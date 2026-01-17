@@ -4454,6 +4454,26 @@
             saveLeagueData();
         }
         
+        function sortByWeek(weekIndex) {
+            // Sort by specific week score (highest to lowest)
+            playerData.sort((a, b) => {
+                const scoreA = parseInt(a.weekScores[weekIndex]) || 0;
+                const scoreB = parseInt(b.weekScores[weekIndex]) || 0;
+                
+                // Sort by week score (highest first)
+                if (scoreB !== scoreA) return scoreB - scoreA;
+                
+                // If same score, sort by best points as tiebreaker
+                if (b.bestPoints !== a.bestPoints) return b.bestPoints - a.bestPoints;
+                
+                // If still same, sort by total points
+                return b.totalPoints - a.totalPoints;
+            });
+            
+            renderLeagueTable();
+            saveLeagueData();
+        }
+        
         function renderLeagueTable() {
             const header = document.getElementById('standings-header');
             const body = document.getElementById('standings-body');
@@ -4472,7 +4492,7 @@
             `;
             
             for (let i = 0; i < totalWeeks; i++) {
-                headerHTML += `<th class="wk-header" style="min-width: ${weekColWidth}; width: ${weekColWidth};">WK${i+1}</th>`;
+                headerHTML += `<th class="wk-header" onclick="sortByWeek(${i})" style="min-width: ${weekColWidth}; width: ${weekColWidth}; cursor: pointer; user-select: none;" title="Click to sort by Week ${i+1}">WK${i+1}</th>`;
             }
             
             headerHTML += `
