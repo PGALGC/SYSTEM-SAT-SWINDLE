@@ -4887,7 +4887,9 @@
             const notFoundPlayers = [];
             
             // Loop through scorecard players
-            weekData.players.forEach(scorecardPlayer => {
+            console.log(`Total scorecard players: ${weekData.players.length}`);
+            weekData.players.forEach((scorecardPlayer, index) => {
+                console.log(`Processing player ${index + 1}: ${scorecardPlayer.name}`);
                 // Calculate stableford total for this player
                 let stablefordTotal = 0;
                 
@@ -4926,10 +4928,12 @@
                 );
                 
                 if (leaguePlayer) {
+                    console.log(`  ✓ Found in league: ${leaguePlayer.name} (Stableford: ${stablefordTotal})`);
                     // Set the score for the current week (currentWeek - 1 because array is 0-indexed)
                     leaguePlayer.weekScores[currentWeek - 1] = stablefordTotal.toString();
                     importedCount++;
                 } else {
+                    console.log(`  ✗ NOT found in league: "${scorecardPlayer.name}"`);
                     notFoundCount++;
                     notFoundPlayers.push(scorecardPlayer.name);
                 }
