@@ -5076,11 +5076,104 @@
                 return;
             }
             
+            // Run the same calculation logic as generateBatchHandicapReport()
+            const week = currentWeek || 1;
+            const weekKey = `week${week}`;
+            const weekData = allWeeksScorecardData[weekKey];
+            
+            // Create calculation map
+            window.latestHandicapCalculations = new Map();
+            
+            // If there's scorecard data, calculate for players who played
+            if (weekData && weekData.players && weekData.players.length > 0) {
+                weekData.players.forEach(player => {
+                    const playerName = player.name;
+                    const pgaIndex = parseFloat(player.pgaIndex) || 0;
+                    const handicap = parseFloat(player.whiteTees) || parseFloat(player.handicap) || 0;
+                    const prizeMoney = parseFloat(player.prizeMoney) || 0;
+                    
+                    // Calculate Stableford score
+                    let stablefordTotal = 0;
+                    for (let hole = 0; hole < 18; hole++) {
+                        const score = parseInt(player.scores[hole]) || 0;
+                        if (score > 0) {
+                            const par = globalParValues[hole] || 4;
+                            const holeIndex = globalIndexValues[hole] || (hole + 1);
+                            const strokesReceived = calculateStrokesForHole(handicap, holeIndex);
+                            const adjustedPar = par + strokesReceived;
+                            const diff = score - adjustedPar;
+                            
+                            let points = 0;
+                            if (diff <= -2) points = 4;
+                            else if (diff === -1) points = 3;
+                            else if (diff === 0) points = 2;
+                            else if (diff === 1) points = 1;
+                            
+                            stablefordTotal += points;
+                        }
+                    }
+                    
+                    // Calculate category
+                    const category = calculateGolfIndexCategory(pgaIndex);
+                    const finishingPosition = prizeMoney > 0 ? 1 : 4;
+                    
+                    // Calculate adjustments
+                    let stage1 = 0;
+                    if (prizeMoney > 0 && stablefordTotal > golfParams.winThreshold) {
+                        const baseCut = golfParams.cutBase + (category / golfParams.cutCatDivisor) + (pgaIndex * golfParams.cutIndexPercent);
+                        stage1 = -(baseCut / finishingPosition);
+                    }
+                    
+                    let stage2 = 0;
+                    if (prizeMoney === 0 && stablefordTotal < golfParams.noWinThreshold && category > 0) {
+                        stage2 = (pgaIndex * golfParams.incIndexPercent) + golfParams.incAddValue + (category / golfParams.incCatDivisor);
+                    }
+                    
+                    let stage3 = 0;
+                    if (stablefordTotal > golfParams.exceptionalThreshold) {
+                        const pointsOver = stablefordTotal - golfParams.exceptionalThreshold;
+                        stage3 = -((category / golfParams.excCatDivisor) + (pgaIndex * golfParams.excIndexPercent)) * pointsOver;
+                    }
+                    
+                    const totalAdjustment = stage1 + stage2 + stage3;
+                    let newIndex = pgaIndex + totalAdjustment;
+                    if (newIndex > golfParams.maxIndex) {
+                        newIndex = golfParams.maxIndex;
+                    }
+                    newIndex = Math.round(newIndex * 10) / 10;
+                    
+                    window.latestHandicapCalculations.set(playerName, {
+                        newIndex: newIndex,
+                        change: newIndex - pgaIndex
+                    });
+                });
+            }
+            
+            // For all league players not in scorecard, set 0 change
+            leaguePlayers.forEach(lp => {
+                if (!window.latestHandicapCalculations.has(lp.name)) {
+                    // Find current handicap
+                    let currentIndex = 0;
+                    if (handicapPlayerData && handicapPlayerData.length > 0) {
+                        const handicapInfo = handicapPlayerData.find(hp => 
+                            hp.name.toLowerCase().trim() === lp.name.toLowerCase().trim()
+                        );
+                        if (handicapInfo) {
+                            currentIndex = parseFloat(handicapInfo.pgaIndex) || 0;
+                        }
+                    }
+                    window.latestHandicapCalculations.set(lp.name, {
+                        newIndex: currentIndex,
+                        change: 0
+                    });
+                }
+            });
+            
             // Refresh the calculator table to show latest handicap data
             renderCalculatorTable();
             
             // Show success message
-            alert(`H'CAP Calculator refreshed!\n\nShowing data for ${handicapPlayerData.length} player(s) from Handicap tab.`);
+            alert(`H'CAP Calculator refreshed!\n\nShowing calculated handicaps for Week ${week}.`);
         }
         
         function editPayment(element) {
