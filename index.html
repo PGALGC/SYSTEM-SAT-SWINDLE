@@ -3626,10 +3626,17 @@
                     // Get calculated newIndex from latest handicap calculations if available
                     let newIndex = pgaIndex;
                     let change = 0;
+                    let whiteHandicap = parseInt(handicapPlayer.whiteTees) || 0;
+                    let yellowHandicap = parseInt(handicapPlayer.yellowTees) || 0;
+                    
                     if (window.latestHandicapCalculations && window.latestHandicapCalculations.has(handicapPlayer.name)) {
                         const calc = window.latestHandicapCalculations.get(handicapPlayer.name);
                         newIndex = calc.newIndex;
-                        change = calc.change;
+                        change = Math.round(calc.change * 10) / 10;  // Round to 1 decimal
+                        
+                        // Recalculate course handicaps from new index
+                        whiteHandicap = Math.round((newIndex * golfCourses.White.slope / 113) + (golfCourses.White.rating - golfCourses.White.par));
+                        yellowHandicap = Math.round((newIndex * golfCourses.Yellow.slope / 113) + (golfCourses.Yellow.rating - golfCourses.Yellow.par));
                     } else {
                         // If no calculation available and player didn't play, show 0 change
                         change = hasScorecard ? (parseFloat(handicapPlayer.changeSinceLastRound) || 0) : 0;
@@ -3642,8 +3649,8 @@
                         pgaIndex: pgaIndex,
                         newPgaIndex: newIndex,  // Shows calculated new index from report
                         changeSinceLastRound: change,
-                        whiteTeesHandicap: parseInt(handicapPlayer.whiteTees) || 0,
-                        yellowTeesHandicap: parseInt(handicapPlayer.yellowTees) || 0,
+                        whiteTeesHandicap: whiteHandicap,
+                        yellowTeesHandicap: yellowHandicap,
                         calcPlayerIndex: -1 // No editing when using handicap data directly
                     });
                 });
