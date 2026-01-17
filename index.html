@@ -3016,6 +3016,25 @@
             calculateScorecardTotals();
         }
         
+        // Helper function to calculate strokes for a hole (handles plus handicaps correctly)
+        function calculateStrokesForHole(playerHandicap, holeIndex) {
+            if (playerHandicap < 0) {
+                // Plus handicap: give strokes back on hardest holes
+                const absHandicap = Math.abs(playerHandicap);
+                const strokesPerHole = Math.floor(absHandicap / 18);
+                const extraStrokesCount = Math.round(absHandicap % 18);
+                // Give back stroke if hole index <= extraStrokesCount
+                const extraStroke = holeIndex <= extraStrokesCount ? 1 : 0;
+                return -(strokesPerHole + extraStroke);
+            } else {
+                // Regular handicap: receive strokes on hardest holes
+                const strokesPerHole = Math.floor(playerHandicap / 18);
+                const extraStrokesCount = Math.round(playerHandicap % 18);
+                const extraStroke = holeIndex <= extraStrokesCount ? 1 : 0;
+                return strokesPerHole + extraStroke;
+            }
+        }
+        
         function calculateStablefordForHole(playerIndex, hole) {
             const player = scorecardData.players[playerIndex];
             if (!player) return null; // Return null instead of 0 for no score
@@ -3031,9 +3050,7 @@
             const holeIndex = globalIndexValues[hole] || (hole + 1);
             
             // Calculate strokes received on this hole
-            const handicapStrokes = Math.floor(playerHandicap / 18);
-            const extraStrokeHole = (playerHandicap % 18) >= holeIndex ? 1 : 0;
-            const strokesReceived = handicapStrokes + extraStrokeHole;
+            const strokesReceived = calculateStrokesForHole(playerHandicap, holeIndex);
             
             // Adjust par for handicap
             const adjustedPar = par + strokesReceived;
@@ -3587,9 +3604,7 @@
                                         : (parseFloat(scorecardPlayer.handicap) || 0);
                                     const holeIndex = globalIndexValues[hole] || (hole + 1);
                                     
-                                    const handicapStrokes = Math.floor(playerHandicap / 18);
-                                    const extraStrokeHole = (playerHandicap % 18) >= holeIndex ? 1 : 0;
-                                    const strokesReceived = handicapStrokes + extraStrokeHole;
+                                    const strokesReceived = calculateStrokesForHole(playerHandicap, holeIndex);
                                     const adjustedPar = par + strokesReceived;
                                     const diff = score - adjustedPar;
                                     
@@ -3652,9 +3667,7 @@
                             : (parseFloat(scorecardPlayer.handicap) || 0);
                         const holeIndex = globalIndexValues[hole] || (hole + 1);
                         
-                        const handicapStrokes = Math.floor(playerHandicap / 18);
-                        const extraStrokeHole = (playerHandicap % 18) >= holeIndex ? 1 : 0;
-                        const strokesReceived = handicapStrokes + extraStrokeHole;
+                        const strokesReceived = calculateStrokesForHole(playerHandicap, holeIndex);
                         const adjustedPar = par + strokesReceived;
                         const diff = score - adjustedPar;
                         
@@ -3847,9 +3860,7 @@
                             : (parseFloat(player.handicap) || 0);
                         const holeIndex = globalIndexValues[hole] || (hole + 1);
                         
-                        const handicapStrokes = Math.floor(playerHandicap / 18);
-                        const extraStrokeHole = (playerHandicap % 18) >= holeIndex ? 1 : 0;
-                        const strokesReceived = handicapStrokes + extraStrokeHole;
+                        const strokesReceived = calculateStrokesForHole(playerHandicap, holeIndex);
                         const adjustedPar = par + strokesReceived;
                         const diff = score - adjustedPar;
                         
@@ -4890,9 +4901,7 @@
                         const holeIndex = globalIndexValues[hole] || (hole + 1);
                         
                         // Calculate strokes received on this hole (same as scorecard)
-                        const handicapStrokes = Math.floor(playerHandicap / 18);
-                        const extraStrokeHole = (playerHandicap % 18) >= holeIndex ? 1 : 0;
-                        const strokesReceived = handicapStrokes + extraStrokeHole;
+                        const strokesReceived = calculateStrokesForHole(playerHandicap, holeIndex);
                         
                         // Adjust par for handicap
                         const adjustedPar = par + strokesReceived;
