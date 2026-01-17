@@ -3623,13 +3623,16 @@
                     const pgaIndex = parseFloat(handicapPlayer.pgaIndex) || 0;
                     const category = getCategory(pgaIndex);
                     
+                    // If player didn't play, show 0 change (newPgaIndex same as current)
+                    const change = hasScorecard ? (parseFloat(handicapPlayer.changeSinceLastRound) || 0) : 0;
+                    
                     playersWithScores.push({
                         name: handicapPlayer.name,
                         category: category,
                         stableford: hasScorecard ? stablefordTotal : '-',
                         pgaIndex: pgaIndex,
-                        newPgaIndex: pgaIndex,
-                        changeSinceLastRound: parseFloat(handicapPlayer.changeSinceLastRound) || 0,
+                        newPgaIndex: pgaIndex,  // Shows current index (no change if didn't play)
+                        changeSinceLastRound: change,
                         whiteTeesHandicap: parseInt(handicapPlayer.whiteTees) || 0,
                         yellowTeesHandicap: parseInt(handicapPlayer.yellowTees) || 0,
                         calcPlayerIndex: -1 // No editing when using handicap data directly
@@ -6549,7 +6552,13 @@
                 });
             }
                 
-            // Process each player and calculate handicaps
+            // Get all 40 league players as base
+            const allLeaguePlayers = leaguePlayers.map(lp => lp.name);
+            
+            // Create a map of players who played this week
+            const playedPlayersMap = new Map();
+            
+            // Process each player who played and calculate handicaps
             const playerResults = [];
             
             weekData.players.forEach(player => {
@@ -6632,13 +6641,46 @@
                 }
                 
                 // Store result for sorting
-                playerResults.push({
+                playedPlayersMap.set(playerName, {
                     name: playerName,
                     index: newIndex,
                     change: changeIndicator,
                     whiteHandicap: whiteHandicap,
                     yellowHandicap: yellowHandicap
                 });
+            });
+            
+            // Now add ALL 40 league players to results
+            allLeaguePlayers.forEach(leaguePlayerName => {
+                if (playedPlayersMap.has(leaguePlayerName)) {
+                    // Player played - use calculated values
+                    playerResults.push(playedPlayersMap.get(leaguePlayerName));
+                } else {
+                    // Player didn't play - use handicap data if available, otherwise 0
+                    let currentIndex = 0;
+                    let whiteHandicap = 0;
+                    let yellowHandicap = 0;
+                    
+                    // Try to get current handicap from handicapPlayerData
+                    if (handicapPlayerData && handicapPlayerData.length > 0) {
+                        const handicapInfo = handicapPlayerData.find(hp => 
+                            hp.name.toLowerCase().trim() === leaguePlayerName.toLowerCase().trim()
+                        );
+                        if (handicapInfo) {
+                            currentIndex = parseFloat(handicapInfo.pgaIndex) || 0;
+                            whiteHandicap = parseInt(handicapInfo.whiteTees) || 0;
+                            yellowHandicap = parseInt(handicapInfo.yellowTees) || 0;
+                        }
+                    }
+                    
+                    playerResults.push({
+                        name: leaguePlayerName,
+                        index: currentIndex,
+                        change: '= 0',
+                        whiteHandicap: whiteHandicap,
+                        yellowHandicap: yellowHandicap
+                    });
+                }
             });
             
             // Sort players by name
