@@ -3571,7 +3571,7 @@
                                 const score = parseInt(scorecardPlayer.scores[hole]) || 0;
                                 if (score > 0) {
                                     const par = globalParValues[hole] || 4;
-                                    const playerHandicap = parseFloat(scorecardPlayer.handicap) || 0;
+                                    const playerHandicap = parseFloat(scorecardPlayer.whiteTees) || parseFloat(scorecardPlayer.handicap) || 0;
                                     const holeIndex = globalIndexValues[hole] || (hole + 1);
                                     
                                     const handicapStrokes = Math.floor(playerHandicap / 18);
@@ -3634,7 +3634,7 @@
                     const score = parseInt(scorecardPlayer.scores[hole]) || 0;
                     if (score > 0) {
                         const par = globalParValues[hole] || 4;
-                        const playerHandicap = parseFloat(scorecardPlayer.handicap) || 0;
+                        const playerHandicap = parseFloat(scorecardPlayer.whiteTees) || parseFloat(scorecardPlayer.handicap) || 0;
                         const holeIndex = globalIndexValues[hole] || (hole + 1);
                         
                         const handicapStrokes = Math.floor(playerHandicap / 18);
@@ -3827,7 +3827,7 @@
                     const score = parseInt(player.scores[hole]) || 0;
                     if (score > 0) {
                         const par = globalParValues[hole] || 4;
-                        const playerHandicap = parseFloat(player.handicap) || 0;
+                        const playerHandicap = parseFloat(player.whiteTees) || parseFloat(player.handicap) || 0;
                         const holeIndex = globalIndexValues[hole] || (hole + 1);
                         
                         const handicapStrokes = Math.floor(playerHandicap / 18);
@@ -4867,7 +4867,7 @@
                     const score = parseInt(scorecardPlayer.scores[hole]) || 0;
                     if (score > 0) {
                         const par = globalParValues[hole] || 4;
-                        const playerHandicap = parseFloat(scorecardPlayer.handicap) || 0;
+                        const playerHandicap = parseFloat(scorecardPlayer.whiteTees) || parseFloat(scorecardPlayer.handicap) || 0;
                         const holeIndex = globalIndexValues[hole] || (hole + 1);
                         
                         // Calculate strokes received on this hole (same as scorecard)
