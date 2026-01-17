@@ -2367,7 +2367,7 @@
             { id: 19, name: "Josh Kinnear" }, { id: 20, name: "Josh Roseberry" },
             { id: 21, name: "Julian Pennie" }, { id: 22, name: "Kamal Dhunna" },
             { id: 23, name: "Mark Hickman" }, { id: 24, name: "Mark Saunders" },
-            { id: 25, name: "Michael Paeckmeyer" }, { id: 26, name: "Nick Eaton" },
+            { id: 25, name: "Michael Pacekmeyer" }, { id: 26, name: "Nick Eaton" },
             { id: 27, name: "Paul Bentley" }, { id: 28, name: "Peter Ramsden" },
             { id: 29, name: "Rich Moore" }, { id: 30, name: "Ringo Theara" },
             { id: 31, name: "Robert Brown" }, { id: 32, name: "Ryan Brown" },
@@ -4493,7 +4493,7 @@
                 
                 let rowHTML = `
                     <td>${index + 1}</td>
-                    <td title="${player.name}">${player.name.substring(0, 12)}${player.name.length > 12 ? '...' : ''}</td>
+                    <td><input type="text" value="${player.name}" class="player-name-edit" data-player-index="${index}" style="width: 110px; border: 1px solid #ddd; padding: 2px 4px; font-size: 10px;" title="${player.name}"></td>
                 `;
                 
                 for (let weekIndex = 0; weekIndex < totalWeeks; weekIndex++) {
@@ -4519,7 +4519,8 @@
                 body.appendChild(row);
             });
             
-            document.querySelectorAll('#standings-body input').forEach(input => {
+            // Handle week score inputs
+            document.querySelectorAll('#standings-body input:not(.player-name-edit)').forEach(input => {
                 input.addEventListener('input', function(e) {
                     this.value = this.value.replace(/[^0-9]/g, '');
                     const pIndex = parseInt(this.dataset.p);
@@ -4542,6 +4543,22 @@
                 
                 // Add Enter key navigation for league table
                 input.addEventListener('keydown', handleLeagueKeyNavigation);
+            });
+            
+            // Handle player name inputs
+            document.querySelectorAll('.player-name-edit').forEach(input => {
+                input.addEventListener('change', function(e) {
+                    const pIndex = parseInt(this.dataset.playerIndex);
+                    const newName = this.value.trim();
+                    if (newName) {
+                        playerData[pIndex].name = newName;
+                        saveLeagueData();
+                        console.log(`Updated player name to: ${newName}`);
+                    } else {
+                        // Restore original name if empty
+                        this.value = playerData[pIndex].name;
+                    }
+                });
             });
             
             document.getElementById('player-count').textContent = playerData.length;
