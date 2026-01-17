@@ -2738,8 +2738,9 @@
                     if (aGross > 0) {
                         const par = globalParValues[hole] || 4;
                         const holeIndex = globalIndexValues[hole] || (hole + 1);
-                        const handicapStrokes = Math.floor((a.handicap || 0) / 18);
-                        const extraStroke = ((a.handicap || 0) % 18) >= holeIndex ? 1 : 0;
+                        const aHandicap = parseFloat(a.whiteTees) || a.handicap || 0;
+                        const handicapStrokes = Math.floor(aHandicap / 18);
+                        const extraStroke = (aHandicap % 18) >= holeIndex ? 1 : 0;
                         const adjustedPar = par + handicapStrokes + extraStroke;
                         const diff = aGross - adjustedPar;
                         
@@ -2758,8 +2759,9 @@
                     if (bGross > 0) {
                         const par = globalParValues[hole] || 4;
                         const holeIndex = globalIndexValues[hole] || (hole + 1);
-                        const handicapStrokes = Math.floor((b.handicap || 0) / 18);
-                        const extraStroke = ((b.handicap || 0) % 18) >= holeIndex ? 1 : 0;
+                        const bHandicap = parseFloat(b.whiteTees) || b.handicap || 0;
+                        const handicapStrokes = Math.floor(bHandicap / 18);
+                        const extraStroke = (bHandicap % 18) >= holeIndex ? 1 : 0;
                         const adjustedPar = par + handicapStrokes + extraStroke;
                         const diff = bGross - adjustedPar;
                         
@@ -3022,7 +3024,8 @@
             if (score <= 0) return null; // Return null for no score or zero
             
             const par = globalParValues[hole] || 4;
-            const playerHandicap = player.handicap || 0;
+            // Use White Tees playing handicap instead of Index
+            const playerHandicap = parseFloat(player.whiteTees) || player.handicap || 0;
             const holeIndex = globalIndexValues[hole] || (hole + 1);
             
             // Calculate strokes received on this hole
