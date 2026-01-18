@@ -2060,7 +2060,7 @@
                         </div>
                         <div>
                             <label style="display: block; font-weight: 600; font-size: 9px; color: #333; margin-bottom: 2px;">5) Swindle Finishing Position</label>
-                            <input type="number" id="golf-finishingPosition" min="1" value="1" style="background-color: #ffecd9 !important; width: 100%; padding: 4px; font-size: 9px; border: 1px solid #ddd; border-radius: 2px;">
+                            <input type="number" id="golf-finishingPosition" min="1" value="" placeholder="Enter if won" style="background-color: #ffecd9 !important; width: 100%; padding: 4px; font-size: 9px; border: 1px solid #ddd; border-radius: 2px;">
                         </div>
                         <div>
                             <label style="display: block; font-weight: 600; font-size: 9px; color: #333; margin-bottom: 2px;">6) LGC Heritage Tees Color</label>
@@ -6523,8 +6523,8 @@
             // Stage 1: Index Cut (if won money AND scored > winThreshold)
             // IMPORTANT: Cut is divided by finishing position (1st, 2nd, 3rd, 4th)
             let stage1 = 0;
-            const finishingPosition = parseInt(document.getElementById('golf-finishingPosition').value) || 1;
-            if (prizeMoney > 0 && stablefordPoints > golfParams.winThreshold) {
+            const finishingPosition = parseInt(document.getElementById('golf-finishingPosition').value) || null;
+            if (prizeMoney > 0 && stablefordPoints > golfParams.winThreshold && finishingPosition) {
                 const baseCut = golfParams.cutBase + (category / golfParams.cutCatDivisor) + (playerIndex * golfParams.cutIndexPercent);
                 stage1 = - (baseCut / finishingPosition);
             }
@@ -6578,7 +6578,7 @@
             const playerIndex = parseFloat(document.getElementById('golf-playerIndex').value);
             const prizeMoney = parseFloat(document.getElementById('golf-prizeMoney').value) || 0;
             const stablefordPoints = parseFloat(document.getElementById('golf-stablefordPoints').value);
-            const finishingPosition = parseInt(document.getElementById('golf-finishingPosition').value) || 1;
+            const finishingPosition = parseInt(document.getElementById('golf-finishingPosition').value) || null;
             const teeColor = document.getElementById('golf-teeColor').value;
             const manualAdjustment = parseFloat(document.getElementById('golf-manualAdjustment').value) || 0;
             
@@ -6590,7 +6590,7 @@
             
             // Calculate stages (same logic as calculateGolfHandicap)
             let stage1 = 0;
-            if (prizeMoney > 0 && stablefordPoints > golfParams.winThreshold) {
+            if (prizeMoney > 0 && stablefordPoints > golfParams.winThreshold && finishingPosition) {
                 const baseCut = golfParams.cutBase + (category / golfParams.cutCatDivisor) + (playerIndex * golfParams.cutIndexPercent);
                 stage1 = - (baseCut / finishingPosition);
             }
@@ -6668,7 +6668,7 @@
             document.getElementById('golf-playerIndex').value = 6.4;
             document.getElementById('golf-prizeMoney').value = 0;
             document.getElementById('golf-stablefordPoints').value = 38;
-            document.getElementById('golf-finishingPosition').value = 1;
+            document.getElementById('golf-finishingPosition').value = '';
             document.getElementById('golf-teeColor').value = 'White';
             document.getElementById('golf-manualAdjustment').value = 0;
             
@@ -6761,7 +6761,8 @@
                 txtContent += `Cat ${player.category}`.padEnd(colWidths.category);
                 txtContent += player.prizeMoney.toFixed(0).padEnd(colWidths.prize);
                 txtContent += player.stablefordPoints.toFixed(0).padEnd(colWidths.stableford);
-                txtContent += player.finishingPosition.toString().padEnd(colWidths.position);
+                const positionStr = player.finishingPosition ? player.finishingPosition.toString() : '-';
+                txtContent += positionStr.padEnd(colWidths.position);
                 txtContent += player.teeColor.padEnd(colWidths.teeColor);
                 txtContent += player.previousIndex.toFixed(1).padEnd(colWidths.prevIndex);
                 txtContent += player.totalAdjustment.toFixed(2).padEnd(colWidths.adjustment);
