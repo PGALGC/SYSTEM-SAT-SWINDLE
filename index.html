@@ -6716,21 +6716,19 @@
             // Define column widths
             const colWidths = {
                 name: 22,
-                index: 8,
-                category: 8,
+                category: 10,
                 prize: 8,
                 stableford: 11,
                 position: 11,
                 teeColor: 10,
                 prevIndex: 10,
-                adjustment: 11,
+                adjustment: 12,
                 newIndex: 10,
-                courseHcap: 11
+                courseHcap: 12
             };
             
             // Table headers
             txtContent += 'Players Name'.padEnd(colWidths.name);
-            txtContent += 'Index'.padEnd(colWidths.index);
             txtContent += 'Category'.padEnd(colWidths.category);
             txtContent += 'Prize £'.padEnd(colWidths.prize);
             txtContent += 'Stableford'.padEnd(colWidths.stableford);
@@ -6743,7 +6741,6 @@
             
             // Second row of headers
             txtContent += ''.padEnd(colWidths.name);
-            txtContent += ''.padEnd(colWidths.index);
             txtContent += ''.padEnd(colWidths.category);
             txtContent += ''.padEnd(colWidths.prize);
             txtContent += 'Points'.padEnd(colWidths.stableford);
@@ -6761,7 +6758,6 @@
             // Add each player row
             golfReportData.forEach(player => {
                 txtContent += player.name.substring(0, colWidths.name - 1).padEnd(colWidths.name);
-                txtContent += player.previousIndex.toFixed(1).padEnd(colWidths.index);
                 txtContent += `Cat ${player.category}`.padEnd(colWidths.category);
                 txtContent += player.prizeMoney.toFixed(0).padEnd(colWidths.prize);
                 txtContent += player.stablefordPoints.toFixed(0).padEnd(colWidths.stableford);
