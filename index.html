@@ -2018,6 +2018,15 @@
             <div class="section" id="embedded-golf-calculator">
                 <h2><i class="fas fa-calculator"></i> Golf Handicap Cut & Increase Calculator</h2>
                 <div class="season-info" style="text-align: center; font-style: italic; font-size: 9px; margin-bottom: 8px;">Season: Winter 2025-26</div>
+                <div style="text-align: center; margin-bottom: 8px;">
+                    <span style="font-size: 10px; font-weight: 600; color: #2c5530;">Players Calculated: <span id="golf-player-count">0</span></span>
+                    <button onclick="downloadGolfReport()" class="secondary" style="margin-left: 10px; padding: 4px 10px; font-size: 9px;">
+                        <i class="fas fa-download"></i> Download Report
+                    </button>
+                    <button onclick="clearGolfReport()" class="danger" style="padding: 4px 10px; font-size: 9px;">
+                        <i class="fas fa-eraser"></i> Clear
+                    </button>
+                </div>
                 
                 <!-- Calculator Input Section -->
                 <div style="background-color: white; padding: 12px; border-radius: 3px; margin-bottom: 8px;">
@@ -6546,6 +6555,26 @@
             // Update final results display
             document.getElementById('golf-prevIndex').textContent = playerIndex.toFixed(1);
             document.getElementById('golf-totalAdjustment').textContent = stage5.toFixed(2);
+            
+            // AUTO-APPEND TO REPORT if player name is entered
+            if (playerName.trim()) {
+                appendToGolfReport({
+                    name: playerName,
+                    previousIndex: playerIndex,
+                    category: category,
+                    prizeMoney: prizeMoney,
+                    stablefordPoints: stablefordPoints,
+                    finishingPosition: finishingPosition,
+                    teeColor: teeColor,
+                    stage1: stage1,
+                    stage2: stage2,
+                    stage3: stage3,
+                    manualAdjustment: manualAdjustment,
+                    totalAdjustment: stage5,
+                    newIndex: newIndex,
+                    courseHandicap: courseHandicap
+                });
+            }
         }
         
         function resetGolfCalculator() {
@@ -6560,6 +6589,100 @@
             
             // Recalculate
             calculateGolfHandicap();
+        }
+        
+        // ============================================
+        // GOLF REPORT AUTO-APPEND FUNCTIONS
+        // ============================================
+        
+        let golfReportData = [];
+        
+        function appendToGolfReport(playerData) {
+            // Add player data to array
+            golfReportData.push(playerData);
+            
+            // Update player count
+            document.getElementById('golf-player-count').textContent = golfReportData.length;
+        }
+        
+        function clearGolfReport() {
+            if (golfReportData.length > 0 && !confirm(`Clear ${golfReportData.length} player(s) from the report?`)) {
+                return;
+            }
+            golfReportData = [];
+            document.getElementById('golf-player-count').textContent = '0';
+        }
+        
+        function downloadGolfReport() {
+            if (golfReportData.length === 0) {
+                alert('No players calculated yet. Please calculate at least one player first.');
+                return;
+            }
+            
+            // Build TXT report
+            let txtContent = '';
+            txtContent += '================================================================================\n';
+            txtContent += 'GOLF HANDICAP CUT & INCREASE CALCULATOR REPORT\n';
+            txtContent += `Season: Winter 2025-26\n`;
+            txtContent += `Generated: ${new Date().toLocaleString()}\n`;
+            txtContent += `Total Players: ${golfReportData.length}\n`;
+            txtContent += '================================================================================\n\n';
+            
+            // Add each player
+            golfReportData.forEach((player, index) => {
+                const course = golfCourses[player.teeColor];
+                
+                txtContent += `PLAYER ${index + 1}: ${player.name}\n`;
+                txtContent += '----------------------------------------\n';
+                txtContent += `Previous Index: ${player.previousIndex.toFixed(1)}\n`;
+                txtContent += `Category: ${player.category}\n`;
+                txtContent += `Prize Money: £${player.prizeMoney}\n`;
+                txtContent += `Stableford Points: ${player.stablefordPoints}\n`;
+                txtContent += `Finishing Position: ${player.finishingPosition}\n`;
+                txtContent += `Tee Color: ${player.teeColor} (Par ${course.par}, Slope ${course.slope}, Rating ${course.rating})\n`;
+                txtContent += `\n`;
+                txtContent += `Stage 1 (Index Cut): ${player.stage1.toFixed(2)}\n`;
+                txtContent += `Stage 2 (Index Increase): ${player.stage2.toFixed(2)}\n`;
+                txtContent += `Stage 3 (Exceptional Cut): ${player.stage3.toFixed(2)}\n`;
+                txtContent += `Stage 4 (Manual Adjustment): ${player.manualAdjustment.toFixed(2)}\n`;
+                txtContent += `\n`;
+                txtContent += `Total Adjustment: ${player.totalAdjustment.toFixed(2)}\n`;
+                txtContent += `NEW INDEX: ${player.newIndex.toFixed(1)}\n`;
+                txtContent += `COURSE HANDICAP: ${player.courseHandicap}\n`;
+                txtContent += `\n\n`;
+            });
+            
+            txtContent += '================================================================================\n';
+            txtContent += 'SUMMARY\n';
+            txtContent += '================================================================================\n';
+            txtContent += 'Name'.padEnd(30) + 'Prev Idx'.padEnd(10) + 'Adj'.padEnd(8) + 'New Idx'.padEnd(10) + 'H\'cap\n';
+            txtContent += '-'.repeat(70) + '\n';
+            
+            golfReportData.forEach(player => {
+                const name = player.name.substring(0, 28).padEnd(30);
+                const prevIdx = player.previousIndex.toFixed(1).padEnd(10);
+                const adj = player.totalAdjustment.toFixed(2).padEnd(8);
+                const newIdx = player.newIndex.toFixed(1).padEnd(10);
+                const hcap = player.courseHandicap.toString();
+                
+                txtContent += name + prevIdx + adj + newIdx + hcap + '\n';
+            });
+            
+            txtContent += '\n';
+            txtContent += `Total Players Calculated: ${golfReportData.length}\n`;
+            txtContent += '================================================================================\n';
+            
+            // Download file
+            const blob = new Blob([txtContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
+            a.download = `Golf_Handicap_Report_${timestamp}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert(`Report downloaded with ${golfReportData.length} player(s)!`);
         }
         
         // ============================================
