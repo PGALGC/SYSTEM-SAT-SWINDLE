@@ -3062,14 +3062,16 @@
             else if (diff === 1) points = 1; // Bogey (1 over adjusted par)
             // 0 points for double bogey or worse
             
-            // Debug logging for scratch/plus handicap players
-            if (playerHandicap <= 0 && hole === 1) {
-                console.log(`DEBUG Hole ${hole + 1} - ${player.name}:`);
-                console.log(`  whiteTees: ${player.whiteTees}, handicap: ${player.handicap}, pgaIndex: ${player.pgaIndex}`);
-                console.log(`  playerHandicap used: ${playerHandicap}`);
-                console.log(`  Par: ${par}, Index: ${holeIndex}, Score: ${score}`);
-                console.log(`  Strokes: ${strokesReceived}, AdjPar: ${adjustedPar}, Diff: ${diff}, Points: ${points}`);
-            }
+            // COMPREHENSIVE DEBUG LOGGING FOR ALL PLAYERS AND HOLES
+            console.log(`===== HOLE ${hole + 1} - ${player.name} =====`);
+            console.log(`Raw values: whiteTees='${player.whiteTees}', handicap='${player.handicap}'`);
+            console.log(`playerHandicap used: ${playerHandicap}`);
+            console.log(`Par: ${par}, Hole Index: ${holeIndex}, Gross Score: ${score}`);
+            console.log(`Strokes Received: ${strokesReceived}`);
+            console.log(`Adjusted Par: ${adjustedPar}`);
+            console.log(`Diff (Score - Adj Par): ${diff}`);
+            console.log(`Stableford Points: ${points}`);
+            console.log(`==========================================`);
             
             return points;
         }
