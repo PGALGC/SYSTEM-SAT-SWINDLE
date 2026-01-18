@@ -2008,9 +2008,6 @@
                     <button onclick="clearAllWinnersData()" class="danger" style="font-size: 9px; padding: 4px 8px;">
                         <i class="fas fa-trash-alt"></i> Clear ALL Weeks
                     </button>
-                    <button onclick="showProfitLoss()" class="success" style="font-size: 9px; padding: 4px 8px;">
-                        <i class="fas fa-chart-line"></i> Profit & Loss
-                    </button>
                 </div>
                 
                 <!-- Winners Table -->
@@ -2035,12 +2032,12 @@
             </div>
             
             <!-- PROFIT & LOSS SECTION -->
-            <div class="section" id="profit-loss-section" style="display: none;">
+            <div class="section" id="profit-loss-section">
                 <h2><i class="fas fa-chart-line"></i> Profit & Loss - All Weeks Combined</h2>
                 
                 <div class="button-group" style="margin-bottom: 10px;">
-                    <button onclick="hideProfitLoss()" class="secondary">
-                        <i class="fas fa-times"></i> Close
+                    <button onclick="calculateProfitLoss()" class="warning">
+                        <i class="fas fa-sync-alt"></i> Refresh Weekly Data
                     </button>
                     <button onclick="downloadProfitLossCSV()" class="success">
                         <i class="fas fa-download"></i> Download CSV
@@ -3786,6 +3783,8 @@
             const selector = document.getElementById('winnersWeekSelector');
             currentWinnersWeek = parseInt(selector.value);
             renderWinnersTable();
+            // Auto-update Profit & Loss when week changes
+            calculateProfitLoss();
         }
         
         function getPositionSymbol(position) {
@@ -3925,6 +3924,8 @@
             allWeeksWinnersData[weekKey] = playersData;
             saveWinnersData();
             renderWinnersTable();
+            // Auto-update Profit & Loss after import
+            calculateProfitLoss();
             
             alert(`Imported ${playersData.length} players from Scorecard Week ${currentWinnersWeek}.\n\nPlayers are sorted by Stableford score (highest to lowest).`);
         }
@@ -3974,6 +3975,8 @@
             
             allWeeksWinnersData[weekKey][index].prize = prizeValue;
             saveWinnersData();
+            // Auto-update Profit & Loss when prize changes
+            calculateProfitLoss();
         }
         
         function clearWinnersWeek() {
@@ -3983,6 +3986,8 @@
             delete allWeeksWinnersData[weekKey];
             saveWinnersData();
             renderWinnersTable();
+            // Auto-update Profit & Loss when week is cleared
+            calculateProfitLoss();
         }
         
         function clearAllWinnersData() {
@@ -3991,6 +3996,8 @@
             allWeeksWinnersData = {};
             saveWinnersData();
             renderWinnersTable();
+            // Auto-update Profit & Loss when all data is cleared
+            calculateProfitLoss();
             alert('All winners data cleared successfully!');
         }
         
@@ -4010,14 +4017,14 @@
         // ============================================
         
         function showProfitLoss() {
-            document.getElementById('profit-loss-section').style.display = 'block';
+            // Legacy function - P&L section is now always visible
             calculateProfitLoss();
             // Scroll to the P&L section
             document.getElementById('profit-loss-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         
         function hideProfitLoss() {
-            document.getElementById('profit-loss-section').style.display = 'none';
+            // Legacy function - no longer used (P&L section is always visible)
         }
         
         function calculateProfitLoss() {
@@ -6878,6 +6885,8 @@
             loadWinnersData();
             initializeWinnersWeekSelector();
             renderWinnersTable();
+            // Initialize Profit & Loss section (always visible)
+            calculateProfitLoss();
             
             // Initialize theme
             loadTheme();
