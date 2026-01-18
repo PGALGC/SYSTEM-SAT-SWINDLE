@@ -6650,7 +6650,7 @@
                 return;
             }
             
-            // Build TXT report
+            // Build TXT report in table format
             let txtContent = '';
             txtContent += '================================================================================\n';
             txtContent += 'GOLF HANDICAP CUT & INCREASE CALCULATOR REPORT\n';
@@ -6659,48 +6659,69 @@
             txtContent += `Total Players: ${golfReportData.length}\n`;
             txtContent += '================================================================================\n\n';
             
-            // Add each player
-            golfReportData.forEach((player, index) => {
-                const course = golfCourses[player.teeColor];
-                
-                txtContent += `PLAYER ${index + 1}: ${player.name}\n`;
-                txtContent += '----------------------------------------\n';
-                txtContent += `Previous Index: ${player.previousIndex.toFixed(1)}\n`;
-                txtContent += `Category: ${player.category}\n`;
-                txtContent += `Prize Money: £${player.prizeMoney}\n`;
-                txtContent += `Stableford Points: ${player.stablefordPoints}\n`;
-                txtContent += `Finishing Position: ${player.finishingPosition}\n`;
-                txtContent += `Tee Color: ${player.teeColor} (Par ${course.par}, Slope ${course.slope}, Rating ${course.rating})\n`;
-                txtContent += `\n`;
-                txtContent += `Stage 1 (Index Cut): ${player.stage1.toFixed(2)}\n`;
-                txtContent += `Stage 2 (Index Increase): ${player.stage2.toFixed(2)}\n`;
-                txtContent += `Stage 3 (Exceptional Cut): ${player.stage3.toFixed(2)}\n`;
-                txtContent += `Stage 4 (Manual Adjustment): ${player.manualAdjustment.toFixed(2)}\n`;
-                txtContent += `\n`;
-                txtContent += `Total Adjustment: ${player.totalAdjustment.toFixed(2)}\n`;
-                txtContent += `NEW INDEX: ${player.newIndex.toFixed(1)}\n`;
-                txtContent += `COURSE HANDICAP: ${player.courseHandicap}\n`;
-                txtContent += `\n\n`;
-            });
+            // Define column widths
+            const colWidths = {
+                name: 22,
+                index: 8,
+                category: 8,
+                prize: 8,
+                stableford: 11,
+                position: 11,
+                teeColor: 10,
+                prevIndex: 10,
+                adjustment: 11,
+                newIndex: 10,
+                courseHcap: 11
+            };
             
-            txtContent += '================================================================================\n';
-            txtContent += 'SUMMARY\n';
-            txtContent += '================================================================================\n';
-            txtContent += 'Name'.padEnd(30) + 'Prev Idx'.padEnd(10) + 'Adj'.padEnd(8) + 'New Idx'.padEnd(10) + 'H\'cap\n';
-            txtContent += '-'.repeat(70) + '\n';
+            // Table headers
+            txtContent += 'Players Name'.padEnd(colWidths.name);
+            txtContent += 'Index'.padEnd(colWidths.index);
+            txtContent += 'Category'.padEnd(colWidths.category);
+            txtContent += 'Prize £'.padEnd(colWidths.prize);
+            txtContent += 'Stableford'.padEnd(colWidths.stableford);
+            txtContent += 'Finishing'.padEnd(colWidths.position);
+            txtContent += 'Tee Color'.padEnd(colWidths.teeColor);
+            txtContent += 'Previous'.padEnd(colWidths.prevIndex);
+            txtContent += 'Total'.padEnd(colWidths.adjustment);
+            txtContent += 'New Index'.padEnd(colWidths.newIndex);
+            txtContent += 'Course\n';
             
+            // Second row of headers
+            txtContent += ''.padEnd(colWidths.name);
+            txtContent += ''.padEnd(colWidths.index);
+            txtContent += ''.padEnd(colWidths.category);
+            txtContent += ''.padEnd(colWidths.prize);
+            txtContent += 'Points'.padEnd(colWidths.stableford);
+            txtContent += 'Position'.padEnd(colWidths.position);
+            txtContent += ''.padEnd(colWidths.teeColor);
+            txtContent += 'Index'.padEnd(colWidths.prevIndex);
+            txtContent += 'Adjustment'.padEnd(colWidths.adjustment);
+            txtContent += ''.padEnd(colWidths.newIndex);
+            txtContent += 'Handicap\n';
+            
+            // Separator line
+            const totalWidth = Object.values(colWidths).reduce((a, b) => a + b, 0);
+            txtContent += '-'.repeat(totalWidth) + '\n';
+            
+            // Add each player row
             golfReportData.forEach(player => {
-                const name = player.name.substring(0, 28).padEnd(30);
-                const prevIdx = player.previousIndex.toFixed(1).padEnd(10);
-                const adj = player.totalAdjustment.toFixed(2).padEnd(8);
-                const newIdx = player.newIndex.toFixed(1).padEnd(10);
-                const hcap = player.courseHandicap.toString();
-                
-                txtContent += name + prevIdx + adj + newIdx + hcap + '\n';
+                txtContent += player.name.substring(0, colWidths.name - 1).padEnd(colWidths.name);
+                txtContent += player.previousIndex.toFixed(1).padEnd(colWidths.index);
+                txtContent += `Cat ${player.category}`.padEnd(colWidths.category);
+                txtContent += player.prizeMoney.toFixed(0).padEnd(colWidths.prize);
+                txtContent += player.stablefordPoints.toFixed(0).padEnd(colWidths.stableford);
+                txtContent += player.finishingPosition.toString().padEnd(colWidths.position);
+                txtContent += player.teeColor.padEnd(colWidths.teeColor);
+                txtContent += player.previousIndex.toFixed(1).padEnd(colWidths.prevIndex);
+                txtContent += player.totalAdjustment.toFixed(2).padEnd(colWidths.adjustment);
+                txtContent += player.newIndex.toFixed(1).padEnd(colWidths.newIndex);
+                txtContent += player.courseHandicap.toString() + '\n';
             });
             
-            txtContent += '\n';
-            txtContent += `Total Players Calculated: ${golfReportData.length}\n`;
+            txtContent += '-'.repeat(totalWidth) + '\n';
+            txtContent += `\nTotal Players Calculated: ${golfReportData.length}\n`;
+            txtContent += '\nGenerated by Golf League Management System\n';
             txtContent += '================================================================================\n';
             
             // Download file
