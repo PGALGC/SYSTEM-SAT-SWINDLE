@@ -2037,46 +2037,7 @@
                             <div style="display: flex; gap: 5px;">
                                 <select id="golf-playerNameSelect" onchange="selectGolfPlayer()" style="background-color: #ffecd9 !important; flex: 1; padding: 4px; font-size: 9px; border: 1px solid #ddd; border-radius: 2px;">
                                     <option value="">-- Select Player --</option>
-                                    <option value="Andy Ball">Andy Ball</option>
-                                    <option value="Ashley Grimshaw">Ashley Grimshaw</option>
-                                    <option value="Bob Evans">Bob Evans</option>
-                                    <option value="Carl Mitchell">Carl Mitchell</option>
-                                    <option value="David Gilks">David Gilks</option>
-                                    <option value="David Morley">David Morley</option>
-                                    <option value="Deean Cooley">Deean Cooley</option>
-                                    <option value="Grant Holden">Grant Holden</option>
-                                    <option value="Hugh Jones">Hugh Jones</option>
-                                    <option value="Ian Reith">Ian Reith</option>
-                                    <option value="Jacob Oldroyd">Jacob Oldroyd</option>
-                                    <option value="James MacMillan">James MacMillan</option>
-                                    <option value="Jason Oldroyd">Jason Oldroyd</option>
-                                    <option value="John Woodward">John Woodward</option>
-                                    <option value="Jonathan Coelen">Jonathan Coelen</option>
-                                    <option value="Julian Pennie">Julian Pennie</option>
-                                    <option value="Kamal Dhunna">Kamal Dhunna</option>
-                                    <option value="Kevin Coster">Kevin Coster</option>
-                                    <option value="Kristian Pearson">Kristian Pearson</option>
-                                    <option value="Lee Clarkson">Lee Clarkson</option>
-                                    <option value="Lee Rhodes">Lee Rhodes</option>
-                                    <option value="Mark Colbert">Mark Colbert</option>
-                                    <option value="Mark Keighley">Mark Keighley</option>
-                                    <option value="Mark Senior">Mark Senior</option>
-                                    <option value="Martyn Firth">Martyn Firth</option>
-                                    <option value="Martyn Holroyd">Martyn Holroyd</option>
-                                    <option value="Matthew Gilling">Matthew Gilling</option>
-                                    <option value="Mick Fretwell">Mick Fretwell</option>
-                                    <option value="Mike Walmsley">Mike Walmsley</option>
-                                    <option value="Nathan Hall">Nathan Hall</option>
-                                    <option value="Nathan Senior">Nathan Senior</option>
-                                    <option value="Nick Varley">Nick Varley</option>
-                                    <option value="Paul Exley">Paul Exley</option>
-                                    <option value="Paul Smith">Paul Smith</option>
-                                    <option value="Peter Blacker">Peter Blacker</option>
-                                    <option value="Richard Blacker">Richard Blacker</option>
-                                    <option value="Russell Dawson">Russell Dawson</option>
-                                    <option value="Sam Burrow">Sam Burrow</option>
-                                    <option value="Stephen Ashton">Stephen Ashton</option>
-                                    <option value="Timothy Ryder">Timothy Ryder</option>
+                                    <!-- Players populated dynamically from League data -->
                                 </select>
                                 <input type="text" id="golf-playerName" placeholder="Or type name" value="" style="background-color: #ffecd9 !important; flex: 1; padding: 4px; font-size: 9px; border: 1px solid #ddd; border-radius: 2px;">
                             </div>
@@ -6622,6 +6583,21 @@
             }
         }
         
+        function populateGolfPlayerDropdown() {
+            const select = document.getElementById('golf-playerNameSelect');
+            
+            // Clear existing options except the first one
+            select.innerHTML = '<option value="">-- Select Player --</option>';
+            
+            // Add all league players
+            leaguePlayers.forEach(player => {
+                const option = document.createElement('option');
+                option.value = player.name;
+                option.textContent = player.name;
+                select.appendChild(option);
+            });
+        }
+        
         function selectGolfPlayer() {
             const select = document.getElementById('golf-playerNameSelect');
             const nameInput = document.getElementById('golf-playerName');
@@ -6995,6 +6971,9 @@
             playerData = generatePlayerData();
             loadBestCountSetting();
             calculateAllTotals();
+            
+            // Populate Golf Handicap Calculator player dropdown
+            populateGolfPlayerDropdown();
             
             // Initialize handicap data
             loadHandicapData();
