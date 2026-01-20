@@ -7007,13 +7007,18 @@
                     el.addEventListener('keydown', (e) => {
                         if (e.key === 'Enter') {
                             e.preventDefault();
-                            const currentRow = parseInt(el.getAttribute('data-row'));
                             const currentField = el.getAttribute('data-field');
-                            const nextRow = currentRow + 1;
                             
-                            // If not the last row, move to same field in next row
-                            if (nextRow < leaguePlayers.length) {
-                                const nextInput = document.querySelector(`#batch-calculator-body [data-row="${nextRow}"][data-field="${currentField}"]`);
+                            // Find current cell's parent row
+                            const currentCell = el.closest('td');
+                            const currentRow = currentCell.closest('tr');
+                            
+                            // Find the next row in the current visual order
+                            const nextRow = currentRow.nextElementSibling;
+                            
+                            if (nextRow) {
+                                // Find the input with the same field in the next row
+                                const nextInput = nextRow.querySelector(`[data-field="${currentField}"]`);
                                 if (nextInput) {
                                     nextInput.focus();
                                     nextInput.select();
