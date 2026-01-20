@@ -1014,13 +1014,14 @@
             background-color: #3a5a8a !important;
         }
         
-        /* Column widths for extracted table */
-        #extractedTable th:nth-child(1) { width: 50px; min-width: 50px; max-width: 50px; } /* Paid */
-        #extractedTable th:nth-child(2) { width: 150px; min-width: 150px; max-width: 150px; text-align: left; padding-left: 8px; } /* Name */
-        #extractedTable th:nth-child(3) { width: 90px; min-width: 90px; max-width: 90px; } /* PGA_Index */
-        #extractedTable th:nth-child(4) { width: 100px; min-width: 100px; max-width: 100px; } /* Change_since_last_round */
-        #extractedTable th:nth-child(5) { width: 100px; min-width: 100px; max-width: 100px; } /* PGA_PH_cap_White_Tees */
-        #extractedTable th:nth-child(6) { width: 100px; min-width: 100px; max-width: 100px; } /* PGA_PH_cap_Yellow_Tees */
+        /* Column widths for extracted table - Equal widths */
+        #extractedTable th:nth-child(1) { width: 14.28%; } /* Paid */
+        #extractedTable th:nth-child(2) { width: 14.28%; text-align: left; padding-left: 8px; } /* Players Name */
+        #extractedTable th:nth-child(3) { width: 14.28%; } /* Players New Index */
+        #extractedTable th:nth-child(4) { width: 14.28%; } /* Total Adjustment */
+        #extractedTable th:nth-child(5) { width: 14.28%; } /* Players Previous Index */
+        #extractedTable th:nth-child(6) { width: 14.28%; } /* Course Handicap (White) */
+        #extractedTable th:nth-child(7) { width: 14.28%; } /* Course Handicap (Yellow) */
         
         #extractedTable td:nth-child(2) { text-align: left; padding-left: 8px; }
         
@@ -1039,13 +1040,6 @@
                 padding: 3px;
                 font-size: 9px;
             }
-            
-            #extractedTable th:nth-child(1) { width: 60px; min-width: 60px; }
-            #extractedTable th:nth-child(2) { width: 120px; min-width: 120px; }
-            #extractedTable th:nth-child(3) { width: 60px; min-width: 60px; }
-            #extractedTable th:nth-child(4) { width: 80px; min-width: 80px; }
-            #extractedTable th:nth-child(5) { width: 60px; min-width: 60px; }
-            #extractedTable th:nth-child(6) { width: 60px; min-width: 60px; }
         }
         
         /* ENHANCED SCORECARD STYLES */
@@ -5652,7 +5646,7 @@
                              style="cursor: move;">
                             <div>
                                 <div class="player-name">☰ ${p.name}</div>
-                                <div class="player-details">Index: ${p.pgaIndex} | White: ${p.whiteTees} | Yellow: ${p.yellowTees}</div>
+                                <div class="player-details">Index: ${p.newIndex || p.pgaIndex || 'N/A'} | White: ${p.whiteTees} | Yellow: ${p.yellowTees}</div>
                             </div>
                             <span class="delete-player" onclick="removeFromGroup(${idx}, '${p.name}')" style="pointer-events: auto;">×</span>
                         </div>
