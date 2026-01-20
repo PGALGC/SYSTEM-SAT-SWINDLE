@@ -2162,6 +2162,7 @@
                         <div style="display:flex; gap:6px;">
                             <button class="secondary" style="margin-left:8px;" onclick="showImportStblfdScoreDialog()"><i class="fas fa-file-import"></i> Import STBLFD Score</button>
                             <button class="warning" style="margin-left:4px;" onclick="recalcAllBatchRows()"><i class="fas fa-sync-alt"></i> Calculate Batch</button>
+                            <button class="success" style="margin-left:4px;" onclick="showBatchReportDialog()"><i class="fas fa-file-download"></i> Generate Report</button>
                         </div>
                     </h3>
                     
@@ -7306,6 +7307,214 @@
             
             closeImportDialog();
             alert(`Imported ${importedCount} Stableford scores from Week ${selectedWeek}.`);
+        }
+        
+        // ============================================
+        // BATCH CALCULATOR REPORT GENERATION
+        // ============================================
+        
+        function showBatchReportDialog() {
+            // Create a temporary modal/dialog
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.6)';
+            overlay.style.zIndex = '9999';
+            overlay.style.display = 'flex';
+            overlay.style.alignItems = 'center';
+            overlay.style.justifyContent = 'center';
+            
+            const dialog = document.createElement('div');
+            dialog.style.backgroundColor = 'white';
+            dialog.style.padding = '20px';
+            dialog.style.borderRadius = '6px';
+            dialog.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+            dialog.style.minWidth = '300px';
+            dialog.style.color = '#333';
+            
+            dialog.innerHTML = `
+                <h3 style="color:#1a6b4f; margin-bottom:12px; font-size:14px;">Generate HCAP Batch Report</h3>
+                <p style="font-size:11px; margin-bottom:12px;">Select report format:</p>
+                <div style="display:flex; gap:8px; justify-content:center; margin-bottom:16px;">
+                    <button onclick="downloadBatchReportExcel()" style="padding:8px 16px; font-size:11px; background:#28a745; color:white; border:none; border-radius:3px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                        <i class="fas fa-file-excel"></i> Excel (CSV)
+                    </button>
+                    <button onclick="downloadBatchReportTXT()" style="padding:8px 16px; font-size:11px; background:#4a90e2; color:white; border:none; border-radius:3px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                        <i class="fas fa-file-alt"></i> Text (TXT)
+                    </button>
+                </div>
+                <div style="display:flex; gap:8px; justify-content:flex-end;">
+                    <button onclick="closeBatchReportDialog()" style="padding:6px 12px; font-size:10px; background:#6c757d; color:white; border:none; border-radius:3px; cursor:pointer;">Cancel</button>
+                </div>
+            `;
+            
+            overlay.appendChild(dialog);
+            document.body.appendChild(overlay);
+            
+            // Store reference to close later
+            window.batchReportOverlay = overlay;
+            
+            // Close on overlay click
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeBatchReportDialog();
+            });
+        }
+        
+        function closeBatchReportDialog() {
+            if (window.batchReportOverlay) {
+                document.body.removeChild(window.batchReportOverlay);
+                window.batchReportOverlay = null;
+            }
+        }
+        
+        function downloadBatchReportExcel() {
+            // Build CSV content for Excel
+            let csvContent = '';
+            
+            // Header rows
+            csvContent += 'HCAP BATCH CALCULATOR REPORT\n';
+            csvContent += `Generated: ${new Date().toLocaleString()}\n`;
+            csvContent += '\n';
+            
+            // Column headers
+            csvContent += 'No,Player Name,Players Index,Index Category,Prize Money Won,Stableford Points Scored,Swindle Finishing Position,Players Previous Index,Total Adjustment,Players New Index,Course Handicap (White),Course Handicap (Yellow)\n';
+            
+            // Add each row
+            const tbody = document.getElementById('batch-calculator-body');
+            if (tbody) {
+                const rows = tbody.querySelectorAll('tr');
+                rows.forEach((row, idx) => {
+                    const cells = row.cells;
+                    const no = cells[0].textContent;
+                    const name = cells[1].textContent;
+                    const index = cells[2].querySelector('input')?.value || '';
+                    const category = cells[3].textContent;
+                    const prize = cells[4].querySelector('input')?.value || '0';
+                    const stableford = cells[5].querySelector('input')?.value || '';
+                    const position = cells[6].querySelector('input')?.value || '';
+                    const prevIndex = cells[9].textContent;
+                    const adjustment = cells[10].textContent;
+                    const newIndex = cells[11].textContent;
+                    const whiteHcap = cells[12].textContent;
+                    const yellowHcap = cells[13].textContent;
+                    
+                    csvContent += `${no},"${name}",${index},"${category}",${prize},${stableford},${position},${prevIndex},${adjustment},${newIndex},${whiteHcap},${yellowHcap}\n`;
+                });
+            }
+            
+            csvContent += '\n';
+            csvContent += 'Generated by PGA League System\n';
+            
+            // Download file as CSV with UTF-8 BOM for proper Excel encoding
+            const BOM = '\uFEFF';
+            const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
+            a.download = `HCAP_Batch_Report_${timestamp}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            closeBatchReportDialog();
+            alert('Excel CSV report downloaded successfully!');
+        }
+        
+        function downloadBatchReportTXT() {
+            // Build TXT report in table format
+            let txtContent = '';
+            txtContent += '================================================================================\n';
+            txtContent += 'HCAP BATCH CALCULATOR REPORT\n';
+            txtContent += `Generated: ${new Date().toLocaleString()}\n`;
+            txtContent += '================================================================================\n\n';
+            
+            // Define column widths
+            const colWidths = {
+                no: 4,
+                name: 22,
+                index: 8,
+                category: 10,
+                prize: 8,
+                stableford: 11,
+                position: 10,
+                prevIndex: 10,
+                adjustment: 12,
+                newIndex: 10,
+                whiteHcap: 12,
+                yellowHcap: 12
+            };
+            
+            // Table headers
+            txtContent += 'No'.padEnd(colWidths.no);
+            txtContent += 'Player Name'.padEnd(colWidths.name);
+            txtContent += 'Index'.padEnd(colWidths.index);
+            txtContent += 'Category'.padEnd(colWidths.category);
+            txtContent += 'Prize £'.padEnd(colWidths.prize);
+            txtContent += 'Stableford'.padEnd(colWidths.stableford);
+            txtContent += 'Position'.padEnd(colWidths.position);
+            txtContent += 'Prev Idx'.padEnd(colWidths.prevIndex);
+            txtContent += 'Adjustment'.padEnd(colWidths.adjustment);
+            txtContent += 'New Idx'.padEnd(colWidths.newIndex);
+            txtContent += 'White H\'cap'.padEnd(colWidths.whiteHcap);
+            txtContent += 'Yellow H\'cap\n';
+            
+            // Separator line
+            const totalWidth = Object.values(colWidths).reduce((a, b) => a + b, 0);
+            txtContent += '-'.repeat(totalWidth) + '\n';
+            
+            // Add each row
+            const tbody = document.getElementById('batch-calculator-body');
+            if (tbody) {
+                const rows = tbody.querySelectorAll('tr');
+                rows.forEach((row, idx) => {
+                    const cells = row.cells;
+                    const no = cells[0].textContent;
+                    const name = cells[1].textContent.substring(0, colWidths.name - 1);
+                    const index = cells[2].querySelector('input')?.value || '-';
+                    const category = cells[3].textContent || '-';
+                    const prize = cells[4].querySelector('input')?.value || '0';
+                    const stableford = cells[5].querySelector('input')?.value || '-';
+                    const position = cells[6].querySelector('input')?.value || '-';
+                    const prevIndex = cells[9].textContent;
+                    const adjustment = cells[10].textContent;
+                    const newIndex = cells[11].textContent;
+                    const whiteHcap = cells[12].textContent;
+                    const yellowHcap = cells[13].textContent;
+                    
+                    txtContent += no.padEnd(colWidths.no);
+                    txtContent += name.padEnd(colWidths.name);
+                    txtContent += index.padEnd(colWidths.index);
+                    txtContent += category.padEnd(colWidths.category);
+                    txtContent += prize.padEnd(colWidths.prize);
+                    txtContent += stableford.padEnd(colWidths.stableford);
+                    txtContent += position.padEnd(colWidths.position);
+                    txtContent += prevIndex.padEnd(colWidths.prevIndex);
+                    txtContent += adjustment.padEnd(colWidths.adjustment);
+                    txtContent += newIndex.padEnd(colWidths.newIndex);
+                    txtContent += whiteHcap.padEnd(colWidths.whiteHcap);
+                    txtContent += yellowHcap + '\n';
+                });
+            }
+            
+            txtContent += '-'.repeat(totalWidth) + '\n';
+            txtContent += '\nGenerated by PGA League System\n';
+            txtContent += '================================================================================\n';
+            
+            // Download file
+            const blob = new Blob([txtContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
+            a.download = `HCAP_Batch_Report_${timestamp}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            closeBatchReportDialog();
+            alert('Text report downloaded successfully!');
         }
         
         // ============================================
