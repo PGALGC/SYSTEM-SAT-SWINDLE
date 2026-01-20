@@ -1770,9 +1770,16 @@
                         <button id="calculate-btn" class="success">
                             <i class="fas fa-calculator"></i> Calculate
                         </button>
-                        <button id="export-btn" class="warning">
-                            <i class="fas fa-download"></i> Export
-                        </button>
+                        <div class="best-scores-selector" style="display: inline-block;">
+                            <button class="best-scores-button warning" onclick="toggleLeagueCSVDropdown()" style="background-color: #d4af37; color: #0a3d2e;">
+                                <i class="fas fa-file-csv"></i> CSV <i class="fas fa-caret-down"></i>
+                            </button>
+                            <div class="best-scores-dropdown" id="leagueCSVDropdown">
+                                <div class="best-scores-option" onclick="exportLeagueCSV()"><i class="fas fa-download"></i> Export CSV</div>
+                                <div class="best-scores-option" onclick="document.getElementById('leagueCSVImportInput').click()"><i class="fas fa-upload"></i> Import CSV</div>
+                            </div>
+                        </div>
+                        <input type="file" id="leagueCSVImportInput" accept=".csv" style="display: none;" onchange="importLeagueCSV(event)">
                         <button id="reset-btn" class="danger">
                             <i class="fas fa-undo"></i> Reset
                         </button>
@@ -2162,7 +2169,16 @@
                         <div style="display:flex; gap:6px;">
                             <button class="secondary" style="margin-left:8px;" onclick="showImportStblfdScoreDialog()"><i class="fas fa-file-import"></i> Import STBLFD Score</button>
                             <button class="warning" style="margin-left:4px;" onclick="recalcAllBatchRows()"><i class="fas fa-sync-alt"></i> Calculate Batch</button>
-                            <button class="success" style="margin-left:4px;" onclick="showBatchReportDialog()"><i class="fas fa-file-download"></i> Generate Report</button>
+                            <div class="best-scores-selector" style="display: inline-block;">
+                                <button class="best-scores-button warning" onclick="toggleBatchCSVDropdown()" style="background-color: #d4af37; color: #0a3d2e; margin-left:4px;">
+                                    <i class="fas fa-file-csv"></i> CSV <i class="fas fa-caret-down"></i>
+                                </button>
+                                <div class="best-scores-dropdown" id="batchCSVDropdown">
+                                    <div class="best-scores-option" onclick="showBatchReportDialog()"><i class="fas fa-download"></i> Export CSV</div>
+                                    <div class="best-scores-option" onclick="document.getElementById('batchCSVImportInput').click()"><i class="fas fa-upload"></i> Import CSV</div>
+                                </div>
+                            </div>
+                            <input type="file" id="batchCSVImportInput" accept=".csv" style="display: none;" onchange="importBatchCalculatorCSV(event)">
                         </div>
                     </h3>
                     
@@ -2319,9 +2335,16 @@
                         </button>
                     </div>
                     <div class="button-group">
-                        <button onclick="exportScorecardCSV()" class="warning">
-                            <i class="fas fa-download"></i> Export CSV
-                        </button>
+                        <div class="best-scores-selector" style="display: inline-block;">
+                            <button class="best-scores-button warning" onclick="toggleScorecardCSVDropdown()" style="background-color: #d4af37; color: #0a3d2e;">
+                                <i class="fas fa-file-csv"></i> CSV <i class="fas fa-caret-down"></i>
+                            </button>
+                            <div class="best-scores-dropdown" id="scorecardCSVDropdown">
+                                <div class="best-scores-option" onclick="exportScorecardCSV()"><i class="fas fa-download"></i> Export CSV</div>
+                                <div class="best-scores-option" onclick="document.getElementById('scorecardCSVImportInput').click()"><i class="fas fa-upload"></i> Import CSV</div>
+                            </div>
+                        </div>
+                        <input type="file" id="scorecardCSVImportInput" accept=".csv" style="display: none;" onchange="importScorecardCSV(event)">
                         <button onclick="captureScorecardImage()" class="secondary">
                             <i class="fas fa-camera"></i> Capture
                         </button>
@@ -3445,6 +3468,68 @@
             a.download = `scorecard_${scorecardData.date || 'export'}.csv`;
             a.click();
             URL.revokeObjectURL(url);
+            document.getElementById('scorecardCSVDropdown').classList.remove('show');
+        }
+        
+        function importScorecardCSV(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const csvContent = e.target.result;
+                    const lines = csvContent.split('\n').filter(line => line.trim());
+                    
+                    if (lines.length < 4) {
+                        alert('Invalid scorecard CSV format');
+                        return;
+                    }
+                    
+                    // Clear existing players
+                    scorecardData.players = [];
+                    nextScorecardPlayerId = 1;
+                    
+                    let importedCount = 0;
+                    
+                    // Parse each player row (skip header, PAR, and INDEX rows)
+                    for (let i = 3; i < lines.length; i++) {
+                        const values = lines[i].split(',').map(v => v.trim());
+                        if (values.length < 20) continue;
+                        
+                        const playerName = values[0];
+                        const handicap = parseFloat(values[1]) || 0;
+                        const scores = values.slice(2, 20); // 18 holes
+                        
+                        const newPlayer = {
+                            id: nextScorecardPlayerId++,
+                            name: playerName,
+                            handicap: handicap,
+                            pgaIndex: handicap,
+                            whiteTees: '',
+                            yellowTees: '',
+                            scores: scores.map(s => s || '')
+                        };
+                        
+                        scorecardData.players.push(newPlayer);
+                        importedCount++;
+                    }
+                    
+                    if (importedCount > 0) {
+                        saveScorecardData();
+                        renderScorecard();
+                        alert(`Successfully imported ${importedCount} player(s) to Week ${currentWeek}!`);
+                    } else {
+                        alert('No player data found in CSV file.');
+                    }
+                } catch (error) {
+                    console.error('Scorecard import error:', error);
+                    alert('Error importing scorecard CSV: ' + error.message);
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+            document.getElementById('scorecardCSVDropdown').classList.remove('show');
         }
         
         // ============================================
@@ -4729,6 +4814,22 @@
             }
         }
         
+        // ============================================
+        // CSV DROPDOWN TOGGLE FUNCTIONS
+        // ============================================
+        
+        function toggleLeagueCSVDropdown() {
+            document.getElementById('leagueCSVDropdown').classList.toggle('show');
+        }
+        
+        function toggleScorecardCSVDropdown() {
+            document.getElementById('scorecardCSVDropdown').classList.toggle('show');
+        }
+        
+        function toggleBatchCSVDropdown() {
+            document.getElementById('batchCSVDropdown').classList.toggle('show');
+        }
+        
         function exportLeagueCSV() {
             let csv = "POS,Player Name," + Array.from({length: totalWeeks}, (_, i) => `WK${i+1}`).join(',') + ",PLD,B" + bestCount + ",Total\n";
             
@@ -4751,6 +4852,64 @@
             a.download = 'pga_league.csv';
             a.click();
             URL.revokeObjectURL(url);
+            document.getElementById('leagueCSVDropdown').classList.remove('show');
+        }
+        
+        function importLeagueCSV(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const csvContent = e.target.result;
+                    const lines = csvContent.split('\n').filter(line => line.trim());
+                    
+                    if (lines.length < 2) {
+                        alert('Invalid CSV file format');
+                        return;
+                    }
+                    
+                    // Parse header to determine week columns
+                    const headers = lines[0].split(',').map(h => h.trim());
+                    let importedCount = 0;
+                    
+                    // Process each data row
+                    for (let i = 1; i < lines.length; i++) {
+                        const values = lines[i].split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+                        if (values.length < 2) continue;
+                        
+                        const playerName = values[1]; // Column 2 is player name
+                        
+                        // Find matching player in playerData
+                        const player = playerData.find(p => p.name.toLowerCase().trim() === playerName.toLowerCase().trim());
+                        if (player) {
+                            // Import week scores (starting from column 2)
+                            for (let weekIdx = 0; weekIdx < totalWeeks && (weekIdx + 2) < values.length; weekIdx++) {
+                                const score = values[weekIdx + 2];
+                                if (score && score !== '') {
+                                    player.weekScores[weekIdx] = score;
+                                }
+                            }
+                            importedCount++;
+                        }
+                    }
+                    
+                    if (importedCount > 0) {
+                        calculateAllTotals();
+                        saveLeagueData();
+                        alert(`Successfully imported data for ${importedCount} player(s)!`);
+                    } else {
+                        alert('No matching players found in CSV file.');
+                    }
+                } catch (error) {
+                    console.error('Import error:', error);
+                    alert('Error importing CSV file: ' + error.message);
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+            document.getElementById('leagueCSVDropdown').classList.remove('show');
         }
         
         function captureLeagueTable() {
@@ -7543,6 +7702,90 @@
             alert('Text report downloaded successfully!');
         }
         
+        function importBatchCalculatorCSV(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const csvContent = e.target.result;
+                    const lines = csvContent.split('\n').filter(line => line.trim());
+                    
+                    if (lines.length < 4) {
+                        alert('Invalid batch calculator CSV format');
+                        return;
+                    }
+                    
+                    let importedCount = 0;
+                    
+                    // Skip header rows (first 3 lines)
+                    for (let i = 3; i < lines.length; i++) {
+                        const values = lines[i].split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+                        if (values.length < 12) continue;
+                        
+                        const playerNo = parseInt(values[0]);
+                        const playerName = values[1];
+                        const playersIndex = values[2];
+                        const prizeMoney = values[4];
+                        const stableford = values[5];
+                        const position = values[6];
+                        
+                        // Find matching player by name
+                        const playerIdx = leaguePlayers.findIndex(p => 
+                            p.name.toLowerCase().trim() === playerName.toLowerCase().trim()
+                        );
+                        
+                        if (playerIdx !== -1) {
+                            // Update the input fields
+                            const indexEl = document.querySelector(`#batch-calculator-body [data-row="${playerIdx}"][data-field="index"]`);
+                            const prizeEl = document.querySelector(`#batch-calculator-body [data-row="${playerIdx}"][data-field="prize"]`);
+                            const pointsEl = document.querySelector(`#batch-calculator-body [data-row="${playerIdx}"][data-field="stableford"]`);
+                            const posEl = document.querySelector(`#batch-calculator-body [data-row="${playerIdx}"][data-field="position"]`);
+                            
+                            if (indexEl) indexEl.value = playersIndex || '';
+                            if (prizeEl) prizeEl.value = prizeMoney || '0';
+                            if (pointsEl) pointsEl.value = stableford || '';
+                            if (posEl) posEl.value = position || '';
+                            
+                            // Save to batch data
+                            if (!batchCalculatorData[playerIdx]) {
+                                batchCalculatorData[playerIdx] = {
+                                    index: '',
+                                    prize: 0,
+                                    stableford: '',
+                                    position: '',
+                                    teeWhite: true,
+                                    teeYellow: true
+                                };
+                            }
+                            batchCalculatorData[playerIdx].index = playersIndex || '';
+                            batchCalculatorData[playerIdx].prize = prizeMoney || 0;
+                            batchCalculatorData[playerIdx].stableford = stableford || '';
+                            batchCalculatorData[playerIdx].position = position || '';
+                            
+                            // Trigger recalculation
+                            recalcBatchRow(playerIdx);
+                            importedCount++;
+                        }
+                    }
+                    
+                    if (importedCount > 0) {
+                        saveBatchCalculatorData();
+                        alert(`Successfully imported data for ${importedCount} player(s)!`);
+                    } else {
+                        alert('No matching players found in CSV file.');
+                    }
+                } catch (error) {
+                    console.error('Batch calculator import error:', error);
+                    alert('Error importing CSV: ' + error.message);
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+            document.getElementById('batchCSVDropdown').classList.remove('show');
+        }
+        
         // ============================================
         // BATCH HANDICAP REPORT GENERATOR
         // ============================================
@@ -7844,6 +8087,21 @@
                 }
                 if (!e.target.closest('.best-scores-selector')) {
                     document.getElementById('bestScoresDropdown').classList.remove('show');
+                }
+                // Close League CSV dropdown
+                const leagueCSVSelector = document.querySelector('.best-scores-selector[onclick="toggleLeagueCSVDropdown()"]');
+                if (leagueCSVSelector && !e.target.closest('.best-scores-selector[onclick="toggleLeagueCSVDropdown()"]')) {
+                    document.getElementById('leagueCSVDropdown').classList.remove('show');
+                }
+                // Close Scorecard CSV dropdown
+                const scorecardCSVSelector = document.querySelector('.best-scores-selector[onclick="toggleScorecardCSVDropdown()"]');
+                if (scorecardCSVSelector && !e.target.closest('.best-scores-selector[onclick="toggleScorecardCSVDropdown()"]')) {
+                    document.getElementById('scorecardCSVDropdown').classList.remove('show');
+                }
+                // Close Batch Calculator CSV dropdown
+                const batchCSVSelector = document.querySelector('.best-scores-selector[onclick="toggleBatchCSVDropdown()"]');
+                if (batchCSVSelector && !e.target.closest('.best-scores-selector[onclick="toggleBatchCSVDropdown()"]')) {
+                    document.getElementById('batchCSVDropdown').classList.remove('show');
                 }
             });
             
