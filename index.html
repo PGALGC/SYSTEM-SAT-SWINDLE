@@ -8186,107 +8186,244 @@
                 <div class="guide-section">
                     <h3><i class="fas fa-trophy"></i> 1. LEAGUE TAB</h3>
                     <h4>Purpose:</h4>
-                    <p>Track player standings across multiple weeks of competition.</p>
+                    <p>Track player standings across multiple weeks of competition with automatic best-score calculations.</p>
                     
-                    <h4>Key Features:</h4>
+                    <h4>Buttons & Features:</h4>
                     <ul>
-                        <li><strong>Add Players:</strong> Click "Add Player" to add new players to the league</li>
-                        <li><strong>Enter Scores:</strong> Click on any week cell to enter a player's score for that week</li>
-                        <li><strong>Best Scores:</strong> Use the "Best X" dropdown to select how many top scores count toward total</li>
-                        <li><strong>Adjust Weeks:</strong> Click "Adjust Weeks" to add or remove weeks from the season</li>
-                        <li><strong>Export Data:</strong> Click "Export CSV" to download league standings</li>
+                        <li><strong>Add Player:</strong> Add new players to the league table</li>
+                        <li><strong>Calculate:</strong> Recalculate all totals and rankings</li>
+                        <li><strong>CSV Dropdown:</strong>
+                            <ul>
+                                <li><strong>Export CSV:</strong> Download league standings with all player data</li>
+                                <li><strong>Import CSV:</strong> Upload CSV file to import player scores by matching names</li>
+                            </ul>
+                        </li>
+                        <li><strong>Reset:</strong> Clear all league data (requires confirmation)</li>
+                        <li><strong>Weeks:</strong> Adjust the total number of weeks in the season</li>
+                        <li><strong>Player Scores:</strong> Import Stableford scores from Scorecard tab for current week</li>
+                        <li><strong>Capture:</strong> Take screenshot of league table</li>
+                        <li><strong>Best X Dropdown:</strong> Select how many top scores count (e.g., Best 10 of 17)</li>
                     </ul>
                     
+                    <h4>How to Use:</h4>
+                    <ol>
+                        <li>Click on any week cell to enter/edit a player's score</li>
+                        <li>Scores are color-coded: Red (≤29), Gold (top scores that count), Green (other scores)</li>
+                        <li>Click column headers to sort: "Player ▲" for alphabetical, "B10 ▼" for ranking</li>
+                        <li>Totals automatically update based on Best X selection</li>
+                        <li>PLD (Played) shows how many weeks the player has scores for</li>
+                        <li>B[count] shows which scores are counted in the total</li>
+                    </ol>
+                    
                     <div class="tip-box">
-                        <strong>💡 Tip:</strong> Top scores for each player are highlighted in gold. The system automatically calculates totals based on your "Best X" selection.
+                        <strong>💡 Tips:</strong> Use "Player Scores" button to quickly import weekly Stableford scores from Scorecard. CSV Import matches players by name, so names must match exactly.
                     </div>
                 </div>
                 
                 <div class="guide-section">
                     <h3><i class="fas fa-file-upload"></i> 2. HANDICAP TAB</h3>
                     <h4>Purpose:</h4>
-                    <p>Import player data from Excel files and manage handicap information.</p>
+                    <p>Import and manage player handicap data, payment tracking, and create draw groups for golf rounds.</p>
                     
-                    <h4>Steps to Use:</h4>
-                    <ol>
-                        <li><strong>Upload Excel File:</strong> Click "Choose File" and select your Excel handicap sheet</li>
-                        <li><strong>Extract Data:</strong> Click "Extract Data" to import player information</li>
-                        <li><strong>Set Payments:</strong> Click on "Paid" cells to toggle payment status (changes between "5" and "0")</li>
-                        <li><strong>Create Draw:</strong> Click "Create" under Draw Management to organize players into groups</li>
-                        <li><strong>Capture Images:</strong> Use "Capture" to save screenshots of the draw or payment list</li>
-                    </ol>
+                    <h4>Upload File Section:</h4>
+                    <ul>
+                        <li><strong>Upload Box:</strong> Click to select CSV, TXT, JPG, PNG, DOCX, or XLSX files</li>
+                        <li><strong>Remove Quotes:</strong> Checkbox to strip quotation marks from player names</li>
+                        <li><strong>Remove Default Names:</strong> Checkbox to filter out placeholder names like "Golfer 1"</li>
+                        <li><strong>Extract:</strong> Parse uploaded file and populate Extracted Data table</li>
+                        <li><strong>All £5 / All £0:</strong> Quickly set all players' payment status</li>
+                    </ul>
+                    
+                    <h4>Extracted Data Section:</h4>
+                    <p>Displays 7 columns with equal widths:</p>
+                    <ul>
+                        <li><strong>Paid:</strong> Click to edit payment amount (shows red for £0, green for paid)</li>
+                        <li><strong>Players Name:</strong> Imported from CSV column 1 (HCAP Batch Calculator export)</li>
+                        <li><strong>Players New Index:</strong> Imported from CSV column 9</li>
+                        <li><strong>Total Adjustment:</strong> Imported from CSV column 8</li>
+                        <li><strong>Players Previous Index:</strong> Imported from CSV column 7</li>
+                        <li><strong>Course Handicap (White):</strong> Imported from CSV column 10</li>
+                        <li><strong>Course Handicap (Yellow):</strong> Imported from CSV column 11</li>
+                    </ul>
+                    <p><strong>Stats Display:</strong> Total collection amount, Total players, Number paid</p>
+                    <ul>
+                        <li><strong>CSV:</strong> Download extracted data as CSV file</li>
+                        <li><strong>£5 Image:</strong> Capture screenshot of players who paid £5</li>
+                        <li><strong>Clear:</strong> Remove all extracted data and reload page</li>
+                    </ul>
+                    
+                    <h4>Draw Management Section:</h4>
+                    <ul>
+                        <li><strong>Create:</strong> Automatically organize paid players into groups of 3-4</li>
+                        <li><strong>Reshuffle:</strong> Re-randomize existing groups</li>
+                        <li><strong>Capture:</strong> Take screenshot of draw groups</li>
+                    </ul>
+                    <p><strong>Draw Features:</strong></p>
+                    <ul>
+                        <li>Each group shows: Player name, Index (from Players New Index), White/Yellow handicaps</li>
+                        <li>Tee Box number (editable 1-20)</li>
+                        <li>Drag-and-drop players between groups</li>
+                        <li>Click × to remove player from group</li>
+                        <li>Groups auto-balance to 3-4 players each</li>
+                    </ul>
+                    
+                    <h4>Add Player to Draw:</h4>
+                    <ul>
+                        <li>Enter Name, Index, and Paid amount</li>
+                        <li>Click "Add to Draw" to include in next reshuffle</li>
+                    </ul>
                     
                     <div class="tip-box">
-                        <strong>💡 Tip:</strong> Green values indicate paid status, red indicates unpaid. Use "All £5" or "All £0" buttons to quickly set all payments.
+                        <strong>💡 Tips:</strong> Export CSV from HCAP Batch Calculator (Winners tab) and upload here to auto-populate all fields. The system skips header rows automatically.
                     </div>
                 </div>
                 
                 <div class="guide-section">
                     <h3><i class="fas fa-clipboard-list"></i> 3. SCORECARD TAB</h3>
                     <h4>Purpose:</h4>
-                    <p>Record detailed hole-by-hole scores and calculate Stableford points.</p>
+                    <p>Record detailed hole-by-hole scores with automatic Stableford calculation and countback support.</p>
                     
-                    <h4>Steps to Use:</h4>
-                    <ol>
-                        <li><strong>Select Week:</strong> Choose which week you're recording scores for (WK1, WK2, etc.)</li>
-                        <li><strong>Course Info:</strong> Enter course name, date, and competition details</li>
-                        <li><strong>Add Players:</strong> Click "Add Player" and enter player name and handicap</li>
-                        <li><strong>Enter Scores:</strong> Input scores for each hole (1-18)</li>
-                        <li><strong>View Stableford:</strong> The system automatically calculates Stableford points below each score</li>
-                        <li><strong>Backup Data:</strong> Click "Backup Scorecard" to save a JSON file</li>
-                        <li><strong>Capture Image:</strong> Click "Capture Scorecard" to save as image</li>
-                    </ol>
+                    <h4>Top Controls:</h4>
+                    <ul>
+                        <li><strong>Week Selector:</strong> Choose week WK1-WK52 (each week stores data separately)</li>
+                        <li><strong>Course Name, Date, Competition Name:</strong> Course details (saved per week)</li>
+                        <li><strong>Add Player:</strong> Add player with name and handicap</li>
+                        <li><strong>CSV Dropdown:</strong>
+                            <ul>
+                                <li><strong>Export CSV:</strong> Download complete scorecard with all player data</li>
+                                <li><strong>Import CSV:</strong> Upload CSV to populate scorecard (clears existing players first)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Backup Scorecard:</strong> Download JSON backup for current week</li>
+                        <li><strong>Restore Scorecard:</strong> Upload JSON backup to restore data</li>
+                        <li><strong>Capture Scorecard:</strong> Screenshot the scorecard table</li>
+                        <li><strong>Clear Week:</strong> Delete all player data for selected week</li>
+                    </ul>
+                    
+                    <h4>Scorecard Table:</h4>
+                    <p><strong>Columns:</strong> Player, Handicap, Holes 1-18, Front 9, Back 9, Gross, Stableford, Countback</p>
+                    <ul>
+                        <li><strong>Editing Scores:</strong> Click any score cell to enter/edit (press Enter to save)</li>
+                        <li><strong>Stableford Calculation:</strong> Automatic based on par, index, and handicap strokes
+                            <ul>
+                                <li>4 points = Eagle or better (2+ under adjusted par)</li>
+                                <li>3 points = Birdie (1 under adjusted par)</li>
+                                <li>2 points = Par (on adjusted par)</li>
+                                <li>1 point = Bogey (1 over adjusted par)</li>
+                                <li>0 points = Double bogey or worse</li>
+                            </ul>
+                        </li>
+                        <li><strong>Front 9 / Back 9:</strong> Auto-sum of holes 1-9 and 10-18</li>
+                        <li><strong>Gross Total:</strong> Sum of all 18 hole scores</li>
+                        <li><strong>Stableford Total:</strong> Sum of all Stableford points</li>
+                        <li><strong>Countback:</strong> Last 9 holes Stableford for tie-breaking</li>
+                        <li><strong>Delete Button (×):</strong> Remove player from scorecard</li>
+                    </ul>
+                    
+                    <h4>PAR and INDEX Rows:</h4>
+                    <ul>
+                        <li>Click PAR or INDEX cells to edit course setup</li>
+                        <li>Changes apply to all players immediately</li>
+                        <li>Saved separately for each week</li>
+                    </ul>
                     
                     <div class="warning-box">
-                        <strong>⚠️ Important:</strong> Each week's scorecard is stored separately. Make sure you've selected the correct week before entering scores!
+                        <strong>⚠️ Important:</strong> Each week's data is independent. Always verify you've selected the correct week before entering scores. CSV Import will clear existing players for that week.
                     </div>
                 </div>
                 
                 <div class="guide-section">
                     <h3><i class="fas fa-calculator"></i> 4. WINNERS TAB</h3>
                     <h4>Purpose:</h4>
-                    <p>Manage winners, prizes, and view handicap calculations.</p>
+                    <p>Comprehensive prize management, handicap calculations, and batch processing for all 40 players.</p>
                     
                     <h4>H'CAP Calculator Section:</h4>
                     <ul>
-                        <li><strong>Select Week:</strong> Choose which week to view handicap calculations</li>
-                        <li><strong>Show All Players:</strong> Toggle to see all players or only those with scores</li>
-                        <li><strong>Refresh Data:</strong> Sync latest data from Handicap tab</li>
-                        <li><strong>Generate Report:</strong> Create a downloadable .txt report for the current week</li>
+                        <li><strong>Week Selector:</strong> Choose week to view calculations</li>
+                        <li><strong>Show All Players:</strong> Toggle to display all 40 players or only those with scorecard data</li>
+                        <li><strong>Refresh Data:</strong> Sync latest handicap data from Handicap tab</li>
+                        <li><strong>Generate Report:</strong> Download .txt report with current week's handicap changes</li>
                     </ul>
+                    <p>Table shows: Player name, Current index, Change amount, White/Yellow handicaps</p>
                     
                     <h4>Winners - Saturday Swindle Section:</h4>
-                    <ol>
-                        <li><strong>Select Week:</strong> Choose the week you want to manage winners for</li>
-                        <li><strong>Import Scorecard Players:</strong> Click to automatically import players from the Scorecard tab (sorted by Stableford score)</li>
-                        <li><strong>Auto-Prizes:</strong> The system automatically populates prize amounts based on player count and the prize matrix</li>
-                        <li><strong>Edit Prizes:</strong> You can manually edit any prize amount if needed</li>
-                        <li><strong>Clear Week:</strong> Remove all winners data for the selected week</li>
-                        <li><strong>Clear ALL Weeks:</strong> Delete all winners data (use with caution!)</li>
-                    </ol>
-                    
-                    <h4>Profit & Loss Section:</h4>
-                    <p>Click "Profit & Loss" button to view comprehensive financial analysis:</p>
                     <ul>
-                        <li>Shows each player's total weeks played</li>
-                        <li>Calculates total loss (£5 per week played)</li>
-                        <li>Shows total prizes won</li>
-                        <li>Displays net profit/loss (green = profit, red = loss)</li>
-                        <li>Download as CSV for external analysis</li>
+                        <li><strong>Week Selector:</strong> Choose week to manage (WK1-WK52)</li>
+                        <li><strong>Import Scorecard Players:</strong> Auto-import from Scorecard tab (sorted by Stableford highest first)</li>
+                        <li><strong>Clear Week:</strong> Delete winners for selected week only</li>
+                        <li><strong>Clear ALL Weeks:</strong> Delete all winners data across all weeks</li>
+                    </ul>
+                    <p><strong>Winners Table:</strong> Position, Player Name, Prize (editable)</p>
+                    <ul>
+                        <li>Prizes auto-populate based on SWINDLE prize matrix</li>
+                        <li>Click prize amounts to edit manually</li>
+                        <li>Sorted by Stableford score when imported</li>
                     </ul>
                     
-                    <h4>Golf Handicap Cut & Increase Calculator:</h4>
-                    <p>Individual calculator for determining handicap adjustments based on:</p>
+                    <h4>Profit & Loss Section:</h4>
+                    <p>Comprehensive financial tracking across entire season:</p>
                     <ul>
-                        <li>Player's current index and category</li>
-                        <li>Prize money won</li>
-                        <li>Stableford points scored</li>
-                        <li>Finishing position in swindle</li>
-                        <li>Tee color (White/Yellow)</li>
+                        <li><strong>Weeks Played:</strong> Total weeks each player participated</li>
+                        <li><strong>Total Loss:</strong> £5 × weeks played</li>
+                        <li><strong>Total Won:</strong> Sum of all prizes won across all weeks</li>
+                        <li><strong>Profit/Loss:</strong> Net result (green = profit, red = loss)</li>
+                        <li><strong>Download CSV:</strong> Export for Excel analysis</li>
+                    </ul>
+                    
+                    <h4>Golf Handicap Cut & Increase Calculator (Individual):</h4>
+                    <p>Single-player calculator with inputs:</p>
+                    <ul>
+                        <li><strong>Player Dropdown:</strong> Select from 40 default players</li>
+                        <li><strong>Players Index:</strong> Current handicap index</li>
+                        <li><strong>Index Category:</strong> Auto-calculated (0-5 based on index)</li>
+                        <li><strong>Prize Money Won:</strong> Amount won in swindle</li>
+                        <li><strong>Stableford Points:</strong> Total points scored</li>
+                        <li><strong>Finishing Position:</strong> 1st, 2nd, 3rd, or 4th+</li>
+                        <li><strong>Tee Selection:</strong> White or Yellow (affects course handicap)</li>
+                    </ul>
+                    <p><strong>Calculate Button:</strong> Computes Stage 1 (cut), Stage 2 (increase), Stage 3 (exceptional), Total Adjustment, New Index, and Course Handicaps</p>
+                    
+                    <h4>HCAP Batch Calculator Section:</h4>
+                    <p>Process all 40 players simultaneously with full data tracking:</p>
+                    <p><strong>Top Controls:</strong></p>
+                    <ul>
+                        <li><strong>Import STBLFD Score:</strong> Import Stableford scores from any week's scorecard</li>
+                        <li><strong>Calculate Batch:</strong> Recalculate all 40 rows at once</li>
+                        <li><strong>CSV Dropdown:</strong>
+                            <ul>
+                                <li><strong>Export CSV:</strong> Download complete batch data (no header/footer text, direct to columns)</li>
+                                <li><strong>Import CSV:</strong> Upload CSV to populate batch calculator fields by matching player names</li>
+                            </ul>
+                        </li>
+                        <li><strong>Generate Report:</strong> Create Excel CSV or TXT format report</li>
+                    </ul>
+                    <p><strong>Batch Calculator Table - 14 Columns:</strong></p>
+                    <ol>
+                        <li><strong>No:</strong> Player number (1-40)</li>
+                        <li><strong>Player Name:</strong> Pre-populated with 40 default players</li>
+                        <li><strong>Players Index:</strong> Editable input field</li>
+                        <li><strong>Index Category:</strong> Auto-calculated (0-5)</li>
+                        <li><strong>Prize Money Won:</strong> Editable input (triggers recalc)</li>
+                        <li><strong>Stableford Points Scored:</strong> Editable input or imported</li>
+                        <li><strong>Swindle Finishing Position:</strong> Editable input (1-4)</li>
+                        <li><strong>Tee (White):</strong> Checkbox selection</li>
+                        <li><strong>Tee (Yellow):</strong> Checkbox selection</li>
+                        <li><strong>Players Previous Index:</strong> Auto-calculated</li>
+                        <li><strong>Total Adjustment:</strong> Auto-calculated (Stage 1+2+3)</li>
+                        <li><strong>Players New Index:</strong> Auto-calculated (capped at 54.0)</li>
+                        <li><strong>Course Handicap (White):</strong> Auto-calculated</li>
+                        <li><strong>Course Handicap (Yellow):</strong> Auto-calculated</li>
+                    </ol>
+                    <p><strong>Special Features:</strong></p>
+                    <ul>
+                        <li><strong>Sortable Columns:</strong> Click any column header (except tee checkboxes) to sort ascending/descending</li>
+                        <li><strong>Enter Key Navigation:</strong> Press Enter in input fields to move cursor down to next row (same column)</li>
+                        <li><strong>Auto-Save:</strong> All changes saved to localStorage immediately</li>
+                        <li><strong>Persistent Data:</strong> Batch calculator data persists across sessions</li>
                     </ul>
                     
                     <div class="tip-box">
-                        <strong>💡 Tip:</strong> The system automatically divides Stage 1 cuts by finishing position (1st gets full cut, 2nd gets half, etc.).
+                        <strong>💡 Workflow Tip:</strong> Import Stableford scores from Scorecard → Fill in prize money → Calculate Batch → Export CSV → Import CSV to Handicap tab for draw creation.
                     </div>
                 </div>
                 
