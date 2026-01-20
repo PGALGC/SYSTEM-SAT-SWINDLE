@@ -5208,49 +5208,97 @@
                     const text = e.target.result;
                     const lines = text.split('\n');
                     
-                    lines.forEach(line => {
+                    lines.forEach((line, lineIndex) => {
                         line = line.trim();
-                        if (!line || line.includes('PGA') || line.includes('Name') || line.includes('Tees')) return;
+                        if (!line) return;
                         
-                        // Match name followed by numbers (space-separated)
-                        const parts = line.split(/\s{2,}/);
-                        if (parts.length < 2) return;
+                        // Skip header line (contains "Player Name" or "No,Player")
+                        if (line.includes('Player Name') || line.includes('No,Player')) return;
                         
-                        let name = parts[0].trim();
-                        if (!name || !/^[A-Z]/.test(name)) return;
-                        
-                        if (document.getElementById('removeQuotes').checked) {
-                            name = name.replace(/"([^"]*)"/g, '$1');
+                        // Check if this is CSV format (from HCAP Batch Calculator)
+                        if (line.includes(',')) {
+                            // Parse CSV line
+                            const columns = line.split(',');
+                            if (columns.length < 12) return;
+                            
+                            // Extract columns:
+                            // 0: No, 1: Player Name, 2: Players Index, 3: Index Category, 4: Prize Money Won,
+                            // 5: Stableford Points Scored, 6: Swindle Finishing Position, 7: Players Previous Index,
+                            // 8: Total Adjustment, 9: Players New Index, 10: Course Handicap (White), 11: Course Handicap (Yellow)
+                            let name = columns[1].replace(/"/g, '').trim();
+                            if (!name) return;
+                            
+                            const playersNewIndex = columns[9].trim();
+                            const totalAdjustment = columns[8].trim();
+                            const playersPreviousIndex = columns[7].trim();
+                            const whiteHandicap = columns[10].trim();
+                            const yellowHandicap = columns[11].trim();
+                            
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td class="swindle-editable not-paid" onclick="editPayment(this)" data-name="${name}">£0</td>
+                                <td>${name}</td>
+                                <td>${playersNewIndex}</td>
+                                <td>${totalAdjustment}</td>
+                                <td>${playersPreviousIndex}</td>
+                                <td>${whiteHandicap}</td>
+                                <td>${yellowHandicap}</td>
+                            `;
+                            tableBody.appendChild(tr);
+                            
+                            handicapPlayerData.push({
+                                name: name,
+                                newIndex: playersNewIndex,
+                                totalAdjustment: totalAdjustment,
+                                previousIndex: playersPreviousIndex,
+                                whiteTees: whiteHandicap,
+                                yellowTees: yellowHandicap,
+                                paid: '£0'
+                            });
+                        } else {
+                            // Original text format parsing (for backwards compatibility)
+                            if (line.includes('PGA') || line.includes('Name') || line.includes('Tees')) return;
+                            
+                            // Match name followed by numbers (space-separated)
+                            const parts = line.split(/\s{2,}/);
+                            if (parts.length < 2) return;
+                            
+                            let name = parts[0].trim();
+                            if (!name || !/^[A-Z]/.test(name)) return;
+                            
+                            if (document.getElementById('removeQuotes').checked) {
+                                name = name.replace(/"([^"]*)"/g, '$1');
+                            }
+                            if (document.getElementById('removeDefaultNames').checked && /Golfer\s+\d+/i.test(name)) {
+                                return;
+                            }
+                            
+                            // Extract all numbers from the rest of the line
+                            const numbers = line.substring(name.length).match(/-?\d+\.?\d*/g);
+                            if (!numbers || numbers.length < 5) return;
+                            
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td class="swindle-editable not-paid" onclick="editPayment(this)" data-name="${name}">£0</td>
+                                <td>${name}</td>
+                                <td>${numbers[0]}</td>
+                                <td>${numbers[1]}</td>
+                                <td>${numbers[2]}</td>
+                                <td>${numbers[3]}</td>
+                                <td>${numbers[4]}</td>
+                            `;
+                            tableBody.appendChild(tr);
+                            
+                            handicapPlayerData.push({
+                                name: name,
+                                newIndex: numbers[0],
+                                totalAdjustment: numbers[1],
+                                previousIndex: numbers[2],
+                                whiteTees: numbers[3],
+                                yellowTees: numbers[4],
+                                paid: '£0'
+                            });
                         }
-                        if (document.getElementById('removeDefaultNames').checked && /Golfer\s+\d+/i.test(name)) {
-                            return;
-                        }
-                        
-                        // Extract all numbers from the rest of the line
-                        const numbers = line.substring(name.length).match(/-?\d+\.?\d*/g);
-                        if (!numbers || numbers.length < 5) return;
-                        
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td class="swindle-editable not-paid" onclick="editPayment(this)" data-name="${name}">£0</td>
-                            <td>${name}</td>
-                            <td>${numbers[0]}</td>
-                            <td>${numbers[1]}</td>
-                            <td>${numbers[2]}</td>
-                            <td>${numbers[3]}</td>
-                            <td>${numbers[4]}</td>
-                        `;
-                        tableBody.appendChild(tr);
-                        
-                        handicapPlayerData.push({
-                            name: name,
-                            newIndex: numbers[0],
-                            totalAdjustment: numbers[1],
-                            previousIndex: numbers[2],
-                            whiteTees: numbers[3],
-                            yellowTees: numbers[4],
-                            paid: '£0'
-                        });
                     });
                     
                     updatePaymentStats();
