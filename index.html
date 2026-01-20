@@ -7001,6 +7001,27 @@
                 
                 el.addEventListener('change', updateHandler);
                 el.addEventListener('input', updateHandler);
+                
+                // Add Enter key navigation for input fields
+                if (el.type === 'number') {
+                    el.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            const currentRow = parseInt(el.getAttribute('data-row'));
+                            const currentField = el.getAttribute('data-field');
+                            const nextRow = currentRow + 1;
+                            
+                            // If not the last row, move to same field in next row
+                            if (nextRow < leaguePlayers.length) {
+                                const nextInput = document.querySelector(`#batch-calculator-body [data-row="${nextRow}"][data-field="${currentField}"]`);
+                                if (nextInput) {
+                                    nextInput.focus();
+                                    nextInput.select();
+                                }
+                            }
+                        }
+                    });
+                }
             });
         }
         
