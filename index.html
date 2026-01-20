@@ -2154,6 +2154,43 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- HCAP BATCH CALCULATOR -->
+                <div style="background-color: white; padding: 12px; border-radius: 3px; margin-top: 12px;">
+                    <h3 style="color: #2c5530; font-size: 11px; margin-bottom: 8px; border-bottom: 1px solid #2c5530; padding-bottom: 4px; display:flex; align-items:center; justify-content:space-between;">
+                        HCAP Batch Calculator
+                        <div style="display:flex; gap:6px;">
+                            <button class="secondary" style="margin-left:8px;" onclick="showImportStblfdScoreDialog()"><i class="fas fa-file-import"></i> Import STBLFD Score</button>
+                            <button class="warning" style="margin-left:4px;" onclick="recalcAllBatchRows()"><i class="fas fa-sync-alt"></i> Calculate Batch</button>
+                        </div>
+                    </h3>
+                    
+                    <div class="calculator-table-container">
+                        <table id="batch-calculator-table" style="width: 100%; min-width: 100%; border-collapse: collapse; font-size: 9px; table-layout: auto; background-color: white;">
+                            <thead style="background-color: #1a6b4f; color: white; position: sticky; top: 0; z-index: 100;">
+                                <tr>
+                                    <th style="padding: 6px 4px; text-align: center; font-weight: 700; font-size: 8px; border-right: 1px solid rgba(255, 255, 255, 0.1); white-space: normal; word-wrap: break-word; vertical-align: middle; cursor: pointer;" onclick="sortBatchTable(0)">No <span id="batch-sort-0"></span></th>
+                                    <th style="padding: 6px 4px; text-align: left; font-weight: 700; font-size: 8px; border-right: 1px solid rgba(255, 255, 255, 0.1); white-space: normal; word-wrap: break-word; vertical-align: middle; padding-left: 8px; cursor: pointer;" onclick="sortBatchTable(1)">Player Name <span id="batch-sort-1"></span></th>
+                                    <th style="padding: 6px 4px; text-align: center; font-weight: 700; font-size: 8px; border-right: 1px solid rgba(255, 255, 255, 0.1); white-space: normal; word-wrap: break-word; vertical-align: middle; cursor: pointer;" onclick="sortBatchTable(2)">Players Index <span id="batch-sort-2"></span></th>
+                                    <th style="padding: 6px 4px; text-align: center; font-weight: 700; font-size: 8px; border-right: 1px solid rgba(255, 255, 255, 0.1); white-space: normal; word-wrap: break-word; vertical-align: middle; cursor: pointer;" onclick="sortBatchTable(3)">Index Category <span id="batch-sort-3"></span></th>
+                                    <th style="padding: 6px 4px; text-align: center; font-weight: 700; font-size: 8px; border-right: 1px solid rgba(255, 255, 255, 0.1); white-space: normal; word-wrap: break-word; vertical-align: middle; cursor: pointer;" onclick="sortBatchTable(4)">Prize Money Won <span id="batch-sort-4"></span></th>
+                                    <th style="padding: 6px 4px; text-align: center; font-weight: 700; font-size: 8px; border-right: 1px solid rgba(255, 255, 255, 0.1); white-space: normal; word-wrap: break-word; vertical-align: middle; cursor: pointer;" onclick="sortBatchTable(5)">Stableford Points Scored <span id="batch-sort-5"></span></th>
+                                    <th style="padding: 6px 4px; text-align: center; font-weight: 700; font-size: 8px; border-right: 1px solid rgba(255, 255, 255, 0.1); white-space: normal; word-wrap: break-word; vertical-align: middle; cursor: pointer;" onclick="sortBatchTable(6)">Swindle Finishing Position <span id="batch-sort-6"></span></th>
+                                    <th style="padding: 6px 4px; text-align: center; font-weight: 700; font-size: 8px; border-right: 1px solid rgba(255, 255, 255, 0.1); white-space: normal; word-wrap: break-word; vertical-align: middle;">LGC Heritage Tees Colour (White)</th>
+                                    <th style="padding: 6px 4px; text-align: center; font-weight: 700; font-size: 8px; border-right: 1px solid rgba(255, 255, 255, 0.1); white-space: normal; word-wrap: break-word; vertical-align: middle;">LGC Heritage Tees Colour (Yellow)</th>
+                                    <th style="padding: 6px 4px; text-align: center; font-weight: 700; font-size: 8px; border-right: 1px solid rgba(255, 255, 255, 0.1); white-space: normal; word-wrap: break-word; vertical-align: middle; cursor: pointer;" onclick="sortBatchTable(9)">Players Previous Index <span id="batch-sort-9"></span></th>
+                                    <th style="padding: 6px 4px; text-align: center; font-weight: 700; font-size: 8px; border-right: 1px solid rgba(255, 255, 255, 0.1); white-space: normal; word-wrap: break-word; vertical-align: middle; cursor: pointer;" onclick="sortBatchTable(10)">Total Adjustment <span id="batch-sort-10"></span></th>
+                                    <th style="padding: 6px 4px; text-align: center; font-weight: 700; font-size: 8px; border-right: 1px solid rgba(255, 255, 255, 0.1); white-space: normal; word-wrap: break-word; vertical-align: middle; cursor: pointer;" onclick="sortBatchTable(11)">Players New Index <span id="batch-sort-11"></span></th>
+                                    <th style="padding: 6px 4px; text-align: center; font-weight: 700; font-size: 8px; border-right: 1px solid rgba(255, 255, 255, 0.1); white-space: normal; word-wrap: break-word; vertical-align: middle; cursor: pointer;" onclick="sortBatchTable(12)">Course Handicap (White) <span id="batch-sort-12"></span></th>
+                                    <th style="padding: 6px 4px; text-align: center; font-weight: 700; font-size: 8px; white-space: normal; word-wrap: break-word; vertical-align: middle; cursor: pointer;" onclick="sortBatchTable(13)">Course Handicap (Yellow) <span id="batch-sort-13"></span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="batch-calculator-body">
+                                <!-- Generated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -2425,6 +2462,12 @@
                     initializeGolfCalculator();
                     window.golfCalcInitialized = true;
                 }
+                // Load and render HCAP Batch Calculator table
+                if (!window.batchCalcInitialized) {
+                    loadBatchCalculatorData();
+                    window.batchCalcInitialized = true;
+                }
+                renderBatchCalculatorTable();
             }
         }
         
@@ -6841,6 +6884,428 @@
             URL.revokeObjectURL(url);
             
             alert(`Excel CSV report downloaded with ${golfReportData.length} player(s)!`);
+        }
+        
+        // ============================================
+        // HCAP BATCH CALCULATOR TABLE (Winners tab -> Final Results)
+        // ============================================
+        
+        let batchCalculatorData = [];
+        
+        function loadBatchCalculatorData() {
+            const saved = localStorage.getItem('batchCalculatorData');
+            if (saved) {
+                try {
+                    batchCalculatorData = JSON.parse(saved);
+                    console.log('Loaded batch calculator data:', batchCalculatorData.length, 'rows');
+                } catch (e) {
+                    console.error('Error loading batch calculator data:', e);
+                    batchCalculatorData = [];
+                }
+            } else {
+                console.log('No saved batch calculator data found');
+                batchCalculatorData = [];
+            }
+        }
+        
+        function saveBatchCalculatorData() {
+            try {
+                localStorage.setItem('batchCalculatorData', JSON.stringify(batchCalculatorData));
+                console.log('Saved batch calculator data:', batchCalculatorData.length, 'rows');
+            } catch (e) {
+                console.error('Error saving batch calculator data:', e);
+            }
+        }
+        
+        function renderBatchCalculatorTable() {
+            const tbody = document.getElementById('batch-calculator-body');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            // Ensure data array has 40 entries
+            while (batchCalculatorData.length < leaguePlayers.length) {
+                batchCalculatorData.push({
+                    index: '',
+                    prize: 0,
+                    stableford: '',
+                    position: '',
+                    teeWhite: true,
+                    teeYellow: true
+                });
+            }
+            
+            // Build 40 default rows from leaguePlayers
+            leaguePlayers.forEach((player, idx) => {
+                const rowData = batchCalculatorData[idx] || {};
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align:center;">${idx + 1}</td>
+                    <td style="text-align:left; padding-left:8px; font-weight:600; color:#0a3d2e;">${player.name}</td>
+                    <td><input type="number" step="0.1" data-row="${idx}" data-field="index" class="batch-input" style="width:70px; text-align:center;" value="${rowData.index || ''}"></td>
+                    <td id="batch-cat-${idx}" style="font-weight:700;"></td>
+                    <td><input type="number" step="1" min="0" data-row="${idx}" data-field="prize" class="batch-input" style="width:70px; text-align:center;" value="${rowData.prize || 0}"></td>
+                    <td><input type="number" step="1" min="0" max="50" data-row="${idx}" data-field="stableford" class="batch-input" style="width:70px; text-align:center;" value="${rowData.stableford || ''}"></td>
+                    <td><input type="number" step="1" min="1" data-row="${idx}" data-field="position" class="batch-input" style="width:70px; text-align:center;" value="${rowData.position || ''}"></td>
+                    <td style="text-align:center;">
+                        <input type="checkbox" data-row="${idx}" data-field="teeWhite" class="batch-input" ${rowData.teeWhite !== false ? 'checked' : ''}>
+                    </td>
+                    <td style="text-align:center;">
+                        <input type="checkbox" data-row="${idx}" data-field="teeYellow" class="batch-input" ${rowData.teeYellow !== false ? 'checked' : ''}>
+                    </td>
+                    <td id="batch-prev-${idx}">-</td>
+                    <td id="batch-adj-${idx}">0.00</td>
+                    <td id="batch-new-${idx}">-</td>
+                    <td id="batch-ch-white-${idx}">-</td>
+                    <td id="batch-ch-yellow-${idx}">-</td>
+                `;
+                tbody.appendChild(tr);
+                
+                // Recalculate row if it has data
+                if (rowData.index) {
+                    setTimeout(() => recalcBatchRow(idx), 0);
+                }
+            });
+            
+            // Attach listeners after rendering
+            document.querySelectorAll('#batch-calculator-body .batch-input').forEach(el => {
+                // Use both 'change' and 'input' events to catch all updates
+                const updateHandler = () => {
+                    const row = parseInt(el.getAttribute('data-row'));
+                    const field = el.getAttribute('data-field');
+                    
+                    // Ensure row exists in data array
+                    if (!batchCalculatorData[row]) {
+                        batchCalculatorData[row] = {
+                            index: '',
+                            prize: 0,
+                            stableford: '',
+                            position: '',
+                            teeWhite: true,
+                            teeYellow: true
+                        };
+                    }
+                    
+                    // Save the value
+                    if (field === 'teeWhite' || field === 'teeYellow') {
+                        batchCalculatorData[row][field] = el.checked;
+                    } else {
+                        batchCalculatorData[row][field] = el.value;
+                    }
+                    
+                    console.log(`Saving row ${row}, field ${field}:`, el.type === 'checkbox' ? el.checked : el.value);
+                    saveBatchCalculatorData();
+                    recalcBatchRow(row);
+                };
+                
+                el.addEventListener('change', updateHandler);
+                el.addEventListener('input', updateHandler);
+            });
+        }
+        
+        function recalcBatchRow(idx) {
+            const indexEl = document.querySelector(`#batch-calculator-body [data-row="${idx}"][data-field="index"]`);
+            const prizeEl = document.querySelector(`#batch-calculator-body [data-row="${idx}"][data-field="prize"]`);
+            const pointsEl = document.querySelector(`#batch-calculator-body [data-row="${idx}"][data-field="stableford"]`);
+            const posEl = document.querySelector(`#batch-calculator-body [data-row="${idx}"][data-field="position"]`);
+            if (!indexEl || !prizeEl || !pointsEl || !posEl) return;
+            
+            const playerIndex = parseFloat(indexEl.value) || 0;
+            const prizeMoney = parseFloat(prizeEl.value) || 0;
+            const stablefordPoints = parseFloat(pointsEl.value) || 0;
+            const finishingPosition = parseInt(posEl.value) || null;
+            
+            // Previous index mirrors Players Index for batch calc
+            document.getElementById(`batch-prev-${idx}`).textContent = playerIndex.toFixed(1);
+            
+            // Category
+            const category = calculateGolfIndexCategory(playerIndex);
+            const catCell = document.getElementById(`batch-cat-${idx}`);
+            if (catCell) catCell.textContent = `Cat ${category}`;
+            
+            // Stage calculations (same rules as single calculator, no manual adjustment here)
+            let stage1 = 0;
+            if (prizeMoney > 0 && stablefordPoints > golfParams.winThreshold && finishingPosition) {
+                const baseCut = golfParams.cutBase + (category / golfParams.cutCatDivisor) + (playerIndex * golfParams.cutIndexPercent);
+                stage1 = - (baseCut / finishingPosition);
+            }
+            let stage2 = 0;
+            if (prizeMoney === 0 && stablefordPoints < golfParams.noWinThreshold && category > 0) {
+                stage2 = (playerIndex * golfParams.incIndexPercent) + golfParams.incAddValue + (category / golfParams.incCatDivisor);
+            }
+            let stage3 = 0;
+            if (stablefordPoints > golfParams.exceptionalThreshold) {
+                const pointsOver = stablefordPoints - golfParams.exceptionalThreshold;
+                stage3 = - ((category / golfParams.excCatDivisor) + (playerIndex * golfParams.excIndexPercent)) * pointsOver;
+            }
+            const totalAdjustment = stage1 + stage2 + stage3;
+            document.getElementById(`batch-adj-${idx}`).textContent = totalAdjustment.toFixed(2);
+            
+            // New index (cap at max)
+            let newIndex = playerIndex + totalAdjustment;
+            if (newIndex > golfParams.maxIndex) newIndex = golfParams.maxIndex;
+            newIndex = Math.round(newIndex * 10) / 10;
+            document.getElementById(`batch-new-${idx}`).textContent = newIndex.toFixed(1);
+            
+            // Course handicaps - always calculate both White and Yellow
+            const whiteHandicap = Math.round((newIndex * golfCourses.White.slope / 113) + (golfCourses.White.rating - golfCourses.White.par));
+            const yellowHandicap = Math.round((newIndex * golfCourses.Yellow.slope / 113) + (golfCourses.Yellow.rating - golfCourses.Yellow.par));
+            document.getElementById(`batch-ch-white-${idx}`).textContent = whiteHandicap.toString();
+            document.getElementById(`batch-ch-yellow-${idx}`).textContent = yellowHandicap.toString();
+        }
+        
+        function recalcAllBatchRows() {
+            const rowCount = leaguePlayers.length;
+            for (let i = 0; i < rowCount; i++) recalcBatchRow(i);
+        }
+        
+        // ============================================
+        // IMPORT STABLEFORD SCORES TO BATCH CALCULATOR
+        // ============================================
+        
+        function showImportStblfdScoreDialog() {
+            // Build list of available weeks
+            let weekOptions = '';
+            for (let i = 1; i <= 25; i++) {
+                weekOptions += `<option value="${i}">Week ${i}</option>`;
+            }
+            
+            // Create a temporary modal/dialog
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.6)';
+            overlay.style.zIndex = '9999';
+            overlay.style.display = 'flex';
+            overlay.style.alignItems = 'center';
+            overlay.style.justifyContent = 'center';
+            
+            const dialog = document.createElement('div');
+            dialog.style.backgroundColor = 'white';
+            dialog.style.padding = '20px';
+            dialog.style.borderRadius = '6px';
+            dialog.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+            dialog.style.minWidth = '300px';
+            dialog.style.color = '#333';
+            
+            dialog.innerHTML = `
+                <h3 style="color:#1a6b4f; margin-bottom:12px; font-size:14px;">Import Stableford Scores</h3>
+                <p style="font-size:11px; margin-bottom:12px;">Select which week to import scores from:</p>
+                <select id="import-week-selector" style="width:100%; padding:6px; font-size:11px; margin-bottom:16px;">
+                    ${weekOptions}
+                </select>
+                <div style="display:flex; gap:8px; justify-content:flex-end;">
+                    <button onclick="closeImportDialog()" style="padding:6px 12px; font-size:10px; background:#6c757d; color:white; border:none; border-radius:3px; cursor:pointer;">Cancel</button>
+                    <button onclick="importStblfdScoresFromWeek()" style="padding:6px 12px; font-size:10px; background:#4a90e2; color:white; border:none; border-radius:3px; cursor:pointer;">Import</button>
+                </div>
+            `;
+            
+            overlay.appendChild(dialog);
+            document.body.appendChild(overlay);
+            
+            // Store reference to close later
+            window.batchImportOverlay = overlay;
+            
+            // Close on overlay click
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeImportDialog();
+            });
+        }
+        
+        function closeImportDialog() {
+            if (window.batchImportOverlay) {
+                document.body.removeChild(window.batchImportOverlay);
+                window.batchImportOverlay = null;
+            }
+        }
+        
+        // ============================================
+        // BATCH CALCULATOR TABLE SORTING
+        // ============================================
+        
+        let batchSortColumn = -1;
+        let batchSortAscending = true;
+        
+        function sortBatchTable(columnIndex) {
+            const tbody = document.getElementById('batch-calculator-body');
+            if (!tbody) return;
+            
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            if (rows.length === 0) return;
+            
+            // Toggle sort direction if clicking same column
+            if (batchSortColumn === columnIndex) {
+                batchSortAscending = !batchSortAscending;
+            } else {
+                batchSortColumn = columnIndex;
+                batchSortAscending = true;
+            }
+            
+            // Clear all sort indicators
+            for (let i = 0; i <= 13; i++) {
+                const indicator = document.getElementById(`batch-sort-${i}`);
+                if (indicator) indicator.textContent = '';
+            }
+            
+            // Set current sort indicator
+            const currentIndicator = document.getElementById(`batch-sort-${columnIndex}`);
+            if (currentIndicator) {
+                currentIndicator.textContent = batchSortAscending ? ' ▲' : ' ▼';
+            }
+            
+            // Sort rows
+            rows.sort((a, b) => {
+                let aVal, bVal;
+                
+                switch(columnIndex) {
+                    case 0: // No
+                        aVal = parseInt(a.cells[0].textContent);
+                        bVal = parseInt(b.cells[0].textContent);
+                        break;
+                    case 1: // Player Name
+                        aVal = a.cells[1].textContent.trim();
+                        bVal = b.cells[1].textContent.trim();
+                        return batchSortAscending ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+                    case 2: // Players Index
+                        aVal = parseFloat(a.cells[2].querySelector('input').value) || 0;
+                        bVal = parseFloat(b.cells[2].querySelector('input').value) || 0;
+                        break;
+                    case 3: // Index Category
+                        aVal = a.cells[3].textContent.trim();
+                        bVal = b.cells[3].textContent.trim();
+                        return batchSortAscending ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+                    case 4: // Prize Money Won
+                        aVal = parseFloat(a.cells[4].querySelector('input').value) || 0;
+                        bVal = parseFloat(b.cells[4].querySelector('input').value) || 0;
+                        break;
+                    case 5: // Stableford Points Scored
+                        aVal = parseFloat(a.cells[5].querySelector('input').value) || 0;
+                        bVal = parseFloat(b.cells[5].querySelector('input').value) || 0;
+                        break;
+                    case 6: // Swindle Finishing Position
+                        aVal = parseFloat(a.cells[6].querySelector('input').value) || 999;
+                        bVal = parseFloat(b.cells[6].querySelector('input').value) || 999;
+                        break;
+                    case 9: // Players Previous Index
+                        aVal = parseFloat(a.cells[9].textContent) || 0;
+                        bVal = parseFloat(b.cells[9].textContent) || 0;
+                        break;
+                    case 10: // Total Adjustment
+                        aVal = parseFloat(a.cells[10].textContent) || 0;
+                        bVal = parseFloat(b.cells[10].textContent) || 0;
+                        break;
+                    case 11: // Players New Index
+                        aVal = parseFloat(a.cells[11].textContent) || 0;
+                        bVal = parseFloat(b.cells[11].textContent) || 0;
+                        break;
+                    case 12: // Course Handicap (White)
+                        aVal = parseFloat(a.cells[12].textContent) || 0;
+                        bVal = parseFloat(b.cells[12].textContent) || 0;
+                        break;
+                    case 13: // Course Handicap (Yellow)
+                        aVal = parseFloat(a.cells[13].textContent) || 0;
+                        bVal = parseFloat(b.cells[13].textContent) || 0;
+                        break;
+                    default:
+                        return 0;
+                }
+                
+                // Numeric comparison
+                if (batchSortAscending) {
+                    return aVal - bVal;
+                } else {
+                    return bVal - aVal;
+                }
+            });
+            
+            // Re-append rows in sorted order
+            rows.forEach(row => tbody.appendChild(row));
+        }
+        
+        function importStblfdScoresFromWeek() {
+            const weekSelector = document.getElementById('import-week-selector');
+            if (!weekSelector) return;
+            
+            const selectedWeek = parseInt(weekSelector.value);
+            const weekKey = `week${selectedWeek}`;
+            const weekScorecardData = allWeeksScorecardData[weekKey];
+            
+            if (!weekScorecardData || !weekScorecardData.players || weekScorecardData.players.length === 0) {
+                alert(`No scorecard data found for Week ${selectedWeek}.\n\nPlease add players to the Scorecard tab first.`);
+                return;
+            }
+            
+            // Build a map of player name -> stableford score
+            const stablefordMap = new Map();
+            
+            weekScorecardData.players.forEach(player => {
+                let stablefordTotal = 0;
+                
+                // Calculate stableford score
+                for (let hole = 0; hole < 18; hole++) {
+                    const score = parseInt(player.scores[hole]) || 0;
+                    if (score > 0) {
+                        const par = globalParValues[hole] || 4;
+                        const playerHandicap = (player.whiteTees !== undefined && player.whiteTees !== null && player.whiteTees !== '') 
+                            ? parseFloat(player.whiteTees) 
+                            : (parseFloat(player.handicap) || 0);
+                        const holeIndex = globalIndexValues[hole] || (hole + 1);
+                        
+                        const strokesReceived = calculateStrokesForHole(playerHandicap, holeIndex);
+                        const adjustedPar = par + strokesReceived;
+                        const diff = score - adjustedPar;
+                        
+                        let points = 0;
+                        if (diff <= -2) points = 4;
+                        else if (diff === -1) points = 3;
+                        else if (diff === 0) points = 2;
+                        else if (diff === 1) points = 1;
+                        
+                        stablefordTotal += points;
+                    }
+                }
+                
+                stablefordMap.set(player.name.toLowerCase().trim(), stablefordTotal);
+            });
+            
+            // Now populate batch calculator stableford fields for matching players
+            let importedCount = 0;
+            leaguePlayers.forEach((player, idx) => {
+                const playerNameKey = player.name.toLowerCase().trim();
+                if (stablefordMap.has(playerNameKey)) {
+                    const stablefordScore = stablefordMap.get(playerNameKey);
+                    const pointsEl = document.querySelector(`#batch-calculator-body [data-row="${idx}"][data-field="stableford"]`);
+                    if (pointsEl) {
+                        pointsEl.value = stablefordScore;
+                        
+                        // Save to data array
+                        if (!batchCalculatorData[idx]) {
+                            batchCalculatorData[idx] = {
+                                index: '',
+                                prize: 0,
+                                stableford: '',
+                                position: '',
+                                teeWhite: true,
+                                teeYellow: true
+                            };
+                        }
+                        batchCalculatorData[idx].stableford = stablefordScore;
+                        
+                        importedCount++;
+                        // Trigger recalc for this row
+                        recalcBatchRow(idx);
+                    }
+                }
+            });
+            
+            // Save all data to localStorage
+            saveBatchCalculatorData();
+            
+            closeImportDialog();
+            alert(`Imported ${importedCount} Stableford scores from Week ${selectedWeek}.`);
         }
         
         // ============================================
