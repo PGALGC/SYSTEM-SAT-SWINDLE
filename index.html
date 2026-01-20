@@ -1881,11 +1881,12 @@
                         <thead>
                             <tr>
                                 <th>Paid</th>
-                                <th>Name</th>
-                                <th>PGA_Index</th>
-                                <th>Change_since_last_round</th>
-                                <th>PGA_PH_cap_White_Tees</th>
-                                <th>PGA_PH_cap_Yellow_Tees</th>
+                                <th>Players Name</th>
+                                <th>Players New Index</th>
+                                <th>Total Adjustment</th>
+                                <th>Players Previous Index</th>
+                                <th>Course Handicap (White)</th>
+                                <th>Course Handicap (Yellow)</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -5227,7 +5228,7 @@
                         
                         // Extract all numbers from the rest of the line
                         const numbers = line.substring(name.length).match(/-?\d+\.?\d*/g);
-                        if (!numbers || numbers.length < 4) return;
+                        if (!numbers || numbers.length < 5) return;
                         
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
@@ -5237,15 +5238,17 @@
                             <td>${numbers[1]}</td>
                             <td>${numbers[2]}</td>
                             <td>${numbers[3]}</td>
+                            <td>${numbers[4]}</td>
                         `;
                         tableBody.appendChild(tr);
                         
                         handicapPlayerData.push({
                             name: name,
-                            pgaIndex: numbers[0],
-                            changeSinceLastRound: numbers[1],
-                            whiteTees: numbers[2],
-                            yellowTees: numbers[3],
+                            newIndex: numbers[0],
+                            totalAdjustment: numbers[1],
+                            previousIndex: numbers[2],
+                            whiteTees: numbers[3],
+                            yellowTees: numbers[4],
                             paid: '£0'
                         });
                     });
