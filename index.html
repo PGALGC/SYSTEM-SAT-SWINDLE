@@ -6139,8 +6139,9 @@
                     tr.innerHTML = `
                         <td class="swindle-editable ${paidClass}" onclick="editPayment(this)" data-name="${p.name}">${p.paid}</td>
                         <td>${p.name}</td>
-                        <td>${p.pgaIndex}</td>
-                        <td>${p.changeSinceLastRound || 0}</td>
+                        <td>${p.newIndex || p.pgaIndex || ''}</td>
+                        <td>${p.totalAdjustment || p.changeSinceLastRound || 0}</td>
+                        <td>${p.previousIndex || ''}</td>
                         <td>${p.whiteTees}</td>
                         <td>${p.yellowTees}</td>
                     `;
