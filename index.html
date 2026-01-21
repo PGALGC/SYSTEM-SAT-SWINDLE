@@ -8605,6 +8605,69 @@
                     </ul>
                     <p><strong>Calculate Button:</strong> Computes Stage 1 (cut), Stage 2 (increase), Stage 3 (exceptional), Total Adjustment, New Index, and Course Handicaps</p>
                     
+                    <h4>📐 HANDICAP CALCULATION FORMULAS (Detailed):</h4>
+                    <div class="warning-box">
+                        <strong>Understanding the Math:</strong> These formulas determine how your handicap changes after each round.
+                    </div>
+                    
+                    <p><strong>INDEX CATEGORIES:</strong></p>
+                    <ul style="margin-bottom: 15px;">
+                        <li><strong>Cat 1:</strong> Index ≤ -0.1 (plus handicaps)</li>
+                        <li><strong>Cat 2:</strong> Index 0.0 to 4.9</li>
+                        <li><strong>Cat 3:</strong> Index 5.0 to 9.9</li>
+                        <li><strong>Cat 4:</strong> Index 10.0 and above</li>
+                    </ul>
+                    
+                    <p><strong>STAGE 1 - HANDICAP CUT (When you win money AND score > 29):</strong></p>
+                    <p><code>Base Cut = 0.8 + (Category ÷ 40) + (Index × 0.02)</code></p>
+                    <p><code>Stage 1 = -(Base Cut ÷ Finishing Position)</code></p>
+                    <ul>
+                        <li>1st place: Gets full cut</li>
+                        <li>2nd place: Gets half the cut</li>
+                        <li>3rd place: Gets one-third the cut</li>
+                        <li>4th place: Gets one-quarter the cut</li>
+                    </ul>
+                    <p><em>Example: Index 8.2, Cat 3, 1st place → Base Cut = 0.8 + (3÷40) + (8.2×0.02) = 1.039 → Stage 1 = -1.039</em></p>
+                    
+                    <p><strong>STAGE 2 - HANDICAP INCREASE (When you don't win AND score < 31):</strong></p>
+                    <p><code>Stage 2 = (Index × 0.02) + 0.2 + (Category ÷ 30)</code></p>
+                    <ul>
+                        <li>Only applies if Category > 0 (Cat 1 excluded)</li>
+                        <li>Only applies if player has played (stableford > 0)</li>
+                        <li>Higher handicaps get bigger increases</li>
+                    </ul>
+                    <p><em>Example: Index 13.8, Cat 4, scored 29 → Stage 2 = (13.8×0.02) + 0.2 + (4÷30) = 0.61</em></p>
+                    
+                    <p><strong>STAGE 3 - EXCEPTIONAL CUT (When you score > 36):</strong></p>
+                    <p><code>Stage 3 = -[((Category ÷ 10) + (Index × 0.0225)) × Points Over 36]</code></p>
+                    <ul>
+                        <li>Extra cut for exceptional performance</li>
+                        <li>Multiplied by points scored over 36</li>
+                    </ul>
+                    <p><em>Example: Index 9.5, Cat 3, scored 42 → Points Over = 6 → Stage 3 = -[((3÷10) + (9.5×0.0225)) × 6] = -2.58</em></p>
+                    
+                    <p><strong>TOTAL ADJUSTMENT:</strong></p>
+                    <p><code>Total = Stage 1 + Stage 2 + Stage 3</code></p>
+                    <p><code>New Index = Current Index + Total Adjustment (capped at 54.0)</code></p>
+                    
+                    <p><strong>COURSE HANDICAP CALCULATION:</strong></p>
+                    <p><code>Course Handicap = Round[(New Index × Slope ÷ 113) + (Course Rating - Par)]</code></p>
+                    <ul>
+                        <li><strong>White Tees:</strong> Slope 128, Rating 71.5, Par 71</li>
+                        <li><strong>Yellow Tees:</strong> Slope 123, Rating 70.1, Par 71</li>
+                    </ul>
+                    <p><em>Example: New Index 14.4, White Tees → (14.4 × 128 ÷ 113) + (71.5 - 71) = 16.82 → Rounds to 17</em></p>
+                    
+                    <div class="tip-box">
+                        <strong>💡 Quick Summary:</strong>
+                        <ul>
+                            <li><strong>Win + Score > 29:</strong> Handicap goes DOWN (cut)</li>
+                            <li><strong>No Win + Score < 31:</strong> Handicap goes UP (increase)</li>
+                            <li><strong>Score > 36:</strong> Extra cut applied</li>
+                            <li><strong>Didn't Play:</strong> No change (0.00 adjustment)</li>
+                        </ul>
+                    </div>
+                    
                     <h4>HCAP Batch Calculator Section:</h4>
                     <p>Process all 40 players simultaneously with full data tracking:</p>
                     <p><strong>Top Controls:</strong></p>
