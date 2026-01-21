@@ -3332,6 +3332,15 @@
             const handicapStr = prompt("Enter player handicap (default: 0):", "0");
             const handicap = parseFloat(handicapStr) || 0;
             
+            const indexStr = prompt("Enter player index (default: 0):", "0");
+            const pgaIndex = parseFloat(indexStr) || 0;
+            
+            const whiteTeesStr = prompt("Enter White Tees handicap (default: 0):", "0");
+            const whiteTees = parseFloat(whiteTeesStr) || 0;
+            
+            const yellowTeesStr = prompt("Enter Yellow Tees handicap (default: 0):", "0");
+            const yellowTees = parseFloat(yellowTeesStr) || 0;
+            
             if (scorecardData.players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
                 alert('Player already exists in scorecard');
                 return;
@@ -3341,9 +3350,9 @@
                 id: nextScorecardPlayerId++,
                 name: name.trim(),
                 handicap: handicap,
-                pgaIndex: 'N/A',
-                whiteTees: 'N/A',
-                yellowTees: 'N/A',
+                pgaIndex: pgaIndex,
+                whiteTees: whiteTees,
+                yellowTees: yellowTees,
                 scores: Array(18).fill('')
             };
             
