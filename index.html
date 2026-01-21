@@ -3489,9 +3489,9 @@
                     id: nextScorecardPlayerId++,
                     name: drawPlayer.name,
                     handicap: handicap,
-                    pgaIndex: drawPlayer.pgaIndex || 'N/A',
-                    whiteTees: drawPlayer.whiteTees || 'N/A',
-                    yellowTees: drawPlayer.yellowTees || 'N/A',
+                    pgaIndex: (drawPlayer.pgaIndex !== undefined && drawPlayer.pgaIndex !== null && drawPlayer.pgaIndex !== '') ? drawPlayer.pgaIndex : 'N/A',
+                    whiteTees: (drawPlayer.whiteTees !== undefined && drawPlayer.whiteTees !== null && drawPlayer.whiteTees !== '') ? drawPlayer.whiteTees : 'N/A',
+                    yellowTees: (drawPlayer.yellowTees !== undefined && drawPlayer.yellowTees !== null && drawPlayer.yellowTees !== '') ? drawPlayer.yellowTees : 'N/A',
                     scores: Array(18).fill('')
                 };
                 
