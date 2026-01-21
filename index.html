@@ -6125,23 +6125,40 @@
             
             if (paidValue !== '£0') {
                 if (!groups.length) {
-                    groups.push({ players: [], teeBox: 1 });
-                }
-                
-                // Add to specific group or auto-assign
-                if (groupSelection === 'auto') {
-                    // Add to smallest group
-                    const smallest = groups.reduce((a, b) => a.players.length < b.players.length ? a : b);
-                    smallest.players.push(player);
+                    groups.push({ players: [player], teeBox: 1 });
+                } else if (groupSelection === 'auto') {
+                    // Find smallest group by size
+                    let smallestIndex = 0;
+                    for (let i = 1; i < groups.length; i++) {
+                        if (groups[i].players.length < groups[smallestIndex].players.length) smallestIndex = i;
+                    }
+                    // If smallest group already has 4, start a new group
+                    if (groups[smallestIndex].players.length >= 4) {
+                        groups.push({ players: [player], teeBox: groups.length + 1 });
+                    } else {
+                        groups[smallestIndex].players.push(player);
+                    }
                 } else {
                     // Add to selected group (groupSelection is "0", "1", "2", etc.)
                     const groupIdx = parseInt(groupSelection);
                     if (groupIdx >= 0 && groupIdx < groups.length) {
-                        groups[groupIdx].players.push(player);
+                        if (groups[groupIdx].players.length >= 4) {
+                            // Selected group full -> create a new group
+                            groups.push({ players: [player], teeBox: groups.length + 1 });
+                        } else {
+                            groups[groupIdx].players.push(player);
+                        }
                     } else {
                         // Fallback to smallest if invalid
-                        const smallest = groups.reduce((a, b) => a.players.length < b.players.length ? a : b);
-                        smallest.players.push(player);
+                        let smallestIndex = 0;
+                        for (let i = 1; i < groups.length; i++) {
+                            if (groups[i].players.length < groups[smallestIndex].players.length) smallestIndex = i;
+                        }
+                        if (groups[smallestIndex].players.length >= 4) {
+                            groups.push({ players: [player], teeBox: groups.length + 1 });
+                        } else {
+                            groups[smallestIndex].players.push(player);
+                        }
                     }
                 }
                 
