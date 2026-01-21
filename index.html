@@ -7954,6 +7954,12 @@
             
             // Now populate batch calculator stableford fields for matching players
             let importedCount = 0;
+            const unmatchedScorecard = [];
+            const unmatchedBatch = [];
+            
+            // Track which scorecard players were matched
+            const matchedScorecardNames = new Set();
+            
             leaguePlayers.forEach((player, idx) => {
                 const playerNameKey = player.name.toLowerCase().trim();
                 if (stablefordMap.has(playerNameKey)) {
@@ -7976,9 +7982,18 @@
                         batchCalculatorData[idx].stableford = stablefordScore;
                         
                         importedCount++;
+                        matchedScorecardNames.add(playerNameKey);
                         // Trigger recalc for this row
                         recalcBatchRow(idx);
                     }
+                }
+            });
+            
+            // Find unmatched scorecard players
+            weekScorecardData.players.forEach(player => {
+                const key = player.name.toLowerCase().trim();
+                if (!matchedScorecardNames.has(key)) {
+                    unmatchedScorecard.push(player.name);
                 }
             });
             
@@ -7986,7 +8001,13 @@
             saveBatchCalculatorData();
             
             closeImportDialog();
-            alert(`Imported ${importedCount} Stableford scores from Week ${selectedWeek}.`);
+            
+            let message = `Imported ${importedCount} Stableford scores from Week ${selectedWeek}.`;
+            if (unmatchedScorecard.length > 0) {
+                message += `\n\n⚠️ ${unmatchedScorecard.length} player(s) from Scorecard not found in Batch Calculator:\n${unmatchedScorecard.join('\n')}`;
+                message += `\n\nThese names must match exactly (ignoring case) with the 40 default player names in the Batch Calculator.`;
+            }
+            alert(message);
         }
         
         // ============================================
