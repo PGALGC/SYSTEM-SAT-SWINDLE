@@ -1919,7 +1919,7 @@
                 
                 <div class="compact-card mt-4">
                     <h3>Add Player</h3>
-                    <div class="compact-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="compact-grid" style="grid-template-columns: repeat(4, 1fr);">
                         <div class="form-group">
                             <label>Name</label>
                             <input type="text" id="newPlayerName" placeholder="Name">
@@ -1931,6 +1931,12 @@
                         <div class="form-group">
                             <label>Paid</label>
                             <input type="text" id="newPlayerPaid" placeholder="5">
+                        </div>
+                        <div class="form-group">
+                            <label>Group</label>
+                            <select id="newPlayerGroup" style="padding: 4px; font-size: 9px;">
+                                <option value="auto">Auto</option>
+                            </select>
                         </div>
                     </div>
                     <button onclick="addManualPlayer()" class="mt-2" style="width: 100%;">
@@ -5710,6 +5716,18 @@
             const container = document.getElementById('groupsContainer');
             container.innerHTML = '';
             
+            // Update group selector dropdown
+            const groupSelector = document.getElementById('newPlayerGroup');
+            if (groupSelector) {
+                groupSelector.innerHTML = '<option value="auto">Auto</option>';
+                groups.forEach((group, idx) => {
+                    const option = document.createElement('option');
+                    option.value = idx;
+                    option.textContent = `Group ${idx + 1} (${group.players.length} players)`;
+                    groupSelector.appendChild(option);
+                });
+            }
+            
             if (!groups.length) {
                 container.innerHTML = '<div class="text-small">No draw created</div>';
                 return;
@@ -5822,6 +5840,7 @@
             const name = document.getElementById('newPlayerName').value.trim();
             const index = document.getElementById('newPlayerIndex').value.trim();
             const paid = document.getElementById('newPlayerPaid').value.trim();
+            const groupSelection = document.getElementById('newPlayerGroup').value;
             
             if (!name) {
                 alert('Enter name');
@@ -5831,8 +5850,10 @@
             const paidValue = paid ? '£' + paid.replace('£', '') : '£0';
             const player = {
                 name: name,
+                newIndex: index || 'N/A',
                 pgaIndex: index || 'N/A',
-                changeSinceLastRound: 0,
+                totalAdjustment: 0,
+                previousIndex: 'N/A',
                 whiteTees: 'N/A',
                 yellowTees: 'N/A',
                 paid: paidValue
@@ -5844,8 +5865,9 @@
             tr.innerHTML = `
                 <td class="swindle-editable ${paidClass}" onclick="editPayment(this)" data-name="${name}">${paidValue}</td>
                 <td>${player.name}</td>
-                <td>${player.pgaIndex}</td>
-                <td>${player.changeSinceLastRound}</td>
+                <td>${player.newIndex}</td>
+                <td>${player.totalAdjustment}</td>
+                <td>${player.previousIndex}</td>
                 <td>${player.whiteTees}</td>
                 <td>${player.yellowTees}</td>
             `;
@@ -5857,14 +5879,31 @@
                 if (!groups.length) {
                     groups.push({ players: [], teeBox: 1 });
                 }
-                const smallest = groups.reduce((a, b) => a.players.length < b.players.length ? a : b);
-                smallest.players.push(player);
+                
+                // Add to specific group or auto-assign
+                if (groupSelection === 'auto') {
+                    // Add to smallest group
+                    const smallest = groups.reduce((a, b) => a.players.length < b.players.length ? a : b);
+                    smallest.players.push(player);
+                } else {
+                    // Add to selected group (groupSelection is "0", "1", "2", etc.)
+                    const groupIdx = parseInt(groupSelection);
+                    if (groupIdx >= 0 && groupIdx < groups.length) {
+                        groups[groupIdx].players.push(player);
+                    } else {
+                        // Fallback to smallest if invalid
+                        const smallest = groups.reduce((a, b) => a.players.length < b.players.length ? a : b);
+                        smallest.players.push(player);
+                    }
+                }
+                
                 renderGroups();
             }
             
             document.getElementById('newPlayerName').value = '';
             document.getElementById('newPlayerIndex').value = '';
             document.getElementById('newPlayerPaid').value = '';
+            document.getElementById('newPlayerGroup').value = 'auto';
             
             updatePaymentStats();
             saveHandicapData();
