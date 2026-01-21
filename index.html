@@ -8022,8 +8022,17 @@
                 return;
             }
             
-            // Note: Only stableford scores will be updated/overwritten
-            // Prize money and positions are preserved
+            // Clear all stableford scores first, but preserve prize money and positions
+            leaguePlayers.forEach((player, idx) => {
+                const pointsEl = document.querySelector(`#batch-calculator-body [data-row="${idx}"][data-field="stableford"]`);
+                if (pointsEl) pointsEl.value = '';
+                
+                if (batchCalculatorData[idx]) {
+                    batchCalculatorData[idx].stableford = '';
+                }
+                // Recalc to update calculated fields
+                recalcBatchRow(idx);
+            });
             
             // Build a map of player name -> stableford score
             const stablefordMap = new Map();
