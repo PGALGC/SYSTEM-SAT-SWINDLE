@@ -1732,7 +1732,19 @@
         <!-- LEAGUE STANDINGS TAB -->
         <div id="league-tab" class="tab-content active">
             <div class="section">
-                <h2><i class="fas fa-sliders-h"></i> League Controls</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <h2 style="margin: 0;"><i class="fas fa-sliders-h"></i> League Controls</h2>
+                    <div style="display: flex; gap: 8px; align-items: center; font-size: 9px;">
+                        <select id="season-selector" style="padding: 3px 6px; font-size: 9px; border: 1px solid #ccc; border-radius: 3px;">
+                            <option value="winter">PGA Winter League</option>
+                            <option value="summer">PGA Summer League</option>
+                        </select>
+                        <span style="color: #666;">Start:</span>
+                        <input type="date" id="season-start-date" style="padding: 2px 4px; font-size: 9px; border: 1px solid #ccc; border-radius: 3px;">
+                        <span style="color: #666;">End:</span>
+                        <input type="date" id="season-end-date" style="padding: 2px 4px; font-size: 9px; border: 1px solid #ccc; border-radius: 3px;">
+                    </div>
+                </div>
                 <div class="league-controls">
                     <div class="button-group">
                         <button id="add-player-btn">
@@ -4499,6 +4511,30 @@
                 console.error('Capture error:', error);
                 alert('Error capturing scorecard: ' + error.message);
             });
+        }
+        
+        // ============================================
+        // SEASON MANAGEMENT FUNCTIONS
+        // ============================================
+        
+        let seasonData = {
+            season: 'winter',
+            startDate: '',
+            endDate: ''
+        };
+        
+        function saveSeasonData() {
+            localStorage.setItem('seasonData', JSON.stringify(seasonData));
+        }
+        
+        function loadSeasonData() {
+            const saved = localStorage.getItem('seasonData');
+            if (saved) {
+                seasonData = JSON.parse(saved);
+                document.getElementById('season-selector').value = seasonData.season || 'winter';
+                document.getElementById('season-start-date').value = seasonData.startDate || '';
+                document.getElementById('season-end-date').value = seasonData.endDate || '';
+            }
         }
         
         // ============================================
@@ -8259,11 +8295,28 @@
             // Initialize theme
             loadTheme();
             
+            // Initialize season data
+            loadSeasonData();
+            
             // Set up league event listeners
             document.getElementById('add-player-btn').addEventListener('click', addLeaguePlayer);
             document.getElementById('calculate-btn').addEventListener('click', calculateAllTotals);
             document.getElementById('reset-btn').addEventListener('click', resetLeagueData);
             document.getElementById('adjust-weeks-btn').addEventListener('click', adjustTotalWeeks);
+            
+            // Season selector listeners
+            document.getElementById('season-selector').addEventListener('change', function(e) {
+                seasonData.season = e.target.value;
+                saveSeasonData();
+            });
+            document.getElementById('season-start-date').addEventListener('change', function(e) {
+                seasonData.startDate = e.target.value;
+                saveSeasonData();
+            });
+            document.getElementById('season-end-date').addEventListener('change', function(e) {
+                seasonData.endDate = e.target.value;
+                saveSeasonData();
+            });
             
             // Scorecard form field listeners
             document.getElementById('courseName').addEventListener('change', saveScorecardData);
