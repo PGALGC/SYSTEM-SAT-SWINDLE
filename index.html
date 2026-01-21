@@ -3947,6 +3947,94 @@
             return prizeMatrix[playerCount] || [0, 0, 0, 0, 0];
         }
         
+        // Countback calculation function
+        function calculateCountback(player, handicap) {
+            const stablefordPoints = [];
+            
+            // Calculate Stableford points for each hole
+            for (let hole = 0; hole < 18; hole++) {
+                const score = parseInt(player.scores[hole]) || 0;
+                let points = 0;
+                
+                if (score > 0) {
+                    const par = globalParValues[hole] || 4;
+                    const holeIndex = globalIndexValues[hole] || (hole + 1);
+                    const strokesReceived = calculateStrokesForHole(handicap, holeIndex);
+                    const adjustedPar = par + strokesReceived;
+                    const diff = score - adjustedPar;
+                    
+                    if (diff <= -2) points = 4;
+                    else if (diff === -1) points = 3;
+                    else if (diff === 0) points = 2;
+                    else if (diff === 1) points = 1;
+                }
+                
+                stablefordPoints.push(points);
+            }
+            
+            // Countback order based on specification:
+            // 1. Back 9 (holes 9-17, indices 9-17)
+            // 2. Last 6 of back 9 (holes 13-18, indices 12-17)
+            // 3. Last 3 of back 9 (holes 10-12, indices 9-11)
+            // 4. Last 2 of back 9 (holes 11-12, indices 10-11)
+            // 5. Last 1 of back 9 (hole 10, index 9)
+            // 6. Front 9 (holes 1-9, indices 0-8)
+            // 7. Last 6 of front 9 (holes 4-9, indices 3-8)
+            // 8. Last 3 of front 9 (holes 1-3, indices 0-2)
+            // 9. Last 2 of front 9 (holes 2-3, indices 1-2)
+            // 10. Last 1 of front 9 (hole 1, index 0)
+            
+            const back9 = stablefordPoints.slice(9, 18).reduce((a, b) => a + b, 0);
+            const back6 = stablefordPoints.slice(12, 18).reduce((a, b) => a + b, 0);
+            const back3 = stablefordPoints.slice(9, 12).reduce((a, b) => a + b, 0);
+            const back2 = stablefordPoints.slice(10, 12).reduce((a, b) => a + b, 0);
+            const back1 = stablefordPoints[9];
+            
+            const front9 = stablefordPoints.slice(0, 9).reduce((a, b) => a + b, 0);
+            const front6 = stablefordPoints.slice(3, 9).reduce((a, b) => a + b, 0);
+            const front3 = stablefordPoints.slice(0, 3).reduce((a, b) => a + b, 0);
+            const front2 = stablefordPoints.slice(1, 3).reduce((a, b) => a + b, 0);
+            const front1 = stablefordPoints[0];
+            
+            return {
+                back9,
+                back6,
+                back3,
+                back2,
+                back1,
+                front9,
+                front6,
+                front3,
+                front2,
+                front1
+            };
+        }
+        
+        // Compare two players using countback rules
+        function comparePlayersCountback(playerA, playerB) {
+            // First compare by total Stableford score
+            if (playerB.stableford !== playerA.stableford) {
+                return playerB.stableford - playerA.stableford;
+            }
+            
+            // If tied, apply countback rules in order
+            const cb = playerA.countback;
+            const cbB = playerB.countback;
+            
+            if (cb.back9 !== cbB.back9) return cbB.back9 - cb.back9;
+            if (cb.back6 !== cbB.back6) return cbB.back6 - cb.back6;
+            if (cb.back3 !== cbB.back3) return cbB.back3 - cb.back3;
+            if (cb.back2 !== cbB.back2) return cbB.back2 - cb.back2;
+            if (cb.back1 !== cbB.back1) return cbB.back1 - cb.back1;
+            if (cb.front9 !== cbB.front9) return cbB.front9 - cb.front9;
+            if (cb.front6 !== cbB.front6) return cbB.front6 - cb.front6;
+            if (cb.front3 !== cbB.front3) return cbB.front3 - cb.front3;
+            if (cb.front2 !== cbB.front2) return cbB.front2 - cb.front2;
+            if (cb.front1 !== cbB.front1) return cbB.front1 - cb.front1;
+            
+            return 0; // Still tied after all countback
+        }
+        
         function importHandicapToWinners() {
             // Get scorecard data for the current winners week
             const weekKey = `week${currentWinnersWeek}`;
@@ -3959,18 +4047,18 @@
             
             const playersData = [];
             
-            // Calculate stableford for each player and sort by score (highest first)
+            // Calculate stableford and countback for each player
             const playersWithScores = weekScorecardData.players.map(player => {
                 let stablefordTotal = 0;
+                const playerHandicap = (player.whiteTees !== undefined && player.whiteTees !== null && player.whiteTees !== '') 
+                    ? parseFloat(player.whiteTees) 
+                    : (parseFloat(player.handicap) || 0);
                 
-                // Calculate stableford score
+                // Calculate total stableford score
                 for (let hole = 0; hole < 18; hole++) {
                     const score = parseInt(player.scores[hole]) || 0;
                     if (score > 0) {
                         const par = globalParValues[hole] || 4;
-                        const playerHandicap = (player.whiteTees !== undefined && player.whiteTees !== null && player.whiteTees !== '') 
-                            ? parseFloat(player.whiteTees) 
-                            : (parseFloat(player.handicap) || 0);
                         const holeIndex = globalIndexValues[hole] || (hole + 1);
                         
                         const strokesReceived = calculateStrokesForHole(playerHandicap, holeIndex);
@@ -3987,14 +4075,18 @@
                     }
                 }
                 
+                // Calculate countback values
+                const countback = calculateCountback(player, playerHandicap);
+                
                 return {
                     name: player.name,
-                    stableford: stablefordTotal
+                    stableford: stablefordTotal,
+                    countback: countback
                 };
             });
             
-            // Sort by stableford score (highest first)
-            playersWithScores.sort((a, b) => b.stableford - a.stableford);
+            // Sort by stableford score with countback tiebreaker
+            playersWithScores.sort(comparePlayersCountback);
             
             // Get prizes based on player count
             const playerCount = playersWithScores.length;
@@ -8349,7 +8441,7 @@
                     <h4>Winners - Saturday Swindle Section:</h4>
                     <ul>
                         <li><strong>Week Selector:</strong> Choose week to manage (WK1-WK52)</li>
-                        <li><strong>Import Scorecard Players:</strong> Auto-import from Scorecard tab (sorted by Stableford highest first)</li>
+                        <li><strong>Import Scorecard Players:</strong> Auto-import from Scorecard tab (sorted by Stableford with countback)</li>
                         <li><strong>Clear Week:</strong> Delete winners for selected week only</li>
                         <li><strong>Clear ALL Weeks:</strong> Delete all winners data across all weeks</li>
                     </ul>
@@ -8357,8 +8449,25 @@
                     <ul>
                         <li>Prizes auto-populate based on SWINDLE prize matrix</li>
                         <li>Click prize amounts to edit manually</li>
-                        <li>Sorted by Stableford score when imported</li>
+                        <li>Players sorted by Stableford score (highest first)</li>
+                        <li>Ties broken using official countback system (see below)</li>
                     </ul>
+                    
+                    <h4>Countback System for Tie-Breaking:</h4>
+                    <p>When players have equal Stableford scores, positions are determined using this sequence:</p>
+                    <ol>
+                        <li><strong>Back 9 (Holes 10-18):</strong> Compare Stableford points on holes 10-18</li>
+                        <li><strong>Last 6 of Back 9 (Holes 13-18):</strong> If still tied, compare holes 13-18</li>
+                        <li><strong>Last 3 of Back 9 (Holes 10-12):</strong> If still tied, compare holes 10-12</li>
+                        <li><strong>Last 2 of Back 9 (Holes 11-12):</strong> If still tied, compare holes 11-12</li>
+                        <li><strong>Last 1 of Back 9 (Hole 10):</strong> If still tied, compare hole 10 only</li>
+                        <li><strong>Front 9 (Holes 1-9):</strong> If still tied, compare holes 1-9</li>
+                        <li><strong>Last 6 of Front 9 (Holes 4-9):</strong> If still tied, compare holes 4-9</li>
+                        <li><strong>Last 3 of Front 9 (Holes 1-3):</strong> If still tied, compare holes 1-3</li>
+                        <li><strong>Last 2 of Front 9 (Holes 2-3):</strong> If still tied, compare holes 2-3</li>
+                        <li><strong>Last 1 of Front 9 (Hole 1):</strong> If still tied, compare hole 1 only</li>
+                    </ol>
+                    <p>At each step, the player with the higher Stableford points wins the tiebreaker.</p>
                     
                     <h4>Profit & Loss Section:</h4>
                     <p>Comprehensive financial tracking across entire season:</p>
