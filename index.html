@@ -2400,6 +2400,9 @@
                         <button onclick="retrieveDrawData()" class="warning">
                             <i class="fas fa-users"></i> Retrieve Draw Data
                         </button>
+                        <button onclick="fixScorecardIndexes()" class="warning" style="font-size: 9px; padding: 4px 8px;">
+                            <i class="fas fa-wrench"></i> Fix Index Data
+                        </button>
                         <button onclick="calculateScorecardTotals()" class="success">
                             <i class="fas fa-calculator"></i> Calculate
                         </button>
@@ -3409,6 +3412,74 @@
             
             saveScorecardData();
             alert(`Course information saved (PAR/INDEX apply to all weeks)`);
+        }
+        
+        function fixScorecardIndexes() {
+            // Reload handicap data to ensure we have the latest draw
+            loadHandicapData();
+            
+            if (!groups || groups.length === 0) {
+                alert('No draw data found in Handicap tab.');
+                return;
+            }
+            
+            if (scorecardData.players.length === 0) {
+                alert('No players in current scorecard.');
+                return;
+            }
+            
+            // Build a map of player names to their handicap data
+            const handicapMap = new Map();
+            groups.forEach(group => {
+                if (group.players && Array.isArray(group.players)) {
+                    group.players.forEach(player => {
+                        if (player && player.name) {
+                            const key = player.name.toLowerCase().trim();
+                            handicapMap.set(key, {
+                                newIndex: player.newIndex,
+                                pgaIndex: player.pgaIndex,
+                                whiteTees: player.whiteTees,
+                                yellowTees: player.yellowTees
+                            });
+                        }
+                    });
+                }
+            });
+            
+            let fixedCount = 0;
+            
+            // Update scorecard players with handicap data
+            scorecardData.players.forEach(player => {
+                const key = player.name.toLowerCase().trim();
+                if (handicapMap.has(key)) {
+                    const hData = handicapMap.get(key);
+                    const indexValue = hData.newIndex || hData.pgaIndex;
+                    
+                    // Fix pgaIndex
+                    if (indexValue && indexValue !== 'N/A') {
+                        player.pgaIndex = indexValue;
+                        fixedCount++;
+                    }
+                    
+                    // Fix whiteTees
+                    if (hData.whiteTees !== undefined && hData.whiteTees !== null && hData.whiteTees !== '') {
+                        player.whiteTees = hData.whiteTees;
+                    }
+                    
+                    // Fix yellowTees
+                    if (hData.yellowTees !== undefined && hData.yellowTees !== null && hData.yellowTees !== '') {
+                        player.yellowTees = hData.yellowTees;
+                    }
+                }
+            });
+            
+            if (fixedCount > 0) {
+                saveScorecardData();
+                renderScorecard();
+                alert(`Fixed Index/Tees data for ${fixedCount} player(s) in Week ${currentWeek} from Handicap draw.`);
+            } else {
+                alert('No matching players found between scorecard and handicap draw.');
+            }
         }
         
         function retrieveDrawData() {
