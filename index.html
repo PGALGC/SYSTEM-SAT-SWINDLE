@@ -7387,21 +7387,29 @@
             const catCell = document.getElementById(`batch-cat-${idx}`);
             if (catCell) catCell.textContent = `Cat ${category}`;
             
+            // Check if player has played (has stableford points or position entered)
+            const hasPlayedRound = stablefordPoints > 0 || finishingPosition !== null;
+            
             // Stage calculations (same rules as single calculator, no manual adjustment here)
             let stage1 = 0;
-            if (prizeMoney > 0 && stablefordPoints > golfParams.winThreshold && finishingPosition) {
-                const baseCut = golfParams.cutBase + (category / golfParams.cutCatDivisor) + (playerIndex * golfParams.cutIndexPercent);
-                stage1 = - (baseCut / finishingPosition);
-            }
             let stage2 = 0;
-            if (prizeMoney === 0 && stablefordPoints < golfParams.noWinThreshold && category > 0) {
-                stage2 = (playerIndex * golfParams.incIndexPercent) + golfParams.incAddValue + (category / golfParams.incCatDivisor);
-            }
             let stage3 = 0;
-            if (stablefordPoints > golfParams.exceptionalThreshold) {
-                const pointsOver = stablefordPoints - golfParams.exceptionalThreshold;
-                stage3 = - ((category / golfParams.excCatDivisor) + (playerIndex * golfParams.excIndexPercent)) * pointsOver;
+            
+            // Only calculate adjustments if player has played
+            if (hasPlayedRound) {
+                if (prizeMoney > 0 && stablefordPoints > golfParams.winThreshold && finishingPosition) {
+                    const baseCut = golfParams.cutBase + (category / golfParams.cutCatDivisor) + (playerIndex * golfParams.cutIndexPercent);
+                    stage1 = - (baseCut / finishingPosition);
+                }
+                if (prizeMoney === 0 && stablefordPoints < golfParams.noWinThreshold && category > 0) {
+                    stage2 = (playerIndex * golfParams.incIndexPercent) + golfParams.incAddValue + (category / golfParams.incCatDivisor);
+                }
+                if (stablefordPoints > golfParams.exceptionalThreshold) {
+                    const pointsOver = stablefordPoints - golfParams.exceptionalThreshold;
+                    stage3 = - ((category / golfParams.excCatDivisor) + (playerIndex * golfParams.excIndexPercent)) * pointsOver;
+                }
             }
+            
             const totalAdjustment = stage1 + stage2 + stage3;
             const adjCell = document.getElementById(`batch-adj-${idx}`);
             adjCell.textContent = totalAdjustment.toFixed(2);
