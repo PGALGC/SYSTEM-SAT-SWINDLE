@@ -3479,21 +3479,30 @@
                     }
                 }
                 
-                // Parse handicap from PGA Index
+                // Parse handicap from PGA Index or newIndex
                 let handicap = 0;
-                if (drawPlayer.pgaIndex && drawPlayer.pgaIndex !== 'N/A') {
-                    handicap = parseFloat(drawPlayer.pgaIndex) || 0;
+                const indexValue = drawPlayer.newIndex || drawPlayer.pgaIndex;
+                if (indexValue && indexValue !== 'N/A') {
+                    handicap = parseFloat(indexValue) || 0;
                 }
+                
+                console.log(`Retrieving player: ${drawPlayer.name}`);
+                console.log(`  - newIndex: ${drawPlayer.newIndex}`);
+                console.log(`  - pgaIndex: ${drawPlayer.pgaIndex}`);
+                console.log(`  - whiteTees: ${drawPlayer.whiteTees}`);
+                console.log(`  - yellowTees: ${drawPlayer.yellowTees}`);
                 
                 const newPlayer = {
                     id: nextScorecardPlayerId++,
                     name: drawPlayer.name,
                     handicap: handicap,
-                    pgaIndex: (drawPlayer.pgaIndex !== undefined && drawPlayer.pgaIndex !== null && drawPlayer.pgaIndex !== '') ? drawPlayer.pgaIndex : 'N/A',
+                    pgaIndex: (drawPlayer.newIndex !== undefined && drawPlayer.newIndex !== null && drawPlayer.newIndex !== '' && drawPlayer.newIndex !== 'N/A') ? drawPlayer.newIndex : ((drawPlayer.pgaIndex !== undefined && drawPlayer.pgaIndex !== null && drawPlayer.pgaIndex !== '' && drawPlayer.pgaIndex !== 'N/A') ? drawPlayer.pgaIndex : 'N/A'),
                     whiteTees: (drawPlayer.whiteTees !== undefined && drawPlayer.whiteTees !== null && drawPlayer.whiteTees !== '') ? drawPlayer.whiteTees : 'N/A',
                     yellowTees: (drawPlayer.yellowTees !== undefined && drawPlayer.yellowTees !== null && drawPlayer.yellowTees !== '') ? drawPlayer.yellowTees : 'N/A',
                     scores: Array(18).fill('')
                 };
+                
+                console.log(`  -> Scorecard pgaIndex: ${newPlayer.pgaIndex}`);
                 
                 scorecardData.players.push(newPlayer);
                 addedCount++;
