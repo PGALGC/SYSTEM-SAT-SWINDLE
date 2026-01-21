@@ -7874,6 +7874,25 @@
                 return;
             }
             
+            // Clear previous imported Stableford and positions before importing new week
+            const tbody = document.getElementById('batch-calculator-body');
+            if (tbody) {
+                const rows = tbody.querySelectorAll('tr');
+                rows.forEach((row, idx) => {
+                    const pointsEl = row.querySelector('[data-field="stableford"]');
+                    if (pointsEl) pointsEl.value = '';
+                    const posEl = row.querySelector('[data-field="position"]');
+                    if (posEl) posEl.value = '';
+                    if (!batchCalculatorData[idx]) {
+                        batchCalculatorData[idx] = { index: '', prize: 0, stableford: '', position: '', teeWhite: true, teeYellow: true };
+                    } else {
+                        batchCalculatorData[idx].stableford = '';
+                        batchCalculatorData[idx].position = '';
+                    }
+                    recalcBatchRow(idx);
+                });
+            }
+            
             // Build a map of player name -> stableford score
             const stablefordMap = new Map();
             
