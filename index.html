@@ -1891,7 +1891,7 @@
                         <thead>
                             <tr>
                                 <th>Paid</th>
-                                <th>Players Name</th>
+                                <th onclick="sortHandicapTable()" style="cursor: pointer; user-select: none;">Players Name <span id="handicap-sort-indicator">▼</span></th>
                                 <th>Players New Index</th>
                                 <th>Total Adjustment</th>
                                 <th>Players Previous Index</th>
@@ -5858,6 +5858,48 @@
             document.getElementById('totalSwindle').textContent = '£' + total;
             document.getElementById('totalPlayers').textContent = cells.length;
             document.getElementById('paidPlayers').textContent = paid;
+        }
+        
+        let handicapSortAscending = true;
+        
+        function sortHandicapTable() {
+            const tbody = document.querySelector('#extractedTable tbody');
+            if (!tbody) return;
+            
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            if (rows.length === 0) return;
+            
+            // Toggle sort direction
+            handicapSortAscending = !handicapSortAscending;
+            
+            // Update indicator
+            const indicator = document.getElementById('handicap-sort-indicator');
+            if (indicator) {
+                indicator.textContent = handicapSortAscending ? '▲' : '▼';
+            }
+            
+            // Sort rows by player name (column index 1)
+            rows.sort((a, b) => {
+                const nameA = a.cells[1].textContent.trim().toLowerCase();
+                const nameB = b.cells[1].textContent.trim().toLowerCase();
+                
+                if (handicapSortAscending) {
+                    return nameA.localeCompare(nameB);
+                } else {
+                    return nameB.localeCompare(nameA);
+                }
+            });
+            
+            // Re-append rows in sorted order
+            rows.forEach(row => tbody.appendChild(row));
+            
+            // Update handicapPlayerData array to match sorted order
+            handicapPlayerData = rows.map(row => {
+                const name = row.cells[1].textContent.trim();
+                return handicapPlayerData.find(p => p.name === name);
+            }).filter(p => p);
+            
+            saveHandicapData();
         }
         
         function downloadHandicapCSV() {
