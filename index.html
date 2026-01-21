@@ -8022,7 +8022,7 @@
                 return;
             }
             
-            // Clear previous imported Stableford and positions before importing new week
+            // Clear previous imported Stableford, positions, and prize money before importing new week
             const tbody = document.getElementById('batch-calculator-body');
             if (tbody) {
                 const rows = tbody.querySelectorAll('tr');
@@ -8031,11 +8031,14 @@
                     if (pointsEl) pointsEl.value = '';
                     const posEl = row.querySelector('[data-field="position"]');
                     if (posEl) posEl.value = '';
+                    const prizeEl = row.querySelector('[data-field="prize"]');
+                    if (prizeEl) prizeEl.value = '0';
                     if (!batchCalculatorData[idx]) {
                         batchCalculatorData[idx] = { index: '', prize: 0, stableford: '', position: '', teeWhite: true, teeYellow: true };
                     } else {
                         batchCalculatorData[idx].stableford = '';
                         batchCalculatorData[idx].position = '';
+                        batchCalculatorData[idx].prize = 0;
                     }
                     recalcBatchRow(idx);
                 });
