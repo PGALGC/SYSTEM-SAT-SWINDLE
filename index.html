@@ -2990,7 +2990,7 @@
                 grossRow.className = 'player-score-row';
                 grossRow.dataset.playerId = player.id;
                 
-                let grossHTML = `<td class="player-cell" rowspan="2">${player.name}<br><span style="font-size:6px;color:#666;">Index: ${player.pgaIndex || 'N/A'} | White: ${player.whiteTees || 'N/A'} | Yellow: ${player.yellowTees || 'N/A'}</span></td>`;
+                let grossHTML = `<td class="player-cell" rowspan="2">${player.name}<br><span style="font-size:6px;color:#666;">Index: ${player.pgaIndex !== undefined && player.pgaIndex !== null && player.pgaIndex !== '' ? player.pgaIndex : 'N/A'} | White: ${player.whiteTees !== undefined && player.whiteTees !== null && player.whiteTees !== '' ? player.whiteTees : 'N/A'} | Yellow: ${player.yellowTees !== undefined && player.yellowTees !== null && player.yellowTees !== '' ? player.yellowTees : 'N/A'}</span></td>`;
                 
                 // Add hole gross score input cells
                 for (let hole = 0; hole < 18; hole++) {
