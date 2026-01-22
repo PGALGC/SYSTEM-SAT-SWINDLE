@@ -9203,18 +9203,25 @@
                     </div>
                     
                     <h4>HCAP Batch Calculator Section:</h4>
-                    <p>Process all 40 players simultaneously with full data tracking:</p>
+                    <p>Process all 40 players simultaneously with full data tracking across multiple weeks:</p>
                     <p><strong>Top Controls:</strong></p>
                     <ul>
-                        <li><strong>Import STBLFD Score:</strong> Import Stableford scores from any week's scorecard</li>
+                        <li><strong>Week Selector:</strong> Choose week WK1-WK25 (each week stores data independently)
+                            <ul>
+                                <li>Week data persists - switching weeks preserves all entered data</li>
+                                <li>When switching to a NEW week, it automatically inherits the previous week's "Players New Index" as starting "Players Index"</li>
+                                <li>All other fields (Prize Money, Stableford, Position) start blank for each new week</li>
+                            </ul>
+                        </li>
+                        <li><strong>Import STBLFD Score:</strong> Import Stableford scores from any week's scorecard into current selected week</li>
                         <li><strong>Calculate Batch:</strong> Recalculate all 40 rows at once</li>
                         <li><strong>CSV Dropdown:</strong>
                             <ul>
-                                <li><strong>Export CSV:</strong> Download complete batch data (no header/footer text, direct to columns)</li>
+                                <li><strong>Export CSV:</strong> Download complete batch data for current week (no header/footer text, direct to columns)</li>
                                 <li><strong>Import CSV:</strong> Upload CSV to populate batch calculator fields by matching player names</li>
                             </ul>
                         </li>
-                        <li><strong>Generate Report:</strong> Create Excel CSV or TXT format report</li>
+                        <li><strong>Generate Report:</strong> Create Excel CSV or TXT format report for current week</li>
                     </ul>
                     <p><strong>Batch Calculator Table - 14 Columns:</strong></p>
                     <ol>
@@ -9242,7 +9249,7 @@
                     </ul>
                     
                     <div class="tip-box">
-                        <strong>💡 Workflow Tip:</strong> Import Stableford scores from Scorecard → Fill in prize money → Calculate Batch → Export CSV → Import CSV to Handicap tab for draw creation.
+                        <strong>💡 Workflow Tip:</strong> Select correct week (e.g., WK2) → Import Stableford scores from Scorecard → Fill in prize money and positions → Calculate Batch → Export CSV → Import CSV to Handicap tab for next week's draw creation. The next week (WK3) will automatically inherit WK2's calculated "Players New Index" values.
                     </div>
                 </div>
                 
