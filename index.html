@@ -7701,7 +7701,7 @@
                     // Initialize new week with empty data structure
                     batchCalculatorDataByWeek[newWeek] = [];
                     
-                    // Copy data from previous week and calculate new starting indexes
+                    // Copy data from previous week and use their calculated New Index as starting Index
                     let copiedCount = 0;
                     batchCalculatorDataByWeek[prevWeek].forEach((prevData, idx) => {
                         batchCalculatorDataByWeek[newWeek][idx] = {
@@ -7713,19 +7713,20 @@
                             teeYellow: prevData.teeYellow !== false
                         };
                         
-                        // Calculate previous week's New Index and use it as this week's starting Index
+                        // Use previous week's New Index (calculated result) as this week's starting Index
                         if (prevData.index && prevData.index !== '') {
                             const playerIndex = parseFloat(prevData.index) || 0;
                             const prizeMoney = parseFloat(prevData.prize) || 0;
                             const stablefordPoints = parseFloat(prevData.stableford) || 0;
                             const finishingPosition = parseInt(prevData.position) || null;
                             
+                            // Calculate the New Index from previous week's data
                             const newIndex = calculateNewIndexFromData(playerIndex, prizeMoney, stablefordPoints, finishingPosition);
                             
-                            // Set previous week's New Index as this week's starting Index
+                            // Set previous week's calculated New Index as this week's starting Index
                             batchCalculatorDataByWeek[newWeek][idx].index = newIndex.toString();
                             copiedCount++;
-                            console.log(`  Player ${idx}: WK${prevWeek} index ${prevData.index} -> calculated new index ${newIndex} -> WK${newWeek} starting index`);
+                            console.log(`  Player ${idx} (${leaguePlayers[idx].name}): WK${prevWeek} New Index ${newIndex.toFixed(1)} -> WK${newWeek} Players Index`);
                         }
                     });
                     
