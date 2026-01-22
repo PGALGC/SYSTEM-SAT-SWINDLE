@@ -2358,7 +2358,7 @@
                     <label>Date:</label>
                     <input type="date" id="scorecardDate" value="">
                     <label>Competition:</label>
-                    <input type="text" id="competitionName" placeholder="Competition name">
+                    <input type="text" id="competitionName" placeholder="PGA SWINDLE">
                     <button onclick="saveCourseInformation()" class="success" style="margin-left: 8px;">
                         <i class="fas fa-save"></i> Save Course Info
                     </button>
@@ -8509,9 +8509,15 @@
                             if (pointsEl) pointsEl.value = stableford || '';
                             if (posEl) posEl.value = position || '';
                             
-                            // Save to batch data
-                            if (!batchCalculatorData[playerIdx]) {
-                                batchCalculatorData[playerIdx] = {
+                            // Get current week's data array
+                            if (!batchCalculatorDataByWeek[currentBatchWeek]) {
+                                batchCalculatorDataByWeek[currentBatchWeek] = [];
+                            }
+                            const currentWeekData = batchCalculatorDataByWeek[currentBatchWeek];
+                            
+                            // Save to batch data for current week
+                            if (!currentWeekData[playerIdx]) {
+                                currentWeekData[playerIdx] = {
                                     index: '',
                                     prize: 0,
                                     stableford: '',
@@ -8520,10 +8526,10 @@
                                     teeYellow: true
                                 };
                             }
-                            batchCalculatorData[playerIdx].index = playersIndex || '';
-                            batchCalculatorData[playerIdx].prize = prizeMoney || 0;
-                            batchCalculatorData[playerIdx].stableford = stableford || '';
-                            batchCalculatorData[playerIdx].position = position || '';
+                            currentWeekData[playerIdx].index = playersIndex || '';
+                            currentWeekData[playerIdx].prize = prizeMoney || 0;
+                            currentWeekData[playerIdx].stableford = stableford || '';
+                            currentWeekData[playerIdx].position = position || '';
                             
                             // Trigger recalculation
                             recalcBatchRow(playerIdx);
