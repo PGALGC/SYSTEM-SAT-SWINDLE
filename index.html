@@ -9272,60 +9272,230 @@
                 </div>
                 
                 <div class="guide-section">
-                    <h3><i class="fas fa-file-upload"></i> 2. HANDICAP TAB</h3>
-                    <h4>Purpose:</h4>
-                    <p>Import and manage player handicap data, payment tracking, and create draw groups for golf rounds.</p>
+                    <h3><i class="fas fa-file-upload"></i> TAB 2: HANDICAP (Import Data & Create Draw)</h3>
+                    <h4>What Does This Tab Do?</h4>
+                    <p>This tab lets you upload handicap files (Excel, CSV, etc.), track who has paid £5, and create random groups (draw) for golf rounds.</p>
                     
-                    <h4>Upload File Section:</h4>
+                    <h4>SECTION 1: Upload File (Top Section)</h4>
+                    <p><strong>Step-by-Step: How to Upload a Handicap File</strong></p>
+                    <ol>
+                        <li>You should have a CSV file exported from the Winners tab (HCAP Batch Calculator)</li>
+                        <li>Look for the blue upload box that says "Click to upload handicap file"</li>
+                        <li>Click anywhere inside this blue box</li>
+                        <li>A file picker window opens on your computer</li>
+                        <li>Find your CSV file (it might be in Downloads folder)</li>
+                        <li>Click the file to select it, then click "Open"</li>
+                        <li>The file name appears above the upload box</li>
+                        <li>BEFORE clicking Extract, you can check these two boxes if needed:
+                            <ul>
+                                <li><strong>Remove quotes:</strong> Tick this if player names have " " around them</li>
+                                <li><strong>Remove default names:</strong> Tick this to skip generic names like "Golfer 1"</li>
+                            </ul>
+                        </li>
+                        <li>Click the blue "Extract" button</li>
+                        <li>Wait 1-2 seconds while the data loads</li>
+                        <li>A table appears below with all the player data!</li>
+                    </ol>
+                    
+                    <p><strong>"All £5" and "All £0" Buttons:</strong></p>
                     <ul>
-                        <li><strong>Upload Box:</strong> Click to select CSV, TXT, JPG, PNG, DOCX, or XLSX files</li>
-                        <li><strong>Remove Quotes:</strong> Checkbox to strip quotation marks from player names</li>
-                        <li><strong>Remove Default Names:</strong> Checkbox to filter out placeholder names like "Golfer 1"</li>
-                        <li><strong>Extract:</strong> Parse uploaded file and populate Extracted Data table</li>
-                        <li><strong>All £5 / All £0:</strong> Quickly set all players' payment status</li>
+                        <li><strong>"All £5" Button (Gray):</strong>
+                            <ol>
+                                <li>Click this button</li>
+                                <li>EVERY player in the table gets set to £5 paid</li>
+                                <li>All names turn GREEN (showing they've paid)</li>
+                                <li>Use this if everyone has paid</li>
+                            </ol>
+                        </li>
+                        <li><strong>"All £0" Button (Gray):</strong>
+                            <ol>
+                                <li>Click this button</li>
+                                <li>EVERY player gets set to £0 (not paid)</li>
+                                <li>All names turn RED (showing they haven't paid)</li>
+                                <li>Use this to start fresh</li>
+                            </ol>
+                        </li>
                     </ul>
                     
-                    <h4>Extracted Data Section:</h4>
-                    <p>Displays 7 columns with equal widths:</p>
+                    <h4>SECTION 2: Extracted Data (The Table)</h4>
+                    <p>After extracting, you'll see a table with 7 columns. Here's what each one means:</p>
+                    <ol>
+                        <li><strong>Paid:</strong> How much money the player paid (£5, £0, etc.)
+                            <ul>
+                                <li>Click any number to change it</li>
+                                <li>Type a new amount (e.g., "5" or "0")</li>
+                                <li>Press Enter to save</li>
+                                <li>GREEN = They paid</li>
+                                <li>RED = They haven't paid</li>
+                            </ul>
+                        </li>
+                        <li><strong>Players Name:</strong> The player's full name</li>
+                        <li><strong>Players New Index:</strong> Their current handicap index</li>
+                        <li><strong>Total Adjustment:</strong> How much their handicap changed</li>
+                        <li><strong>Players Previous Index:</strong> What their handicap was before</li>
+                        <li><strong>Course Handicap (White):</strong> Handicap for white tees</li>
+                        <li><strong>Course Handicap (Yellow):</strong> Handicap for yellow tees</li>
+                    </ol>
+                    
+                    <p><strong>Stats at the Top:</strong></p>
                     <ul>
-                        <li><strong>Paid:</strong> Click to edit payment amount (shows red for £0, green for paid)</li>
-                        <li><strong>Players Name:</strong> Imported from CSV column 1 (HCAP Batch Calculator export)</li>
-                        <li><strong>Players New Index:</strong> Imported from CSV column 9</li>
-                        <li><strong>Total Adjustment:</strong> Imported from CSV column 8</li>
-                        <li><strong>Players Previous Index:</strong> Imported from CSV column 7</li>
-                        <li><strong>Course Handicap (White):</strong> Imported from CSV column 10</li>
-                        <li><strong>Course Handicap (Yellow):</strong> Imported from CSV column 11</li>
-                    </ul>
-                    <p><strong>Stats Display:</strong> Total collection amount, Total players, Number paid</p>
-                    <ul>
-                        <li><strong>CSV:</strong> Download extracted data as CSV file</li>
-                        <li><strong>£5 Image:</strong> Capture screenshot of players who paid £5</li>
-                        <li><strong>Clear:</strong> Remove all extracted data and reload page</li>
+                        <li>Shows total money collected (e.g., "£145")</li>
+                        <li>Shows total number of players (e.g., "35")</li>
+                        <li>Shows how many have paid (e.g., "29")</li>
                     </ul>
                     
-                    <h4>Draw Management Section:</h4>
+                    <p><strong>Three Buttons Below the Table:</strong></p>
                     <ul>
-                        <li><strong>Create:</strong> Automatically organize paid players into groups of 3-4</li>
-                        <li><strong>Reshuffle:</strong> Re-randomize existing groups</li>
-                        <li><strong>Capture:</strong> Take screenshot of draw groups</li>
-                    </ul>
-                    <p><strong>Draw Features:</strong></p>
-                    <ul>
-                        <li>Each group shows: Player name, Index (from Players New Index), White/Yellow handicaps</li>
-                        <li>Tee Box number (editable 1-20)</li>
-                        <li>Drag-and-drop players between groups</li>
-                        <li>Click × to remove player from group</li>
-                        <li>Groups auto-balance to 3-4 players each</li>
+                        <li><strong>"CSV" Button (Green):</strong>
+                            <ol>
+                                <li>Click this</li>
+                                <li>A CSV file downloads with all the data</li>
+                                <li>Open in Excel if you want to edit offline</li>
+                            </ol>
+                        </li>
+                        <li><strong>"£5 Image" Button (Gray):</strong>
+                            <ol>
+                                <li>Click this</li>
+                                <li>System takes a screenshot of ONLY players who paid £5</li>
+                                <li>Image file downloads</li>
+                                <li>Share this image to show who's playing</li>
+                            </ol>
+                        </li>
+                        <li><strong>"Clear" Button (RED):</strong>
+                            <ol>
+                                <li>Click this</li>
+                                <li>Confirmation popup: "Are you sure?"</li>
+                                <li>Click OK to delete ALL extracted data</li>
+                                <li>The table becomes empty</li>
+                                <li>Use this to start over</li>
+                            </ol>
+                        </li>
                     </ul>
                     
-                    <h4>Add Player to Draw:</h4>
+                    <h4>SECTION 3: Draw Management (Create Groups)</h4>
+                    <p>This section creates random groups of 3-4 players for your golf round.</p>
+                    
+                    <p><strong>"Create" Button (Blue with + icon):</strong></p>
+                    <ol>
+                        <li>Make sure you've extracted player data first (see above)</li>
+                        <li>Make sure players who ARE playing have £5 in the "Paid" column</li>
+                        <li>Click the "Create" button</li>
+                        <li>The system finds all players who paid £5</li>
+                        <li>It randomly splits them into groups of 3 or 4 players</li>
+                        <li>Groups appear below as colored boxes</li>
+                        <li>Each group shows:
+                            <ul>
+                                <li>Group number (Group 1, Group 2, etc.)</li>
+                                <li>How many players (e.g., "4" in a circle)</li>
+                                <li>Tee box number (editable - click to change)</li>
+                                <li>All player names with their handicaps</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <p><strong>"Reshuffle" Button (Gray with shuffle icon):</strong></p>
+                    <ol>
+                        <li>You must have created groups first</li>
+                        <li>Click this button</li>
+                        <li>ALL groups are deleted</li>
+                        <li>The system creates NEW random groups with the same players</li>
+                        <li>Use this if you don't like the first draw</li>
+                        <li>You can reshuffle as many times as you want</li>
+                    </ol>
+                    
+                    <p><strong>"Capture" Button (Gray with camera icon):</strong></p>
+                    <ol>
+                        <li>Make sure groups are displayed on screen</li>
+                        <li>Click this button</li>
+                        <li>Wait 2-3 seconds</li>
+                        <li>A PNG image downloads with all the groups</li>
+                        <li>Share this image on WhatsApp or print it</li>
+                    </ol>
+                    
+                    <h4>Working with Groups (After Creating Draw)</h4>
+                    <p><strong>Each Group Box Shows:</strong></p>
                     <ul>
-                        <li>Enter Name, Index, and Paid amount</li>
-                        <li>Click "Add to Draw" to include in next reshuffle</li>
+                        <li>Group title ("Group 1", "Group 2", etc.)</li>
+                        <li>Number badge showing player count</li>
+                        <li>Tee box input (click to type a number 1-20)</li>
+                        <li>List of players with:
+                            <ul>
+                                <li>Player name in bold</li>
+                                <li>Their index (e.g., "8.2")</li>
+                                <li>White tees handicap (e.g., "W:10")</li>
+                                <li>Yellow tees handicap (e.g., "Y:8")</li>
+                                <li>Red × button to remove them</li>
+                            </ul>
+                        </li>
                     </ul>
+                    
+                    <p><strong>How to Edit Tee Box Number:</strong></p>
+                    <ol>
+                        <li>Find the group you want to change</li>
+                        <li>Look for the small white box labeled "Tee:"</li>
+                        <li>Click inside the box</li>
+                        <li>Delete the old number</li>
+                        <li>Type a new number (1-20)</li>
+                        <li>Click outside the box or press Enter</li>
+                        <li>The tee number is saved</li>
+                    </ol>
+                    
+                    <p><strong>How to Remove a Player from a Group:</strong></p>
+                    <ol>
+                        <li>Find the player in the group</li>
+                        <li>Look for the red × next to their name</li>
+                        <li>Click the ×</li>
+                        <li>Confirmation: "Remove this player?"</li>
+                        <li>Click OK</li>
+                        <li>The player disappears from the group</li>
+                    </ol>
+                    
+                    <p><strong>How to Move a Player Between Groups (Drag and Drop):</strong></p>
+                    <ol>
+                        <li>Click and HOLD on a player's name</li>
+                        <li>While holding the mouse button, drag the player</li>
+                        <li>Move your mouse over a different group</li>
+                        <li>The destination group will highlight</li>
+                        <li>Let go of the mouse button</li>
+                        <li>The player now appears in the new group</li>
+                    </ol>
+                    
+                    <h4>SECTION 4: Add Player to Draw (Bottom Form)</h4>
+                    <p>Use this if you need to manually add someone who wasn't in the uploaded file.</p>
+                    <ol>
+                        <li>Scroll to the bottom of the Handicap tab</li>
+                        <li>You'll see 6 input boxes in a row:</li>
+                        <ul>
+                            <li><strong>Paid:</strong> Type "5" if they paid, "0" if not</li>
+                            <li><strong>Players Name:</strong> Type their full name</li>
+                            <li><strong>Players New Index:</strong> Type their handicap index (e.g., "12.4")</li>
+                            <li><strong>Players Previous Index:</strong> Type their old index (can leave blank)</li>
+                            <li><strong>Course Handicap (White):</strong> Their handicap on white tees</li>
+                            <li><strong>Course Handicap (Yellow):</strong> Their handicap on yellow tees</li>
+                        </ul>
+                        <li>Below the boxes, there's a "Group" dropdown - choose "Auto" (it will put them in a random group)</li>
+                        <li>Click the blue "Add to Draw" button</li>
+                        <li>The player is now added to the draw</li>
+                        <li>If groups exist, they'll be added to a group automatically</li>
+                    </ol>
+                    
+                    <h4>Complete Workflow for Handicap Tab</h4>
+                    <p><strong>For Complete Beginners - Follow This Order:</strong></p>
+                    <ol>
+                        <li>Export CSV from Winners tab (HCAP Batch Calculator)</li>
+                        <li>Come to Handicap tab</li>
+                        <li>Click upload box and select your CSV file</li>
+                        <li>Click "Extract" button</li>
+                        <li>Click "All £5" to mark everyone as paid (or edit individual amounts)</li>
+                        <li>Click "Create" to make the draw</li>
+                        <li>Review the groups - if you don't like them, click "Reshuffle"</li>
+                        <li>Adjust tee boxes if needed</li>
+                        <li>Click "Capture" to take a screenshot</li>
+                        <li>Share the image with players!</li>
+                    </ol>
                     
                     <div class="tip-box">
-                        <strong>💡 Tips:</strong> Export CSV from HCAP Batch Calculator (Winners tab) and upload here to auto-populate all fields. The system skips header rows automatically.
+                        <strong>Pro Tip:</strong> Always upload the CSV from Winners tab (after using Batch Calculator) to get the most up-to-date handicaps. Only players marked as paid (£5) will be included in the draw!
                     </div>
                 </div>
                 
