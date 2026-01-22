@@ -2173,6 +2173,7 @@
                         <div style="display:flex; gap:6px;">
                             <button class="secondary" style="margin-left:8px;" onclick="showImportStblfdScoreDialog()"><i class="fas fa-file-import"></i> Import STBLFD Score</button>
                             <button class="warning" style="margin-left:4px;" onclick="recalcAllBatchRows()"><i class="fas fa-sync-alt"></i> Calculate Batch</button>
+                            <button class="danger" style="margin-left:4px; font-size:9px; padding:4px 8px;" onclick="resyncAllWeeks()"><i class="fas fa-redo"></i> Resync Weeks</button>
                             <div class="best-scores-selector" style="display: inline-block;">
                                 <button class="best-scores-button warning" onclick="toggleBatchCSVDropdown()" style="background-color: #d4af37; color: #0a3d2e; margin-left:4px;">
                                     <i class="fas fa-file-csv"></i> CSV <i class="fas fa-caret-down"></i>
@@ -7647,6 +7648,60 @@
             newIndex = Math.round(newIndex * 10) / 10;
             
             return newIndex;
+        }
+        
+        function resyncAllWeeks() {
+            if (!confirm('This will update WK2-WK25 to inherit handicap indexes from previous weeks.\n\nWK1 data will be preserved.\nAll Prize/Stableford/Position data in each week will be preserved.\n\nContinue?')) {
+                return;
+            }
+            
+            console.log('=== Resyncing all weeks ===');
+            
+            // Start from week 2 and sync forward
+            for (let week = 2; week <= 25; week++) {
+                const prevWeek = week - 1;
+                
+                // Skip if previous week doesn't exist
+                if (!batchCalculatorDataByWeek[prevWeek]) {
+                    console.log(`Week ${prevWeek} doesn't exist, stopping sync at week ${week}`);
+                    break;
+                }
+                
+                // If this week doesn't exist, create it
+                if (!batchCalculatorDataByWeek[week]) {
+                    batchCalculatorDataByWeek[week] = [];
+                }
+                
+                // Update each player's index from previous week's calculated new index
+                batchCalculatorDataByWeek[prevWeek].forEach((prevData, idx) => {
+                    // Ensure row exists
+                    if (!batchCalculatorDataByWeek[week][idx]) {
+                        batchCalculatorDataByWeek[week][idx] = {
+                            index: '',
+                            prize: 0,
+                            stableford: '',
+                            position: '',
+                            teeWhite: true,
+                            teeYellow: true
+                        };
+                    }
+                    
+                    // Calculate previous week's New Index and set as this week's starting Index
+                    if (prevData.index && prevData.index !== '') {
+                        const playerIndex = parseFloat(prevData.index) || 0;
+                        const prizeMoney = parseFloat(prevData.prize) || 0;
+                        const stablefordPoints = parseFloat(prevData.stableford) || 0;
+                        const finishingPosition = parseInt(prevData.position) || null;
+                        
+                        const newIndex = calculateNewIndexFromData(playerIndex, prizeMoney, stablefordPoints, finishingPosition);
+                        batchCalculatorDataByWeek[week][idx].index = newIndex.toString();
+                    }
+                });
+            }
+            
+            saveBatchCalculatorData();
+            renderBatchCalculatorTable();
+            alert('All weeks resynced successfully!\n\nHandicap indexes have been updated from WK1 through to the last week with data.');
         }
         
         function changeBatchWeek() {
