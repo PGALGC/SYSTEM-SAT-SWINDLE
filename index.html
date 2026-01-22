@@ -9066,43 +9066,208 @@
                 <button class="modal-close" onclick="closeHowToGuide()">×</button>
             </div>
             <div class="modal-body">
-                <h3><i class="fas fa-info-circle"></i> Overview</h3>
-                <p>The PGA League System is a comprehensive golf management application with 5 main tabs: <strong>League</strong>, <strong>Handicap</strong>, <strong>Scorecard</strong>, <strong>Winners</strong>, and <strong>SWINDLE Prizes</strong>.</p>
+                <h3><i class="fas fa-info-circle"></i> Welcome to PGA League System</h3>
+                <p><strong>This guide will teach you EVERYTHING from scratch.</strong> Even if you've never used this app before, follow these instructions step-by-step and you'll become an expert.</p>
+                <p>The app has <strong>6 TABS</strong> at the top: <strong>League</strong>, <strong>Handicap</strong>, <strong>Scorecard</strong>, <strong>Winners</strong>, <strong>STATS</strong>, and <strong>SWINDLE Prizes</strong>.</p>
                 
+                <div class="warning-box">
+                    <strong>⚠️ FIRST TIME USER?</strong> Start by reading the "Getting Started" section below, then read each tab section in order.
+                </div>
+                
+                <h3><i class="fas fa-play-circle"></i> GETTING STARTED (Read This First!)</h3>
                 <div class="guide-section">
-                    <h3><i class="fas fa-trophy"></i> 1. LEAGUE TAB</h3>
-                    <h4>Purpose:</h4>
-                    <p>Track player standings across multiple weeks of competition with automatic best-score calculations.</p>
-                    
-                    <h4>Buttons & Features:</h4>
+                    <h4>Understanding the Header Buttons</h4>
+                    <p>At the very top of the screen (green header), you'll see these buttons:</p>
                     <ul>
-                        <li><strong>Add Player:</strong> Add new players to the league table</li>
-                        <li><strong>Calculate:</strong> Recalculate all totals and rankings</li>
-                        <li><strong>CSV Dropdown:</strong>
-                            <ul>
-                                <li><strong>Export CSV:</strong> Download league standings with all player data</li>
-                                <li><strong>Import CSV:</strong> Upload CSV file to import player scores by matching names</li>
-                            </ul>
+                        <li><strong>🟡 Backup Button:</strong> Click this to save ALL your data to a file on your computer
+                            <ol>
+                                <li>Click the "Backup" button</li>
+                                <li>A file called "pga_league_backup_[date].json" will download</li>
+                                <li>Save this file somewhere safe (Desktop, Documents folder, etc.)</li>
+                                <li>Do this regularly to avoid losing your data!</li>
+                            </ol>
                         </li>
-                        <li><strong>Reset:</strong> Clear all league data (requires confirmation)</li>
-                        <li><strong>Weeks:</strong> Adjust the total number of weeks in the season</li>
-                        <li><strong>Player Scores:</strong> Import Stableford scores from Scorecard tab for current week</li>
-                        <li><strong>Capture:</strong> Take screenshot of league table</li>
-                        <li><strong>Best X Dropdown:</strong> Select how many top scores count (e.g., Best 10 of 17)</li>
+                        <li><strong>🟢 Restore Button:</strong> Click this to load previously saved backup data
+                            <ol>
+                                <li>Click the "Restore" button</li>
+                                <li>A file picker will open</li>
+                                <li>Find and select your backup .json file</li>
+                                <li>Click "Open"</li>
+                                <li>All your data will be restored instantly</li>
+                            </ol>
+                        </li>
+                        <li><strong>❓ HOW TO Button:</strong> Opens this help guide (you're reading it now!)</li>
+                        <li><strong>🎨 Theme Button:</strong> Changes the color scheme of the app
+                            <ol>
+                                <li>Click the "Theme" button</li>
+                                <li>A dropdown menu appears with 10 different themes</li>
+                                <li>Click any theme name to apply it instantly</li>
+                                <li>Your choice is saved automatically</li>
+                            </ol>
+                        </li>
                     </ul>
                     
-                    <h4>How to Use:</h4>
+                    <h4>How the Tabs Work</h4>
+                    <p>Click any tab name to switch between different sections. Each tab does something different:</p>
+                    <ul>
+                        <li><strong>League:</strong> Track season-long standings and scores</li>
+                        <li><strong>Handicap:</strong> Import handicap data and create draw groups</li>
+                        <li><strong>Scorecard:</strong> Record detailed hole-by-hole scores</li>
+                        <li><strong>Winners:</strong> Calculate handicaps and manage prize money</li>
+                        <li><strong>STATS:</strong> View player statistics across the season</li>
+                        <li><strong>SWINDLE Prizes:</strong> See prize distribution table</li>
+                    </ul>
+                </div>
+                
+                <div class="guide-section">
+                    <h3><i class="fas fa-trophy"></i> TAB 1: LEAGUE (Season Standings)</h3>
+                    <h4>What Does This Tab Do?</h4>
+                    <p>This tab tracks your golf league standings across the entire season. It shows each player's weekly scores and calculates their total based on their BEST scores only (not all scores count!).</p>
+                    
+                    <h4>What You See on Screen</h4>
+                    <p>At the top, you'll see:</p>
+                    <ul>
+                        <li><strong>Season Selector:</strong> Choose "PGA Winter League" or "PGA Summer League"</li>
+                        <li><strong>Start/End Date Boxes:</strong> Set when your season begins and ends</li>
+                        <li><strong>Players Count:</strong> Shows how many players are in the league (e.g., "Players: 40")</li>
+                        <li><strong>Weeks Count:</strong> Shows total weeks (e.g., "Weeks: 25")</li>
+                    </ul>
+                    <p>Below that, you'll see many buttons. Here's what EACH button does:</p>
+                    
+                    <h4>EVERY BUTTON EXPLAINED (Step-by-Step)</h4>
+                    
+                    <p><strong>1. "Add Player" Button (Blue with + icon):</strong></p>
                     <ol>
-                        <li>Click on any week cell to enter/edit a player's score</li>
-                        <li>Scores are color-coded: Red (≤29), Gold (top scores that count), Green (other scores)</li>
-                        <li>Click column headers to sort: "Player ▲" for alphabetical, "B10 ▼" for ranking</li>
-                        <li>Totals automatically update based on Best X selection</li>
-                        <li>PLD (Played) shows how many weeks the player has scores for</li>
-                        <li>B[count] shows which scores are counted in the total</li>
+                        <li>Click the button</li>
+                        <li>A popup box appears asking "Enter player name:"</li>
+                        <li>Type the player's full name (e.g., "John Smith")</li>
+                        <li>Click OK</li>
+                        <li>The player now appears as a new row in the table</li>
+                        <li>They start with 0 scores in all weeks</li>
+                    </ol>
+                    
+                    <p><strong>2. "Best X" Dropdown (Gold button with star icon):</strong></p>
+                    <ol>
+                        <li>Click the button that says "Best 10" (or whatever number is currently shown)</li>
+                        <li>A dropdown menu appears showing options: Best 5, Best 6, Best 7... Best 15</li>
+                        <li>Click the number you want (e.g., if you want only their best 10 weeks to count, click "Best 10")</li>
+                        <li>The table instantly updates to show which scores count (they turn GOLD/GREEN)</li>
+                        <li>The "Total" column recalculates using only that many top scores</li>
+                    </ol>
+                    
+                    <p><strong>3. "Calculate" Button (Green button with calculator icon):</strong></p>
+                    <ol>
+                        <li>Click this button anytime you want to refresh all totals</li>
+                        <li>It recalculates every player's "PLD" (weeks played), "Best" scores, and "Total"</li>
+                        <li>Use this after manually editing scores</li>
+                        <li>You'll see a brief flash as numbers update</li>
+                    </ol>
+                    
+                    <p><strong>4. "CSV" Dropdown (Gold button):</strong></p>
+                    <ul>
+                        <li><strong>Export CSV:</strong>
+                            <ol>
+                                <li>Click "CSV" button</li>
+                                <li>Click "Export CSV" from the dropdown</li>
+                                <li>A file named "league_standings_[date].csv" downloads to your computer</li>
+                                <li>Open it in Excel to see all player data in spreadsheet format</li>
+                            </ol>
+                        </li>
+                        <li><strong>Import CSV:</strong>
+                            <ol>
+                                <li>Click "CSV" button</li>
+                                <li>Click "Import CSV" from the dropdown</li>
+                                <li>A file picker opens - select your CSV file</li>
+                                <li>The system reads the CSV and matches player names</li>
+                                <li>Scores are imported into the corresponding week columns</li>
+                                <li>A message tells you how many players were imported</li>
+                            </ol>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>5. "Reset" Button (RED button with undo icon):</strong></p>
+                    <ol>
+                        <li>Click this button</li>
+                        <li>A warning popup appears: "Are you sure you want to reset all league data?"</li>
+                        <li>Click OK to DELETE ALL league data (players, scores, everything)</li>
+                        <li>Click Cancel to keep your data safe</li>
+                        <li><strong>WARNING:</strong> This cannot be undone! Make a backup first!</li>
+                    </ol>
+                    
+                    <p><strong>6. "Weeks" Button (Gray button with calendar icon):</strong></p>
+                    <ol>
+                        <li>Click this button</li>
+                        <li>A popup asks "Enter number of weeks:"</li>
+                        <li>Type a number (e.g., "25" for 25 weeks)</li>
+                        <li>Click OK</li>
+                        <li>The table adds or removes week columns to match</li>
+                        <li>If you reduce weeks, scores in removed weeks are deleted!</li>
+                    </ol>
+                    
+                    <p><strong>7. "Player Scores" Button (Gold button with clipboard icon):</strong></p>
+                    <ol>
+                        <li>First, make sure you've recorded scores in the SCORECARD tab</li>
+                        <li>Click this button</li>
+                        <li>A popup asks "Import scores from which week?"</li>
+                        <li>Type the week number (e.g., "5" for week 5)</li>
+                        <li>Click OK</li>
+                        <li>The system finds all players in that week's scorecard</li>
+                        <li>It copies their Stableford total scores into the league table for that week</li>
+                        <li>A message confirms how many scores were imported</li>
+                    </ol>
+                    
+                    <p><strong>8. "Capture" Button (Gray button with camera icon):</strong></p>
+                    <ol>
+                        <li>Click this button</li>
+                        <li>Wait 2-3 seconds while the system takes a screenshot</li>
+                        <li>An image file downloads to your computer (usually named "league_table.png")</li>
+                        <li>You can share this image on WhatsApp, email, etc.</li>
+                    </ol>
+                    
+                    <h4>How to Enter/Edit Scores Manually</h4>
+                    <ol>
+                        <li>Find the player's row in the table</li>
+                        <li>Find the week column (WK1, WK2, WK3, etc.)</li>
+                        <li>Click on the cell where the player and week intersect</li>
+                        <li>An input box appears - the number turns blue</li>
+                        <li>Type the player's score (Stableford points, e.g., "35")</li>
+                        <li>Press ENTER or TAB to move to the next cell</li>
+                        <li>Press ESC to cancel without saving</li>
+                        <li>The score is saved automatically</li>
+                    </ol>
+                    
+                    <h4>Understanding the Color Codes</h4>
+                    <ul>
+                        <li><strong>RED cells:</strong> Low score (29 or less) - not great performance</li>
+                        <li><strong>LIGHT GREEN cells:</strong> This score counts toward the player's total (it's one of their "Best X" scores)</li>
+                        <li><strong>WHITE cells:</strong> Score exists but doesn't count (they have better scores in other weeks)</li>
+                        <li><strong>Empty cells:</strong> No score entered for that week</li>
+                    </ul>
+                    
+                    <h4>Understanding the Table Columns</h4>
+                    <ul>
+                        <li><strong>#:</strong> Player's current ranking (1 = first place, 2 = second place, etc.)</li>
+                        <li><strong>Player:</strong> Player's name (click header to sort A-Z or Z-A)</li>
+                        <li><strong>WK1, WK2, WK3... :</strong> Each week's score</li>
+                        <li><strong>PLD:</strong> "Played" - how many weeks this player has scores for</li>
+                        <li><strong>B10 (or Best):</strong> How many of their scores count toward total</li>
+                        <li><strong>Total:</strong> Sum of their "Best X" scores (click header to sort by ranking)</li>
+                        <li><strong>Action:</strong> Red X button to delete that player</li>
+                    </ul>
+                    
+                    <h4>Quick Start Guide for League Tab</h4>
+                    <p><strong>If you're brand new, follow these steps:</strong></p>
+                    <ol>
+                        <li>Click the "Add Player" button 5 times and add 5 different players</li>
+                        <li>Click on WK1 for the first player and type "35", press Enter</li>
+                        <li>Add a few more scores for different players and weeks</li>
+                        <li>Click the "Calculate" button to see totals update</li>
+                        <li>Try changing "Best 10" to "Best 5" and see how totals change</li>
+                        <li>Practice makes perfect!</li>
                     </ol>
                     
                     <div class="tip-box">
-                        <strong>💡 Tips:</strong> Use "Player Scores" button to quickly import weekly Stableford scores from Scorecard. CSV Import matches players by name, so names must match exactly.
+                        <strong>Pro Tip:</strong> Always click "Calculate" after making changes. Use "Player Scores" button to automatically import from Scorecard instead of typing scores manually!
                     </div>
                 </div>
                 
