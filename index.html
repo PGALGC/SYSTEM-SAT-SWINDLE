@@ -9500,56 +9500,230 @@
                 </div>
                 
                 <div class="guide-section">
-                    <h3><i class="fas fa-clipboard-list"></i> 3. SCORECARD TAB</h3>
-                    <h4>Purpose:</h4>
-                    <p>Record detailed hole-by-hole scores with automatic Stableford calculation and countback support.</p>
+                    <h3><i class="fas fa-clipboard-list"></i> TAB 3: SCORECARD (Record Hole-by-Hole Scores)</h3>
+                    <h4>What Does This Tab Do?</h4>
+                    <p>This tab records each player's score for all 18 holes and automatically calculates Stableford points. Each week's data is saved separately - you can have up to 25 weeks of scorecards!</p>
                     
-                    <h4>Top Controls:</h4>
-                    <ul>
-                        <li><strong>Week Selector:</strong> Choose week WK1-WK52 (each week stores data separately)</li>
-                        <li><strong>Course Name, Date, Competition Name:</strong> Course details (saved per week)</li>
-                        <li><strong>Add Player:</strong> Add player with name and handicap</li>
-                        <li><strong>CSV Dropdown:</strong>
-                            <ul>
-                                <li><strong>Export CSV:</strong> Download complete scorecard with all player data</li>
-                                <li><strong>Import CSV:</strong> Upload CSV to populate scorecard (clears existing players first)</li>
-                            </ul>
-                        </li>
-                        <li><strong>Backup Scorecard:</strong> Download JSON backup for current week</li>
-                        <li><strong>Restore Scorecard:</strong> Upload JSON backup to restore data</li>
-                        <li><strong>Capture Scorecard:</strong> Screenshot the scorecard table</li>
-                        <li><strong>Clear Week:</strong> Delete all player data for selected week</li>
-                    </ul>
-                    
-                    <h4>Scorecard Table:</h4>
-                    <p><strong>Columns:</strong> Player, Handicap, Holes 1-18, Front 9, Back 9, Gross, Stableford, Countback</p>
-                    <ul>
-                        <li><strong>Editing Scores:</strong> Click any score cell to enter/edit (press Enter to save)</li>
-                        <li><strong>Stableford Calculation:</strong> Automatic based on par, index, and handicap strokes
-                            <ul>
-                                <li>4 points = Eagle or better (2+ under adjusted par)</li>
-                                <li>3 points = Birdie (1 under adjusted par)</li>
-                                <li>2 points = Par (on adjusted par)</li>
-                                <li>1 point = Bogey (1 over adjusted par)</li>
-                                <li>0 points = Double bogey or worse</li>
-                            </ul>
-                        </li>
-                        <li><strong>Front 9 / Back 9:</strong> Auto-sum of holes 1-9 and 10-18</li>
-                        <li><strong>Gross Total:</strong> Sum of all 18 hole scores</li>
-                        <li><strong>Stableford Total:</strong> Sum of all Stableford points</li>
-                        <li><strong>Countback:</strong> Last 9 holes Stableford for tie-breaking</li>
-                        <li><strong>Delete Button (×):</strong> Remove player from scorecard</li>
-                    </ul>
-                    
-                    <h4>PAR and INDEX Rows:</h4>
-                    <ul>
-                        <li>Click PAR or INDEX cells to edit course setup</li>
-                        <li>Changes apply to all players immediately</li>
-                        <li>Saved separately for each week</li>
-                    </ul>
-                    
+                    <h4>IMPORTANT: Understanding Weeks</h4>
                     <div class="warning-box">
-                        <strong>⚠️ Important:</strong> Each week's data is independent. Always verify you've selected the correct week before entering scores. CSV Import will clear existing players for that week.
+                        <strong>KEY CONCEPT:</strong> Each week (WK1, WK2, WK3...) stores its own separate scorecard. Week 1's players and scores are completely separate from Week 2's. Always check which week you've selected before entering data!
+                    </div>
+                    
+                    <h4>Top Section: Course Information & Week Selection</h4>
+                    <p><strong>"Week:" Dropdown (First thing you see):</strong></p>
+                    <ol>
+                        <li>Look at the very top left of the Scorecard tab</li>
+                        <li>You'll see a dropdown that says "Week:" followed by "WK1" (or another week number)</li>
+                        <li>Click this dropdown to see all available weeks (WK1 through WK25)</li>
+                        <li>Click any week to switch to it</li>
+                        <li>The entire scorecard changes to show that week's data</li>
+                        <li><strong>REMEMBER:</strong> Always check you're on the correct week!</li>
+                    </ol>
+                    
+                    <p><strong>Course Information Fields:</strong></p>
+                    <ul>
+                        <li><strong>"Course Name" box:</strong> Type the golf course name (e.g., "Lingfield Park")</li>
+                        <li><strong>"Date" box:</strong> Click to open a calendar and select the date you played</li>
+                        <li><strong>"Competition" box:</strong> Type the competition name (e.g., "PGA SWINDLE")</li>
+                        <li><strong>"Save Course Info" button (Green):</strong>
+                            <ol>
+                                <li>After filling in the boxes above</li>
+                                <li>Click this button</li>
+                                <li>A message says "Course information saved"</li>
+                                <li>This data is saved ONLY for the current week</li>
+                            </ol>
+                        </li>
+                    </ul>
+                    
+                    <h4>ALL BUTTONS EXPLAINED (The Button Row)</h4>
+                    <p><strong>1. "Add Player" Button (Blue with + icon):</strong></p>
+                    <ol>
+                        <li>Click the button</li>
+                        <li>A popup asks: "Enter player name:"</li>
+                        <li>Type the player's name (e.g., "John Smith")</li>
+                        <li>Click OK</li>
+                        <li>Another popup asks: "Enter player handicap (default: 0):"</li>
+                        <li>Type their playing handicap (e.g., "12")</li>
+                        <li>Click OK</li>
+                        <li>More popups ask for: Index, White Tees handicap, Yellow Tees handicap</li>
+                        <li>Fill each one in or just click OK to use defaults</li>
+                        <li>The player now appears as a new row in the scorecard</li>
+                    </ol>
+                    
+                    <p><strong>2. "Retrieve Draw Data" Button (Gold button):</strong></p>
+                    <ol>
+                        <li>First, make sure you've created a draw in the HANDICAP tab</li>
+                        <li>Click this button</li>
+                        <li>The system finds all players from the draw</li>
+                        <li>A popup asks if you want to REPLACE existing players or ADD to them</li>
+                        <li>Click OK to replace (deletes current players and adds draw players)</li>
+                        <li>Click Cancel to add (keeps current players and adds draw players without duplicates)</li>
+                        <li>A message tells you how many players were added</li>
+                        <li>All draw players now appear in the scorecard with their handicaps</li>
+                    </ol>
+                    
+                    <p><strong>3. "Fix Index Data" Button (Gold with wrench icon):</strong></p>
+                    <ol>
+                        <li>Use this if player handicaps look wrong</li>
+                        <li>Click the button</li>
+                        <li>System checks the Handicap tab draw data</li>
+                        <li>It updates each player's Index and Tees handicaps to match the draw</li>
+                        <li>A message says "Fixed Index/Tees data for X player(s)"</li>
+                        <li>Useful if handicaps changed since you first added players</li>
+                    </ol>
+                    
+                    <p><strong>4. "Calculate" Button (Green with calculator icon):</strong></p>
+                    <ol>
+                        <li>Click this anytime to recalculate all totals</li>
+                        <li>It recalculates: Front 9, Back 9, Gross, Stableford, Countback for ALL players</li>
+                        <li>Use this if numbers look wrong</li>
+                        <li>Numbers update instantly</li>
+                    </ol>
+                    
+                    <p><strong>5. "Clear All" Button (Gray with eraser icon):</strong></p>
+                    <ol>
+                        <li>Click this button</li>
+                        <li>Warning popup: "Clear scorecard data for WKX? This will remove all players..."</li>
+                        <li>Click OK to DELETE everything (players, scores, course info) for THIS week only</li>
+                        <li>Click Cancel to keep your data</li>
+                        <li><strong>WARNING:</strong> This only affects the current week - other weeks are safe</li>
+                    </ol>
+                    
+                    <p><strong>6. "CSV" Dropdown (Gold button):</strong></p>
+                    <ul>
+                        <li><strong>Export CSV:</strong>
+                            <ol>
+                                <li>Click "CSV" button, then "Export CSV"</li>
+                                <li>A file downloads named "scorecard_[date].csv"</li>
+                                <li>Open in Excel to see all player scores</li>
+                            </ol>
+                        </li>
+                        <li><strong>Import CSV:</strong>
+                            <ol>
+                                <li>Click "CSV" button, then "Import CSV"</li>
+                                <li>Select your CSV file</li>
+                                <li>WARNING: This DELETES all current players first!</li>
+                                <li>Players from CSV are loaded into the scorecard</li>
+                                <li>A message confirms how many players were imported</li>
+                            </ol>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>7. "Capture" Button (Gray with camera icon):</strong></p>
+                    <ol>
+                        <li>Click this button</li>
+                        <li>Wait 2-3 seconds</li>
+                        <li>A screenshot PNG file downloads</li>
+                        <li>Shows the entire scorecard table</li>
+                        <li>Share this image with players</li>
+                    </ol>
+                    
+                    <h4>How to Enter Scores (The Main Scorecard Table)</h4>
+                    <p><strong>Understanding the Table Layout:</strong></p>
+                    <ul>
+                        <li><strong>First Row: PAR</strong> - Shows par for each hole (3, 4, or 5)</li>
+                        <li><strong>Second Row: INDEX</strong> - Shows stroke index for each hole (1-18)</li>
+                        <li><strong>Player Rows:</strong> Each player gets TWO rows:
+                            <ul>
+                                <li><strong>Top row (white):</strong> Gross scores (actual strokes taken)</li>
+                                <li><strong>Bottom row (gray):</strong> Stableford points (auto-calculated)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>Step-by-Step: Entering a Player's Score:</strong></p>
+                    <ol>
+                        <li>Find the player's name in the left column</li>
+                        <li>Look at their TOP row (this is for gross scores)</li>
+                        <li>Find the column for Hole 1</li>
+                        <li>Click in the white box under Hole 1</li>
+                        <li>The box turns blue and you can type</li>
+                        <li>Type the player's gross score (e.g., "5" for 5 strokes)</li>
+                        <li>Press ENTER or TAB to move to the next hole</li>
+                        <li>The cursor automatically moves to Hole 2</li>
+                        <li>Keep typing scores and pressing ENTER for all 18 holes</li>
+                        <li>After you enter each score, the gray row below shows Stableford points automatically</li>
+                        <li>The Front 9, Back 9, Gross, and STBLFD columns update automatically</li>
+                    </ol>
+                    
+                    <p><strong>Understanding Stableford Colors (The Gray Row):</strong></p>
+                    <ul>
+                        <li><strong>BLACK background:</strong> 2 points (Par)</li>
+                        <li><strong>RED background:</strong> 3 points (Birdie)</li>
+                        <li><strong>BLUE background:</strong> 4 points (Eagle or better)</li>
+                        <li><strong>PURPLE background:</strong> 1 point (Bogey)</li>
+                        <li><strong>PINK background:</strong> 0 points (Double bogey or worse)</li>
+                        <li><strong>WHITE background:</strong> No score entered yet</li>
+                    </ul>
+                    
+                    <p><strong>How to Edit PAR Values (If Playing Different Course):</strong></p>
+                    <ol>
+                        <li>Find the PAR row (first row of the table)</li>
+                        <li>Click on any hole's par value (it's in a small white box)</li>
+                        <li>The number turns blue</li>
+                        <li>Delete it and type the new par (e.g., change "4" to "5")</li>
+                        <li>Press ENTER or click outside the box</li>
+                        <li>ALL players' Stableford points recalculate instantly</li>
+                        <li>Repeat for any other holes that need changing</li>
+                    </ol>
+                    
+                    <p><strong>How to Edit INDEX Values (Stroke Index):</strong></p>
+                    <ol>
+                        <li>Find the INDEX row (second row of the table)</li>
+                        <li>Click on any hole's index value</li>
+                        <li>Type the new stroke index (1-18)</li>
+                        <li>Press ENTER</li>
+                        <li>All Stableford calculations update based on new index</li>
+                    </ol>
+                    
+                    <p><strong>How to Delete a Player:</strong></p>
+                    <ol>
+                        <li>Find the player's row</li>
+                        <li>Look at the far right - there's a red trash can button</li>
+                        <li>Click the trash can</li>
+                        <li>Popup asks: "Remove player from scorecard?"</li>
+                        <li>Click OK to delete</li>
+                        <li>The player and all their scores are removed</li>
+                    </ol>
+                    
+                    <h4>What Each Column Means</h4>
+                    <ul>
+                        <li><strong>Player:</strong> Player name with their handicap info below</li>
+                        <li><strong>1-18:</strong> Each hole's gross score (top) and Stableford points (bottom)</li>
+                        <li><strong>F9:</strong> Front 9 total (holes 1-9)</li>
+                        <li><strong>B9:</strong> Back 9 total (holes 10-18)</li>
+                        <li><strong>GROSS:</strong> Total of all 18 holes (gross score)</li>
+                        <li><strong>STBLFD:</strong> Total Stableford points (click header to sort)</li>
+                        <li><strong>CB 13-18:</strong> Countback - Stableford points for holes 13-18 (used for tiebreakers)</li>
+                        <li><strong>CB 10-12:</strong> Countback - Stableford points for holes 10-12 (second tiebreaker)</li>
+                        <li><strong>Action:</strong> Delete button</li>
+                    </ul>
+                    
+                    <h4>Complete Workflow for Scorecard Tab</h4>
+                    <p><strong>For Complete Beginners - Do This:</strong></p>
+                    <ol>
+                        <li>Click on Scorecard tab</li>
+                        <li>Select the correct week from the dropdown (e.g., "WK5")</li>
+                        <li>Enter Course Name, Date, and Competition name</li>
+                        <li>Click "Save Course Info"</li>
+                        <li>Click "Retrieve Draw Data" to load all players from Handicap tab</li>
+                        <li>Click on first player, Hole 1, and start entering scores</li>
+                        <li>Press ENTER after each score to move to next hole</li>
+                        <li>Watch the Stableford points appear in colors below</li>
+                        <li>Repeat for all players</li>
+                        <li>Click "Calculate" to verify all totals are correct</li>
+                        <li>Click "Capture" to save a screenshot</li>
+                        <li>Done!</li>
+                    </ol>
+                    
+                    <div class="tip-box">
+                        <strong>Pro Tips:</strong> 
+                        <ul>
+                            <li>Use "Retrieve Draw Data" instead of adding players manually - it's much faster!</li>
+                            <li>Press ENTER to quickly move through holes - no need to click each box</li>
+                            <li>Stableford points calculate automatically - you just enter gross scores</li>
+                            <li>Each week stores its own data separately - you won't lose previous weeks</li>
+                        </ul>
                     </div>
                 </div>
                 
