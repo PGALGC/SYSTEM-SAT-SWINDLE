@@ -7691,6 +7691,7 @@
             console.log(`=== Changing from week ${currentBatchWeek} to week ${newWeek} ===`);
             console.log('Current data structure:', JSON.parse(JSON.stringify(batchCalculatorDataByWeek)));
             
+            // IMPORTANT: Check if week exists BEFORE changing currentBatchWeek
             // If switching to a new week that doesn't have data yet, initialize from previous week
             if (!batchCalculatorDataByWeek[newWeek] && newWeek > 1) {
                 const prevWeek = newWeek - 1;
@@ -7737,6 +7738,12 @@
                 console.log(`Week ${newWeek} already exists with data`);
             } else {
                 console.log(`Week ${newWeek} is week 1 or has no previous week`);
+            }
+            
+            // Ensure week exists before switching (for week 1 on first load)
+            if (!batchCalculatorDataByWeek[newWeek]) {
+                console.log(`Initializing empty week ${newWeek}`);
+                batchCalculatorDataByWeek[newWeek] = [];
             }
             
             currentBatchWeek = newWeek;
@@ -7803,8 +7810,10 @@
             
             tbody.innerHTML = '';
             
-            // Get current week's data, or initialize if doesn't exist
+            // Get current week's data - it should already be initialized by changeBatchWeek or loadBatchCalculatorData
+            // Don't auto-create here as it will bypass the week initialization logic
             if (!batchCalculatorDataByWeek[currentBatchWeek]) {
+                console.warn(`Week ${currentBatchWeek} data not found, initializing empty array`);
                 batchCalculatorDataByWeek[currentBatchWeek] = [];
             }
             
