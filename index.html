@@ -2196,9 +2196,10 @@
                 <!-- HCAP BATCH CALCULATOR -->
                 <div style="background-color: white; padding: 12px; border-radius: 3px; margin-top: 12px;">
                     <h3 style="color: #2c5530; font-size: 11px; margin-bottom: 8px; border-bottom: 1px solid #2c5530; padding-bottom: 4px; display:flex; align-items:center; justify-content:space-between;">
-                        <div style="display:flex; align-items:center; gap:12px;">
+                        <div style="display:flex; align-items:center; gap:8px;">
                             <span>HCAP Batch Calculator</span>
                             <span id="batch-last-import-label" style="font-size:10px; color:#1a6b4f; font-weight:600; background-color:#e8f5e9; padding:3px 8px; border-radius:3px; display:none;"></span>
+                            <span id="batch-player-count-label" style="font-size:10px; color:#d4af37; font-weight:600; background-color:#fffbf0; padding:3px 8px; border-radius:3px; display:none;"></span>
                         </div>
                         <div style="display:flex; gap:6px;">
                             <button class="secondary" style="margin-left:8px;" onclick="showImportStblfdScoreDialog()"><i class="fas fa-file-import"></i> Import STBLFD Score</button>
@@ -7632,19 +7633,28 @@
         
         let batchCalculatorData = [];
         
-        function updateBatchLastImportLabel(weekNumber) {
-            const label = document.getElementById('batch-last-import-label');
-            if (label && weekNumber) {
-                label.textContent = `Data: WK${weekNumber}`;
-                label.style.display = 'inline-block';
+        function updateBatchLastImportLabel(weekNumber, playerCount) {
+            const weekLabel = document.getElementById('batch-last-import-label');
+            const countLabel = document.getElementById('batch-player-count-label');
+            
+            if (weekLabel && weekNumber) {
+                weekLabel.textContent = `Data: WK${weekNumber}`;
+                weekLabel.style.display = 'inline-block';
                 localStorage.setItem('batchLastImportWeek', weekNumber.toString());
+            }
+            
+            if (countLabel && playerCount !== undefined) {
+                countLabel.textContent = `${playerCount} Players`;
+                countLabel.style.display = 'inline-block';
+                localStorage.setItem('batchLastImportPlayerCount', playerCount.toString());
             }
         }
         
         function loadBatchLastImportLabel() {
             const savedWeek = localStorage.getItem('batchLastImportWeek');
+            const savedCount = localStorage.getItem('batchLastImportPlayerCount');
             if (savedWeek) {
-                updateBatchLastImportLabel(parseInt(savedWeek));
+                updateBatchLastImportLabel(parseInt(savedWeek), savedCount ? parseInt(savedCount) : undefined);
             }
         }
         
@@ -8138,8 +8148,8 @@
             // Save all data to localStorage
             saveBatchCalculatorData();
             
-            // Update the last import label
-            updateBatchLastImportLabel(selectedWeek);
+            // Update the last import label with week and player count
+            updateBatchLastImportLabel(selectedWeek, importedCount);
             
             closeImportDialog();
             
