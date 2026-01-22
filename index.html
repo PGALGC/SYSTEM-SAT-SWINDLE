@@ -2196,7 +2196,10 @@
                 <!-- HCAP BATCH CALCULATOR -->
                 <div style="background-color: white; padding: 12px; border-radius: 3px; margin-top: 12px;">
                     <h3 style="color: #2c5530; font-size: 11px; margin-bottom: 8px; border-bottom: 1px solid #2c5530; padding-bottom: 4px; display:flex; align-items:center; justify-content:space-between;">
-                        HCAP Batch Calculator
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span>HCAP Batch Calculator</span>
+                            <span id="batch-last-import-label" style="font-size:10px; color:#1a6b4f; font-weight:600; background-color:#e8f5e9; padding:3px 8px; border-radius:3px; display:none;"></span>
+                        </div>
                         <div style="display:flex; gap:6px;">
                             <button class="secondary" style="margin-left:8px;" onclick="showImportStblfdScoreDialog()"><i class="fas fa-file-import"></i> Import STBLFD Score</button>
                             <button class="warning" style="margin-left:4px;" onclick="recalcAllBatchRows()"><i class="fas fa-sync-alt"></i> Calculate Batch</button>
@@ -7629,6 +7632,22 @@
         
         let batchCalculatorData = [];
         
+        function updateBatchLastImportLabel(weekNumber) {
+            const label = document.getElementById('batch-last-import-label');
+            if (label && weekNumber) {
+                label.textContent = `Data: WK${weekNumber}`;
+                label.style.display = 'inline-block';
+                localStorage.setItem('batchLastImportWeek', weekNumber.toString());
+            }
+        }
+        
+        function loadBatchLastImportLabel() {
+            const savedWeek = localStorage.getItem('batchLastImportWeek');
+            if (savedWeek) {
+                updateBatchLastImportLabel(parseInt(savedWeek));
+            }
+        }
+        
         function loadBatchCalculatorData() {
             const saved = localStorage.getItem('batchCalculatorData');
             if (saved) {
@@ -7643,6 +7662,9 @@
                 console.log('No saved batch calculator data found');
                 batchCalculatorData = [];
             }
+            
+            // Load the last import label
+            loadBatchLastImportLabel();
         }
         
         function saveBatchCalculatorData() {
@@ -8115,6 +8137,9 @@
             
             // Save all data to localStorage
             saveBatchCalculatorData();
+            
+            // Update the last import label
+            updateBatchLastImportLabel(selectedWeek);
             
             closeImportDialog();
             
