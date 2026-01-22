@@ -3002,7 +3002,14 @@
                 grossHTML += `<td class="section-cell">-</td>`; // Empty for stableford on gross row
                 grossHTML += `<td class="section-cell" id="countback-${player.id}">0</td>`;
                 grossHTML += `<td class="section-cell" id="countback2-${player.id}">0</td>`;
-                grossHTML += `<td class="hole-cell" rowspan="2"><button class="scorecard-delete-btn" onclick="removeScorecardPlayer(${player.id})"><i class="fas fa-trash"></i></button></td>`;
+                grossHTML += `<td class="hole-cell" rowspan="2">
+                    <button class="scorecard-delete-btn" onclick="editScorecardPlayer(${player.id})" style="background-color: #4a90e2; margin-bottom: 2px;" title="Edit Player">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="scorecard-delete-btn" onclick="removeScorecardPlayer(${player.id})" title="Delete Player">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>`;
                 
                 grossRow.innerHTML = grossHTML;
                 body.appendChild(grossRow);
@@ -3347,6 +3354,52 @@
             scorecardData.players.push(newPlayer);
             saveScorecardData();
             renderScorecard();
+        }
+        
+        function editScorecardPlayer(playerId) {
+            const playerIndex = scorecardData.players.findIndex(p => p.id === playerId);
+            if (playerIndex === -1) return;
+            
+            const player = scorecardData.players[playerIndex];
+            
+            // Prompt for new values, showing current values as defaults
+            const newName = prompt("Edit player name:", player.name);
+            if (newName === null) return; // User cancelled
+            if (newName.trim() === '') {
+                alert('Player name cannot be empty');
+                return;
+            }
+            
+            // Check if new name already exists (excluding current player)
+            if (newName.toLowerCase() !== player.name.toLowerCase() && 
+                scorecardData.players.some(p => p.name.toLowerCase() === newName.toLowerCase())) {
+                alert('A player with this name already exists in the scorecard');
+                return;
+            }
+            
+            const newHandicap = prompt("Edit player handicap:", player.handicap || 0);
+            if (newHandicap === null) return;
+            
+            const newIndex = prompt("Edit player index:", player.pgaIndex || 0);
+            if (newIndex === null) return;
+            
+            const newWhiteTees = prompt("Edit White Tees handicap:", player.whiteTees || 0);
+            if (newWhiteTees === null) return;
+            
+            const newYellowTees = prompt("Edit Yellow Tees handicap:", player.yellowTees || 0);
+            if (newYellowTees === null) return;
+            
+            // Update player data
+            player.name = newName.trim();
+            player.handicap = parseFloat(newHandicap) || 0;
+            player.pgaIndex = parseFloat(newIndex) || 0;
+            player.whiteTees = parseFloat(newWhiteTees) || 0;
+            player.yellowTees = parseFloat(newYellowTees) || 0;
+            
+            // Save and re-render
+            saveScorecardData();
+            renderScorecard();
+            alert('Player details updated successfully!');
         }
         
         function removeScorecardPlayer(playerId) {
