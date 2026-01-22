@@ -8055,21 +8055,13 @@
                 return;
             }
             
-            // Clear stableford scores, prize money, and positions for new week
-            // Only Player Index (which contains previous week's New Index) is preserved
+            // Clear all stableford scores first, but preserve prize money and positions
             leaguePlayers.forEach((player, idx) => {
                 const pointsEl = document.querySelector(`#batch-calculator-body [data-row="${idx}"][data-field="stableford"]`);
-                const prizeEl = document.querySelector(`#batch-calculator-body [data-row="${idx}"][data-field="prize"]`);
-                const positionEl = document.querySelector(`#batch-calculator-body [data-row="${idx}"][data-field="position"]`);
-                
                 if (pointsEl) pointsEl.value = '';
-                if (prizeEl) prizeEl.value = '0';
-                if (positionEl) positionEl.value = '';
                 
                 if (batchCalculatorData[idx]) {
                     batchCalculatorData[idx].stableford = '';
-                    batchCalculatorData[idx].prize = 0;
-                    batchCalculatorData[idx].position = '';
                 }
                 // Recalc to update calculated fields
                 recalcBatchRow(idx);
