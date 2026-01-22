@@ -2175,6 +2175,16 @@
                             <button class="warning" style="margin-left:4px;" onclick="recalcAllBatchRows()"><i class="fas fa-sync-alt"></i> Calculate Batch</button>
                             <button class="danger" style="margin-left:4px; font-size:9px; padding:4px 8px;" onclick="resyncAllWeeks()"><i class="fas fa-redo"></i> Resync Weeks</button>
                             <div class="best-scores-selector" style="display: inline-block;">
+                                <button class="best-scores-button danger" onclick="toggleResetWeeksDropdown()" style="background-color: #e74c3c; color: white; margin-left:4px;">
+                                    <i class="fas fa-trash-alt"></i> Reset <i class="fas fa-caret-down"></i>
+                                </button>
+                                <div class="best-scores-dropdown" id="resetWeeksDropdown">
+                                    <div class="best-scores-option" onclick="resetBatchWeeks('current')"><i class="fas fa-eraser"></i> Reset Current Week</div>
+                                    <div class="best-scores-option" onclick="resetBatchWeeks('all')"><i class="fas fa-trash"></i> Reset ALL Weeks</div>
+                                    <div class="best-scores-option" onclick="resetBatchWeeks('range')"><i class="fas fa-list"></i> Reset Week Range...</div>
+                                </div>
+                            </div>
+                            <div class="best-scores-selector" style="display: inline-block;">
                                 <button class="best-scores-button warning" onclick="toggleBatchCSVDropdown()" style="background-color: #d4af37; color: #0a3d2e; margin-left:4px;">
                                     <i class="fas fa-file-csv"></i> CSV <i class="fas fa-caret-down"></i>
                                 </button>
@@ -7648,6 +7658,82 @@
             newIndex = Math.round(newIndex * 10) / 10;
             
             return newIndex;
+        }
+        
+        function toggleResetWeeksDropdown() {
+            const dropdown = document.getElementById('resetWeeksDropdown');
+            const isShown = dropdown.classList.contains('show');
+            
+            // Close all other dropdowns first
+            document.querySelectorAll('.best-scores-dropdown').forEach(d => d.classList.remove('show'));
+            
+            // Toggle this dropdown
+            if (!isShown) {
+                dropdown.classList.add('show');
+            }
+        }
+        
+        function resetBatchWeeks(mode) {
+            // Close the dropdown
+            document.getElementById('resetWeeksDropdown').classList.remove('show');
+            
+            if (mode === 'current') {
+                // Reset current week only
+                if (!confirm(`Reset WEEK ${currentBatchWeek}?\n\nThis will clear all data for this week only.\n\nThis action cannot be undone!`)) {
+                    return;
+                }
+                
+                // Clear current week data
+                batchCalculatorDataByWeek[currentBatchWeek] = [];
+                saveBatchCalculatorData();
+                renderBatchCalculatorTable();
+                alert(`Week ${currentBatchWeek} has been reset.`);
+                
+            } else if (mode === 'all') {
+                // Reset all weeks
+                if (!confirm('Reset ALL WEEKS (WK1-WK25)?\n\nThis will DELETE ALL batch calculator data for every week.\n\nThis action cannot be undone!')) {
+                    return;
+                }
+                
+                // Clear all weeks
+                batchCalculatorDataByWeek = {};
+                saveBatchCalculatorData();
+                renderBatchCalculatorTable();
+                alert('All weeks have been reset.');
+                
+            } else if (mode === 'range') {
+                // Reset a range of weeks
+                const startWeekStr = prompt('Enter starting week number (1-25):', '1');
+                if (!startWeekStr) return;
+                
+                const startWeek = parseInt(startWeekStr);
+                if (isNaN(startWeek) || startWeek < 1 || startWeek > 25) {
+                    alert('Invalid week number. Please enter a number between 1 and 25.');
+                    return;
+                }
+                
+                const endWeekStr = prompt(`Enter ending week number (${startWeek}-25):`, startWeek.toString());
+                if (!endWeekStr) return;
+                
+                const endWeek = parseInt(endWeekStr);
+                if (isNaN(endWeek) || endWeek < startWeek || endWeek > 25) {
+                    alert(`Invalid week number. Please enter a number between ${startWeek} and 25.`);
+                    return;
+                }
+                
+                if (!confirm(`Reset WEEKS ${startWeek} to ${endWeek}?\n\nThis will clear all data for these weeks.\n\nThis action cannot be undone!`)) {
+                    return;
+                }
+                
+                // Clear the specified range
+                for (let week = startWeek; week <= endWeek; week++) {
+                    batchCalculatorDataByWeek[week] = [];
+                }
+                
+                saveBatchCalculatorData();
+                renderBatchCalculatorTable();
+                alert(`Weeks ${startWeek} to ${endWeek} have been reset.`);
+            }
         }
         
         function resyncAllWeeks() {
