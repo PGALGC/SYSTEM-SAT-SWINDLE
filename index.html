@@ -8395,7 +8395,7 @@
             // Build list of available weeks
             let weekOptions = '';
             for (let i = 1; i <= 25; i++) {
-                weekOptions += `<option value="${i}">WK${i}</option>`;
+                weekOptions += `<option value="${i}" style="color:#333;">WK${i}</option>`;
             }
             
             // Create a temporary modal/dialog
@@ -8458,13 +8458,21 @@
             // Store reference to close later
             window.copyWeekOverlay = overlay;
             
-            // Set default values
-            const fromWeekSelect = document.getElementById('copy-from-week');
-            const toWeekSelect = document.getElementById('copy-to-week');
-            
-            // Default: from current week, to next week
-            if (fromWeekSelect) fromWeekSelect.value = currentBatchWeek.toString();
-            if (toWeekSelect && currentBatchWeek < 25) toWeekSelect.value = (currentBatchWeek + 1).toString();
+            // Set default values with a slight delay to ensure DOM is ready
+            setTimeout(() => {
+                const fromWeekSelect = document.getElementById('copy-from-week');
+                const toWeekSelect = document.getElementById('copy-to-week');
+                
+                // Default: from current week, to next week
+                if (fromWeekSelect) {
+                    fromWeekSelect.value = currentBatchWeek.toString();
+                    console.log('Set From Week to:', currentBatchWeek);
+                }
+                if (toWeekSelect && currentBatchWeek < 25) {
+                    toWeekSelect.value = (currentBatchWeek + 1).toString();
+                    console.log('Set To Week to:', currentBatchWeek + 1);
+                }
+            }, 10);
             
             // Close on overlay click
             overlay.addEventListener('click', (e) => {
