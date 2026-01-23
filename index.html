@@ -2019,7 +2019,12 @@
             
             <!-- EMBEDDED GOLF HANDICAP CALCULATOR -->
             <div class="section" id="embedded-golf-calculator">
-                <h2><i class="fas fa-calculator"></i> Golf Handicap Cut & Increase Calculator</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <h2 style="margin: 0;"><i class="fas fa-calculator"></i> Golf Handicap Cut & Increase Calculator</h2>
+                    <button onclick="showCalculationParametersDialog()" class="secondary" style="padding: 4px 10px; font-size: 9px;" title="Edit calculation parameters">
+                        <i class="fas fa-cog"></i> Parameters
+                    </button>
+                </div>
                 <div class="season-info" style="text-align: center; font-style: italic; font-size: 9px; margin-bottom: 8px;">Season: Winter 2025-26</div>
                 <div style="text-align: center; margin-bottom: 8px;">
                     <span style="font-size: 10px; font-weight: 600; color: #2c5530;">Players Calculated: <span id="golf-player-count">0</span></span>
@@ -7498,6 +7503,275 @@
         }
         
         // ============================================
+        // CALCULATION PARAMETERS SETTINGS
+        // ============================================
+        
+        const defaultGolfParams = {
+            winThreshold: 29,
+            noWinThreshold: 31,
+            exceptionalThreshold: 36,
+            maxIndex: 15.1,
+            minIndex: -18,
+            cutBase: 0.8,
+            cutCatDivisor: 40,
+            cutIndexPercent: 0.02,
+            incIndexPercent: 0.02,
+            incAddValue: 0.2,
+            incCatDivisor: 30,
+            excCatDivisor: 10,
+            excIndexPercent: 0.0225,
+            cat1Max: -0.1,
+            cat2Max: 4.9,
+            cat3Max: 9.9,
+            cat4Min: 10
+        };
+        
+        function loadCalculationParameters() {
+            const saved = localStorage.getItem('golfCalculationParams');
+            if (saved) {
+                try {
+                    const savedParams = JSON.parse(saved);
+                    Object.assign(golfParams, savedParams);
+                    console.log('Loaded custom calculation parameters');
+                } catch (e) {
+                    console.error('Error loading calculation parameters:', e);
+                }
+            }
+        }
+        
+        function saveCalculationParameters() {
+            try {
+                localStorage.setItem('golfCalculationParams', JSON.stringify(golfParams));
+                console.log('Saved calculation parameters');
+            } catch (e) {
+                console.error('Error saving calculation parameters:', e);
+            }
+        }
+        
+        function showCalculationParametersDialog() {
+            // Create overlay
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.6)';
+            overlay.style.zIndex = '9999';
+            overlay.style.display = 'flex';
+            overlay.style.alignItems = 'center';
+            overlay.style.justifyContent = 'center';
+            overlay.style.overflow = 'auto';
+            overlay.style.padding = '20px';
+            
+            // Create dialog
+            const dialog = document.createElement('div');
+            dialog.style.backgroundColor = 'white';
+            dialog.style.padding = '24px';
+            dialog.style.borderRadius = '8px';
+            dialog.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+            dialog.style.minWidth = '600px';
+            dialog.style.maxWidth = '800px';
+            dialog.style.maxHeight = '90vh';
+            dialog.style.overflow = 'auto';
+            dialog.style.color = '#333';
+            
+            dialog.innerHTML = `
+                <h3 style="color:#1a6b4f; margin-bottom:16px; font-size:18px; font-weight:700; display:flex; align-items:center; gap:8px;">
+                    <i class="fas fa-cog"></i> Calculation Parameters
+                </h3>
+                <p style="font-size:12px; margin-bottom:16px; color:#555; line-height:1.5;">
+                    Adjust the parameters used for handicap calculations. Changes will apply immediately to all calculators.
+                </p>
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+                    <div>
+                        <h4 style="color:#2c5530; font-size:13px; margin-bottom:12px; border-bottom:2px solid #2c5530; padding-bottom:4px;">Threshold Parameters</h4>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Win Threshold (points)</label>
+                            <input type="number" id="param-winThreshold" step="1" value="${golfParams.winThreshold}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                            <div style="font-size:9px; color:#666; margin-top:2px;">If won money AND scored > this value</div>
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">No Win Threshold (points)</label>
+                            <input type="number" id="param-noWinThreshold" step="1" value="${golfParams.noWinThreshold}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                            <div style="font-size:9px; color:#666; margin-top:2px;">If no money AND scored < this value</div>
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Exceptional Threshold (points)</label>
+                            <input type="number" id="param-exceptionalThreshold" step="1" value="${golfParams.exceptionalThreshold}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                            <div style="font-size:9px; color:#666; margin-top:2px;">If scored > this value (exceptional cut)</div>
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Max Index</label>
+                            <input type="number" id="param-maxIndex" step="0.1" value="${golfParams.maxIndex}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Min Index</label>
+                            <input type="number" id="param-minIndex" step="0.1" value="${golfParams.minIndex}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 style="color:#2c5530; font-size:13px; margin-bottom:12px; border-bottom:2px solid #2c5530; padding-bottom:4px;">Cut/Increase Parameters</h4>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Cut Base</label>
+                            <input type="number" id="param-cutBase" step="0.01" value="${golfParams.cutBase}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Cut Category Divisor</label>
+                            <input type="number" id="param-cutCatDivisor" step="1" value="${golfParams.cutCatDivisor}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Cut Index Percent</label>
+                            <input type="number" id="param-cutIndexPercent" step="0.001" value="${golfParams.cutIndexPercent}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Increase Index Percent</label>
+                            <input type="number" id="param-incIndexPercent" step="0.001" value="${golfParams.incIndexPercent}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Increase Add Value</label>
+                            <input type="number" id="param-incAddValue" step="0.01" value="${golfParams.incAddValue}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Increase Category Divisor</label>
+                            <input type="number" id="param-incCatDivisor" step="1" value="${golfParams.incCatDivisor}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+                    <div>
+                        <h4 style="color:#2c5530; font-size:13px; margin-bottom:12px; border-bottom:2px solid #2c5530; padding-bottom:4px;">Exceptional Cut Parameters</h4>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Exceptional Category Divisor</label>
+                            <input type="number" id="param-excCatDivisor" step="1" value="${golfParams.excCatDivisor}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Exceptional Index Percent</label>
+                            <input type="number" id="param-excIndexPercent" step="0.0001" value="${golfParams.excIndexPercent}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 style="color:#2c5530; font-size:13px; margin-bottom:12px; border-bottom:2px solid #2c5530; padding-bottom:4px;">Category Boundaries</h4>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Category 1 Max</label>
+                            <input type="number" id="param-cat1Max" step="0.1" value="${golfParams.cat1Max}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Category 2 Max</label>
+                            <input type="number" id="param-cat2Max" step="0.1" value="${golfParams.cat2Max}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Category 3 Max</label>
+                            <input type="number" id="param-cat3Max" step="0.1" value="${golfParams.cat3Max}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; font-weight:600; font-size:11px; margin-bottom:4px; color:#333;">Category 4 Min</label>
+                            <input type="number" id="param-cat4Min" step="0.1" value="${golfParams.cat4Min}" style="width:100%; padding:8px; font-size:12px; border:2px solid #1a6b4f; border-radius:4px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background-color:#e8f5e9; padding:12px; border-left:4px solid #4caf50; border-radius:4px; margin-bottom:20px; font-size:11px;">
+                    <strong style="color:#2e7d32;">💡 Tip:</strong> Changes take effect immediately. All calculations will use the new parameters.
+                </div>
+                
+                <div style="display:flex; gap:10px; justify-content:flex-end;">
+                    <button onclick="resetParametersToDefaults()" style="padding:10px 20px; font-size:12px; background:#ff9800; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:600;">
+                        <i class="fas fa-undo"></i> Reset to Defaults
+                    </button>
+                    <button onclick="closeParametersDialog()" style="padding:10px 20px; font-size:12px; background:#6c757d; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:600;">Cancel</button>
+                    <button onclick="saveParametersFromDialog()" style="padding:10px 20px; font-size:12px; background:#1a6b4f; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:600;">
+                        <i class="fas fa-save"></i> Save Parameters
+                    </button>
+                </div>
+            `;
+            
+            overlay.appendChild(dialog);
+            document.body.appendChild(overlay);
+            window.calculationParamsOverlay = overlay;
+            
+            // Close on overlay click
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeParametersDialog();
+            });
+        }
+        
+        function closeParametersDialog() {
+            if (window.calculationParamsOverlay) {
+                document.body.removeChild(window.calculationParamsOverlay);
+                window.calculationParamsOverlay = null;
+            }
+        }
+        
+        function saveParametersFromDialog() {
+            // Get all values from inputs
+            golfParams.winThreshold = parseFloat(document.getElementById('param-winThreshold').value);
+            golfParams.noWinThreshold = parseFloat(document.getElementById('param-noWinThreshold').value);
+            golfParams.exceptionalThreshold = parseFloat(document.getElementById('param-exceptionalThreshold').value);
+            golfParams.maxIndex = parseFloat(document.getElementById('param-maxIndex').value);
+            golfParams.minIndex = parseFloat(document.getElementById('param-minIndex').value);
+            golfParams.cutBase = parseFloat(document.getElementById('param-cutBase').value);
+            golfParams.cutCatDivisor = parseFloat(document.getElementById('param-cutCatDivisor').value);
+            golfParams.cutIndexPercent = parseFloat(document.getElementById('param-cutIndexPercent').value);
+            golfParams.incIndexPercent = parseFloat(document.getElementById('param-incIndexPercent').value);
+            golfParams.incAddValue = parseFloat(document.getElementById('param-incAddValue').value);
+            golfParams.incCatDivisor = parseFloat(document.getElementById('param-incCatDivisor').value);
+            golfParams.excCatDivisor = parseFloat(document.getElementById('param-excCatDivisor').value);
+            golfParams.excIndexPercent = parseFloat(document.getElementById('param-excIndexPercent').value);
+            golfParams.cat1Max = parseFloat(document.getElementById('param-cat1Max').value);
+            golfParams.cat2Max = parseFloat(document.getElementById('param-cat2Max').value);
+            golfParams.cat3Max = parseFloat(document.getElementById('param-cat3Max').value);
+            golfParams.cat4Min = parseFloat(document.getElementById('param-cat4Min').value);
+            
+            // Save to localStorage
+            saveCalculationParameters();
+            
+            // Close dialog
+            closeParametersDialog();
+            
+            // Recalculate if golf calculator is active
+            if (document.getElementById('golf-playerIndex')) {
+                calculateGolfHandicap();
+            }
+            
+            alert('Calculation parameters updated successfully!\n\nAll calculations will now use the new parameters.');
+        }
+        
+        function resetParametersToDefaults() {
+            if (!confirm('Reset all parameters to default values?\n\nThis will overwrite your current settings.')) {
+                return;
+            }
+            
+            // Reset to defaults
+            Object.assign(golfParams, defaultGolfParams);
+            
+            // Update all input fields
+            document.getElementById('param-winThreshold').value = golfParams.winThreshold;
+            document.getElementById('param-noWinThreshold').value = golfParams.noWinThreshold;
+            document.getElementById('param-exceptionalThreshold').value = golfParams.exceptionalThreshold;
+            document.getElementById('param-maxIndex').value = golfParams.maxIndex;
+            document.getElementById('param-minIndex').value = golfParams.minIndex;
+            document.getElementById('param-cutBase').value = golfParams.cutBase;
+            document.getElementById('param-cutCatDivisor').value = golfParams.cutCatDivisor;
+            document.getElementById('param-cutIndexPercent').value = golfParams.cutIndexPercent;
+            document.getElementById('param-incIndexPercent').value = golfParams.incIndexPercent;
+            document.getElementById('param-incAddValue').value = golfParams.incAddValue;
+            document.getElementById('param-incCatDivisor').value = golfParams.incCatDivisor;
+            document.getElementById('param-excCatDivisor').value = golfParams.excCatDivisor;
+            document.getElementById('param-excIndexPercent').value = golfParams.excIndexPercent;
+            document.getElementById('param-cat1Max').value = golfParams.cat1Max;
+            document.getElementById('param-cat2Max').value = golfParams.cat2Max;
+            document.getElementById('param-cat3Max').value = golfParams.cat3Max;
+            document.getElementById('param-cat4Min').value = golfParams.cat4Min;
+            
+            alert('Parameters reset to defaults!');
+        }
+        
+        // ============================================
         // GOLF REPORT AUTO-APPEND FUNCTIONS
         // ============================================
         
@@ -9245,6 +9519,9 @@
             
             // Populate Golf Handicap Calculator player dropdown
             populateGolfPlayerDropdown();
+            
+            // Load calculation parameters from localStorage
+            loadCalculationParameters();
             
             // Initialize handicap data
             loadHandicapData();
