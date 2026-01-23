@@ -7953,6 +7953,9 @@
             
             // Load the last import label
             loadBatchLastImportLabel();
+            
+            // Load the sort state
+            loadBatchSortState();
         }
         
         function saveBatchCalculatorData() {
@@ -8253,6 +8256,33 @@
         let batchSortColumn = -1;
         let batchSortAscending = true;
         
+        function saveBatchSortState() {
+            try {
+                localStorage.setItem('batchSortColumn', batchSortColumn.toString());
+                localStorage.setItem('batchSortAscending', batchSortAscending.toString());
+            } catch (e) {
+                console.error('Error saving batch sort state:', e);
+            }
+        }
+        
+        function loadBatchSortState() {
+            try {
+                const savedColumn = localStorage.getItem('batchSortColumn');
+                const savedAscending = localStorage.getItem('batchSortAscending');
+                
+                if (savedColumn !== null) {
+                    batchSortColumn = parseInt(savedColumn);
+                }
+                if (savedAscending !== null) {
+                    batchSortAscending = savedAscending === 'true';
+                }
+                
+                console.log('Loaded batch sort state:', { batchSortColumn, batchSortAscending });
+            } catch (e) {
+                console.error('Error loading batch sort state:', e);
+            }
+        }
+        
         function sortBatchTable(columnIndex) {
             // Toggle sort direction if clicking same column
             if (batchSortColumn === columnIndex) {
@@ -8276,6 +8306,9 @@
             
             // Perform the actual sort
             sortBatchTableRows();
+            
+            // Save sort state to localStorage
+            saveBatchSortState();
         }
         
         function sortBatchTableRows() {
