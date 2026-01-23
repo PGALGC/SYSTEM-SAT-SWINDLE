@@ -8029,8 +8029,8 @@
                 }
             });
             
-            // Reapply sort if it was active before
-            if (batchSortColumn >= 0 && currentSortIndicator) {
+            // Reapply sort if it was active before (including after page load)
+            if (batchSortColumn >= 0) {
                 // Re-sort the table after rendering
                 setTimeout(() => {
                     // Restore sort indicators first
