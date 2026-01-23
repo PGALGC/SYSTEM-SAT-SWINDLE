@@ -2172,6 +2172,7 @@
                         </div>
                         <div style="display:flex; gap:6px;">
                             <button class="secondary" style="margin-left:8px;" onclick="showImportStblfdScoreDialog()"><i class="fas fa-file-import"></i> Import STBLFD Score</button>
+                            <button class="warning" onclick="showCopyWeekDataDialog()" style="margin-left:4px;" title="Copy Players New Index from one week to Players Index of another week"><i class="fas fa-copy"></i> Copy Week Data</button>
                             <button class="warning" style="margin-left:4px;" onclick="recalcAllBatchRows()"><i class="fas fa-sync-alt"></i> Calculate Batch</button>
                             <button class="danger" style="margin-left:4px; font-size:9px; padding:4px 8px;" onclick="resyncAllWeeks()"><i class="fas fa-redo"></i> Resync Weeks</button>
                             <div class="best-scores-selector" style="display: inline-block;">
@@ -7979,6 +7980,9 @@
             
             let batchCalculatorData = batchCalculatorDataByWeek[currentBatchWeek];
             
+            // Store current sort state indicator before clearing
+            const currentSortIndicator = batchSortColumn >= 0 ? document.getElementById(`batch-sort-${batchSortColumn}`)?.textContent : null;
+            
             // Ensure data array has 40 entries
             while (batchCalculatorData.length < leaguePlayers.length) {
                 batchCalculatorData.push({
@@ -8022,6 +8026,20 @@
                     setTimeout(() => recalcBatchRow(idx), 0);
                 }
             });
+            
+            // Reapply sort if it was active before
+            if (batchSortColumn >= 0 && currentSortIndicator) {
+                // Re-sort the table after rendering
+                setTimeout(() => {
+                    // Restore sort indicators first
+                    const indicator = document.getElementById(`batch-sort-${batchSortColumn}`);
+                    if (indicator) {
+                        indicator.textContent = batchSortAscending ? ' ▲' : ' ▼';
+                    }
+                    // Then sort the rows
+                    sortBatchTableRows();
+                }, 10);
+            }
             
             // Attach listeners after rendering
             document.querySelectorAll('#batch-calculator-body .batch-input').forEach(el => {
@@ -8237,12 +8255,6 @@
         let batchSortAscending = true;
         
         function sortBatchTable(columnIndex) {
-            const tbody = document.getElementById('batch-calculator-body');
-            if (!tbody) return;
-            
-            const rows = Array.from(tbody.querySelectorAll('tr'));
-            if (rows.length === 0) return;
-            
             // Toggle sort direction if clicking same column
             if (batchSortColumn === columnIndex) {
                 batchSortAscending = !batchSortAscending;
@@ -8262,6 +8274,17 @@
             if (currentIndicator) {
                 currentIndicator.textContent = batchSortAscending ? ' ▲' : ' ▼';
             }
+            
+            // Perform the actual sort
+            sortBatchTableRows();
+        }
+        
+        function sortBatchTableRows() {
+            const tbody = document.getElementById('batch-calculator-body');
+            if (!tbody) return;
+            
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            if (rows.length === 0) return;
             
             // Sort rows
             rows.sort((a, b) => {
@@ -8330,6 +8353,183 @@
             
             // Re-append rows in sorted order
             rows.forEach(row => tbody.appendChild(row));
+        }
+        
+        // ============================================
+        // COPY WEEK DATA FUNCTIONALITY
+        // ============================================
+        
+        function showCopyWeekDataDialog() {
+            // Build list of available weeks
+            let weekOptions = '';
+            for (let i = 1; i <= 25; i++) {
+                weekOptions += `<option value="${i}">WK${i}</option>`;
+            }
+            
+            // Create a temporary modal/dialog
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.6)';
+            overlay.style.zIndex = '9999';
+            overlay.style.display = 'flex';
+            overlay.style.alignItems = 'center';
+            overlay.style.justifyContent = 'center';
+            
+            const dialog = document.createElement('div');
+            dialog.style.backgroundColor = 'white';
+            dialog.style.padding = '24px';
+            dialog.style.borderRadius = '8px';
+            dialog.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+            dialog.style.minWidth = '450px';
+            dialog.style.maxWidth = '550px';
+            dialog.style.color = '#333';
+            
+            dialog.innerHTML = `
+                <h3 style="color:#1a6b4f; margin-bottom:16px; font-size:18px; font-weight:700;">Copy Week Data</h3>
+                <p style="font-size:12px; margin-bottom:16px; color:#555; line-height:1.5;">
+                    This will copy <strong>Players New Index</strong> from the source week to <strong>Players Index</strong> in the destination week.
+                    This operation only affects selected weeks.
+                </p>
+                <div style="display:grid; grid-template-columns:1fr auto 1fr; gap:12px; align-items:center; margin-bottom:20px;">
+                    <div>
+                        <label style="display:block; font-weight:600; font-size:11px; margin-bottom:6px; color:#2c5530;">From Week:</label>
+                        <select id="copy-from-week" style="width:100%; padding:10px; font-size:13px; border:2px solid #1a6b4f; border-radius:4px; background-color:white; cursor:pointer;">
+                            ${weekOptions}
+                        </select>
+                    </div>
+                    <div style="text-align:center; padding-top:20px;">
+                        <i class="fas fa-arrow-right" style="font-size:20px; color:#1a6b4f;"></i>
+                    </div>
+                    <div>
+                        <label style="display:block; font-weight:600; font-size:11px; margin-bottom:6px; color:#2c5530;">Copy to Week:</label>
+                        <select id="copy-to-week" style="width:100%; padding:10px; font-size:13px; border:2px solid #1a6b4f; border-radius:4px; background-color:white; cursor:pointer;">
+                            ${weekOptions}
+                        </select>
+                    </div>
+                </div>
+                <div style="background-color:#fff8e1; padding:12px; border-left:4px solid #ff9800; border-radius:4px; margin-bottom:20px; font-size:11px;">
+                    <strong style="color:#e65100;">⚠️ Warning:</strong> This will overwrite the <strong>Players Index</strong> column in the destination week. Prize Money, Stableford Points, and Finishing Position will NOT be affected.
+                </div>
+                <div style="display:flex; gap:10px; justify-content:flex-end;">
+                    <button onclick="closeCopyWeekDialog()" style="padding:10px 20px; font-size:12px; background:#6c757d; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:600;">Cancel</button>
+                    <button onclick="executeCopyWeekData()" style="padding:10px 20px; font-size:12px; background:#1a6b4f; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:600;"><i class="fas fa-copy"></i> Copy Data</button>
+                </div>
+            `;
+            
+            overlay.appendChild(dialog);
+            document.body.appendChild(overlay);
+            
+            // Store reference to close later
+            window.copyWeekOverlay = overlay;
+            
+            // Set default values
+            const fromWeekSelect = document.getElementById('copy-from-week');
+            const toWeekSelect = document.getElementById('copy-to-week');
+            
+            // Default: from current week, to next week
+            if (fromWeekSelect) fromWeekSelect.value = currentBatchWeek.toString();
+            if (toWeekSelect && currentBatchWeek < 25) toWeekSelect.value = (currentBatchWeek + 1).toString();
+            
+            // Close on overlay click
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeCopyWeekDialog();
+            });
+        }
+        
+        function closeCopyWeekDialog() {
+            if (window.copyWeekOverlay) {
+                document.body.removeChild(window.copyWeekOverlay);
+                window.copyWeekOverlay = null;
+            }
+        }
+        
+        function executeCopyWeekData() {
+            const fromWeekSelect = document.getElementById('copy-from-week');
+            const toWeekSelect = document.getElementById('copy-to-week');
+            
+            if (!fromWeekSelect || !toWeekSelect) return;
+            
+            const fromWeek = parseInt(fromWeekSelect.value);
+            const toWeek = parseInt(toWeekSelect.value);
+            
+            // Validation
+            if (fromWeek === toWeek) {
+                alert('Source and destination weeks must be different.');
+                return;
+            }
+            
+            // Check if source week has data
+            if (!batchCalculatorDataByWeek[fromWeek] || batchCalculatorDataByWeek[fromWeek].length === 0) {
+                alert(`Week ${fromWeek} has no data to copy from.`);
+                return;
+            }
+            
+            // Confirm action
+            if (!confirm(`Copy Players New Index from WK${fromWeek} to Players Index in WK${toWeek}?\n\nThis will overwrite the Players Index column in WK${toWeek}.`)) {
+                return;
+            }
+            
+            // Initialize destination week if needed
+            if (!batchCalculatorDataByWeek[toWeek]) {
+                batchCalculatorDataByWeek[toWeek] = [];
+            }
+            
+            const sourceData = batchCalculatorDataByWeek[fromWeek];
+            const destData = batchCalculatorDataByWeek[toWeek];
+            
+            let copiedCount = 0;
+            
+            // Copy Players New Index to Players Index
+            leaguePlayers.forEach((player, idx) => {
+                // Ensure destination row exists
+                if (!destData[idx]) {
+                    destData[idx] = {
+                        index: '',
+                        prize: 0,
+                        stableford: '',
+                        position: '',
+                        teeWhite: true,
+                        teeYellow: true
+                    };
+                }
+                
+                // Get source player's data
+                const sourcePlayer = sourceData[idx];
+                if (sourcePlayer && sourcePlayer.index && sourcePlayer.index !== '') {
+                    // Calculate the New Index from source week
+                    const playerIndex = parseFloat(sourcePlayer.index) || 0;
+                    const prizeMoney = parseFloat(sourcePlayer.prize) || 0;
+                    const stablefordPoints = parseFloat(sourcePlayer.stableford) || 0;
+                    const finishingPosition = parseInt(sourcePlayer.position) || null;
+                    
+                    // Calculate new index from source data
+                    const newIndex = calculateNewIndexFromData(playerIndex, prizeMoney, stablefordPoints, finishingPosition);
+                    
+                    // Copy to destination Players Index
+                    destData[idx].index = newIndex.toString();
+                    copiedCount++;
+                }
+            });
+            
+            // Save and re-render
+            saveBatchCalculatorData();
+            
+            // Close dialog
+            closeCopyWeekDialog();
+            
+            // Switch to destination week to show results
+            const batchWeekSelector = document.getElementById('batchWeekSelector');
+            if (batchWeekSelector) {
+                batchWeekSelector.value = toWeek.toString();
+                currentBatchWeek = toWeek;
+                renderBatchCalculatorTable();
+            }
+            
+            alert(`Successfully copied ${copiedCount} player indexes from WK${fromWeek} to WK${toWeek}.`);
         }
         
         function importStblfdScoresFromWeek() {
