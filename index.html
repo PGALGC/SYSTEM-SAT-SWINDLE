@@ -6464,7 +6464,7 @@
                     playerDiv.appendChild(playerName);
                     
                     const playerDetails = document.createElement('span');
-                    playerDetails.textContent = `Index: ${player.pgaIndex || 'N/A'} | White: ${player.whiteTees || 'N/A'} | Yellow: ${player.yellowTees || 'N/A'}`;
+                    playerDetails.textContent = `Index: ${player.newIndex || player.pgaIndex || 'N/A'} | White: ${player.whiteTees || 'N/A'} | Yellow: ${player.yellowTees || 'N/A'}`;
                     playerDetails.style.fontSize = '10px';
                     playerDetails.style.color = '#666';
                     playerDiv.appendChild(playerDetails);
