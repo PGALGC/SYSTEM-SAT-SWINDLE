@@ -4299,8 +4299,23 @@
                 };
             });
             
-            // Sort by stableford score with countback tiebreaker
-            playersWithScores.sort(comparePlayersCountback);
+            // Sort by stableford score with countback tiebreaker (same logic as Scorecard)
+            playersWithScores.sort((a, b) => {
+                // Compare total Stableford
+                if (a.stableford !== b.stableford) {
+                    return b.stableford - a.stableford;
+                }
+                // Tie: check Back 9
+                if (a.countback.back9 !== b.countback.back9) {
+                    return b.countback.back9 - a.countback.back9;
+                }
+                // Tie: check holes 13-18
+                if (a.countback.back6 !== b.countback.back6) {
+                    return b.countback.back6 - a.countback.back6;
+                }
+                // Tie: check holes 10-12
+                return b.countback.back3 - a.countback.back3;
+            });
             
             // Get prizes based on player count
             const playerCount = playersWithScores.length;
