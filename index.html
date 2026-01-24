@@ -4092,6 +4092,7 @@
         function changeWinnersWeek() {
             const selector = document.getElementById('winnersWeekSelector');
             currentWinnersWeek = parseInt(selector.value);
+            localStorage.setItem('currentWinnersWeek', currentWinnersWeek.toString());
             renderWinnersTable();
             // Auto-update Profit & Loss when week changes
             calculateProfitLoss();
@@ -4411,6 +4412,11 @@
             const saved = localStorage.getItem('allWeeksWinnersData');
             if (saved) {
                 allWeeksWinnersData = JSON.parse(saved);
+            }
+            // Load last selected week
+            const savedWeek = localStorage.getItem('currentWinnersWeek');
+            if (savedWeek) {
+                currentWinnersWeek = parseInt(savedWeek);
             }
         }
         
@@ -8121,6 +8127,9 @@
             const selector = document.getElementById('batchWeekSelector');
             const newWeek = parseInt(selector.value);
             
+            // Save selected week to localStorage
+            localStorage.setItem('currentBatchWeek', newWeek.toString());
+            
             console.log(`=== Changing from week ${currentBatchWeek} to week ${newWeek} ===`);
             console.log('Current data structure:', JSON.parse(JSON.stringify(batchCalculatorDataByWeek)));
             
@@ -8223,6 +8232,12 @@
             } else {
                 console.log('No saved batch calculator data found');
                 batchCalculatorDataByWeek = {};
+            }
+            
+            // Load last selected week
+            const savedWeek = localStorage.getItem('currentBatchWeek');
+            if (savedWeek) {
+                currentBatchWeek = parseInt(savedWeek);
             }
             
             // Load the last import label
