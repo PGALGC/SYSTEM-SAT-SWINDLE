@@ -3130,13 +3130,8 @@
         // Helper function to calculate strokes for a hole (handles plus handicaps correctly)
         function calculateStrokesForHole(playerHandicap, holeIndex) {
             if (playerHandicap < 0) {
-                // Plus handicap: give strokes back on hardest holes
-                const absHandicap = Math.abs(playerHandicap);
-                const strokesPerHole = Math.floor(absHandicap / 18);
-                const extraStrokesCount = Math.round(absHandicap % 18);
-                // Give back stroke if hole index <= extraStrokesCount
-                const extraStroke = holeIndex <= extraStrokesCount ? 1 : 0;
-                return -(strokesPerHole + extraStroke);
+                // Minus/plus handicap players: play gross scores, no stroke adjustments for Stableford
+                return 0;
             } else {
                 // Regular handicap: receive strokes on hardest holes
                 const strokesPerHole = Math.floor(playerHandicap / 18);
@@ -3164,9 +3159,7 @@
             const strokesReceived = calculateStrokesForHole(playerHandicap, holeIndex);
             
             // Adjust par for handicap
-            // For plus handicaps (negative strokes), subtract them to make the hole harder
-            // For regular handicaps (positive strokes), add them to make the hole easier
-            const adjustedPar = par - strokesReceived;
+            const adjustedPar = par + strokesReceived;
             
             // Calculate stableford points
             const diff = score - adjustedPar;
