@@ -2553,8 +2553,8 @@
                 }
             // Load and render HCAP Batch Calculator table
                 if (!window.batchCalcInitialized) {
-                    initializeBatchWeekSelector();
-                    loadBatchCalculatorData();
+                    loadBatchCalculatorData(); // Load data first (restores saved week)
+                    initializeBatchWeekSelector(); // Then initialize selector with loaded week
                     window.batchCalcInitialized = true;
                 }
                 renderBatchCalculatorTable();
