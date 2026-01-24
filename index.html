@@ -3164,7 +3164,9 @@
             const strokesReceived = calculateStrokesForHole(playerHandicap, holeIndex);
             
             // Adjust par for handicap
-            const adjustedPar = par + strokesReceived;
+            // For plus handicaps (negative strokes), subtract them to make the hole harder
+            // For regular handicaps (positive strokes), add them to make the hole easier
+            const adjustedPar = par - strokesReceived;
             
             // Calculate stableford points
             const diff = score - adjustedPar;
