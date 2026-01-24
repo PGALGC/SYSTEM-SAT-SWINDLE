@@ -3130,8 +3130,13 @@
         // Helper function to calculate strokes for a hole (handles plus handicaps correctly)
         function calculateStrokesForHole(playerHandicap, holeIndex) {
             if (playerHandicap < 0) {
-                // Minus/plus handicap players: play gross scores, no stroke adjustments for Stableford
-                return 0;
+                // Minus/plus handicap players: give strokes back on EASIEST holes (highest index numbers)
+                const absHandicap = Math.abs(playerHandicap);
+                const strokesPerHole = Math.floor(absHandicap / 18);
+                const extraStrokesCount = Math.round(absHandicap % 18);
+                // Give back stroke if hole index is in the easiest holes (18 down to 18-extraStrokesCount+1)
+                const extraStroke = holeIndex > (18 - extraStrokesCount) ? 1 : 0;
+                return -(strokesPerHole + extraStroke);
             } else {
                 // Regular handicap: receive strokes on hardest holes
                 const strokesPerHole = Math.floor(playerHandicap / 18);
