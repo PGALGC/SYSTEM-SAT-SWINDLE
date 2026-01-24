@@ -2843,9 +2843,8 @@
                         const par = globalParValues[hole] || 4;
                         const holeIndex = globalIndexValues[hole] || (hole + 1);
                         const aHandicap = parseFloat(a.whiteTees) || a.handicap || 0;
-                        const handicapStrokes = Math.floor(aHandicap / 18);
-                        const extraStroke = (aHandicap % 18) >= holeIndex ? 1 : 0;
-                        const adjustedPar = par + handicapStrokes + extraStroke;
+                        const strokesReceived = calculateStrokesForHole(aHandicap, holeIndex);
+                        const adjustedPar = par + strokesReceived;
                         const diff = aGross - adjustedPar;
                         
                         let points = 0;
@@ -2864,9 +2863,8 @@
                         const par = globalParValues[hole] || 4;
                         const holeIndex = globalIndexValues[hole] || (hole + 1);
                         const bHandicap = parseFloat(b.whiteTees) || b.handicap || 0;
-                        const handicapStrokes = Math.floor(bHandicap / 18);
-                        const extraStroke = (bHandicap % 18) >= holeIndex ? 1 : 0;
-                        const adjustedPar = par + handicapStrokes + extraStroke;
+                        const strokesReceived = calculateStrokesForHole(bHandicap, holeIndex);
+                        const adjustedPar = par + strokesReceived;
                         const diff = bGross - adjustedPar;
                         
                         let points = 0;
@@ -8430,20 +8428,6 @@
                 if (prizeMoney > 0 && stablefordPoints > golfParams.winThreshold && finishingPosition) {
                     const baseCut = golfParams.cutBase + (category / golfParams.cutCatDivisor) + (playerIndex * golfParams.cutIndexPercent);
                     stage1 = - (baseCut / finishingPosition);
-                    // DEBUG for Stuart Kinge (idx 36)
-                    if (idx === 36) {
-                        console.log('=== BATCH CALC DEBUG - Stuart Kinge ===');
-                        console.log('playerIndex:', playerIndex);
-                        console.log('category:', category);
-                        console.log('prizeMoney:', prizeMoney);
-                        console.log('stablefordPoints:', stablefordPoints);
-                        console.log('finishingPosition:', finishingPosition);
-                        console.log('golfParams.cutBase:', golfParams.cutBase);
-                        console.log('golfParams.cutCatDivisor:', golfParams.cutCatDivisor);
-                        console.log('golfParams.cutIndexPercent:', golfParams.cutIndexPercent);
-                        console.log('baseCut:', baseCut);
-                        console.log('stage1:', stage1);
-                    }
                 }
                 if (prizeMoney === 0 && stablefordPoints < golfParams.noWinThreshold && category > 0) {
                     stage2 = (playerIndex * golfParams.incIndexPercent) + golfParams.incAddValue + (category / golfParams.incCatDivisor);
