@@ -2876,24 +2876,24 @@
                 const bTotal = bPoints.reduce((sum, p) => sum + p, 0);
                 const aBack9 = aPoints.slice(9, 18).reduce((sum, p) => sum + p, 0);
                 const bBack9 = bPoints.slice(9, 18).reduce((sum, p) => sum + p, 0);
-                const aBack6 = aPoints.slice(12, 18).reduce((sum, p) => sum + p, 0);
+                const aBack6 = aPoints.slice(12, 18).reduce((sum, p) => sum + p, 0); // Holes 13-18
                 const bBack6 = bPoints.slice(12, 18).reduce((sum, p) => sum + p, 0);
-                const aBack3 = aPoints.slice(9, 12).reduce((sum, p) => sum + p, 0);
-                const bBack3 = bPoints.slice(9, 12).reduce((sum, p) => sum + p, 0);
-                const aBack2 = aPoints.slice(10, 12).reduce((sum, p) => sum + p, 0);
-                const bBack2 = bPoints.slice(10, 12).reduce((sum, p) => sum + p, 0);
-                const aBack1 = aPoints[9];
-                const bBack1 = bPoints[9];
+                const aBack3 = aPoints.slice(15, 18).reduce((sum, p) => sum + p, 0); // Holes 16,17,18
+                const bBack3 = bPoints.slice(15, 18).reduce((sum, p) => sum + p, 0);
+                const aBack2 = aPoints.slice(16, 18).reduce((sum, p) => sum + p, 0); // Holes 17,18
+                const bBack2 = bPoints.slice(16, 18).reduce((sum, p) => sum + p, 0);
+                const aBack1 = aPoints[17]; // Hole 18
+                const bBack1 = bPoints[17];
                 const aFront9 = aPoints.slice(0, 9).reduce((sum, p) => sum + p, 0);
                 const bFront9 = bPoints.slice(0, 9).reduce((sum, p) => sum + p, 0);
-                const aFront6 = aPoints.slice(3, 9).reduce((sum, p) => sum + p, 0);
+                const aFront6 = aPoints.slice(3, 9).reduce((sum, p) => sum + p, 0); // Holes 4-9
                 const bFront6 = bPoints.slice(3, 9).reduce((sum, p) => sum + p, 0);
-                const aFront3 = aPoints.slice(0, 3).reduce((sum, p) => sum + p, 0);
-                const bFront3 = bPoints.slice(0, 3).reduce((sum, p) => sum + p, 0);
-                const aFront2 = aPoints.slice(1, 3).reduce((sum, p) => sum + p, 0);
-                const bFront2 = bPoints.slice(1, 3).reduce((sum, p) => sum + p, 0);
-                const aFront1 = aPoints[0];
-                const bFront1 = bPoints[0];
+                const aFront3 = aPoints.slice(6, 9).reduce((sum, p) => sum + p, 0); // Holes 7,8,9
+                const bFront3 = bPoints.slice(6, 9).reduce((sum, p) => sum + p, 0);
+                const aFront2 = aPoints.slice(7, 9).reduce((sum, p) => sum + p, 0); // Holes 8,9
+                const bFront2 = bPoints.slice(7, 9).reduce((sum, p) => sum + p, 0);
+                const aFront1 = aPoints[8]; // Hole 9
+                const bFront1 = bPoints[8];
                 
                 // Apply full 11-level countback
                 if (aTotal !== bTotal) return scorecardSortDescending ? bTotal - aTotal : aTotal - bTotal;
@@ -2940,7 +2940,7 @@
                     <th class="section-header">GROSS</th>
                     <th class="section-header" onclick="toggleScorecardSort()" style="cursor: pointer; user-select: none;">STBLFD <span id="scorecard-sort-indicator">▼</span></th>
                     <th class="section-header countback">CB 13-18</th>
-                    <th class="section-header countback">CB 10-12</th>
+                    <th class="section-header countback">CB 16-18</th>
                     <th class="hole-header">Action</th>
                 </tr>
             `;
@@ -3234,7 +3234,7 @@
             document.getElementById('par-gross').textContent = parGross;
             document.getElementById('par-stableford').textContent = parGross * 2; // Assuming 2 points per par
             document.getElementById('par-countback').textContent = globalParValues.slice(12, 18).reduce((sum, val) => sum + (val || 0), 0);
-            document.getElementById('par-countback2').textContent = globalParValues.slice(9, 12).reduce((sum, val) => sum + (val || 0), 0); // Holes 10-12
+            document.getElementById('par-countback2').textContent = globalParValues.slice(15, 18).reduce((sum, val) => sum + (val || 0), 0); // Holes 16-18
             
             // Calculate each player's totals
             scorecardData.players.forEach((player, index) => {
@@ -3291,13 +3291,13 @@
                 }
             }
             
-            // Calculate countback2 gross (holes 10-12)
-            const countback2GrossScores = player.scores.slice(9, 12).filter(s => s !== '' && s !== null && s !== undefined);
+            // Calculate countback2 gross (holes 16-18)
+            const countback2GrossScores = player.scores.slice(15, 18).filter(s => s !== '' && s !== null && s !== undefined);
             const countback2Gross = countback2GrossScores.reduce((sum, val) => sum + (parseInt(val) || 0), 0);
             
-            // Calculate countback2 stableford (holes 10-12)
+            // Calculate countback2 stableford (holes 16-18)
             let countback2Stableford = 0;
-            for (let hole = 9; hole < 12; hole++) {
+            for (let hole = 15; hole < 18; hole++) {
                 const points = calculateStablefordForHole(playerIndex, hole);
                 if (points !== null) {
                     countback2Stableford += points;
@@ -4212,16 +4212,16 @@
             // 10. Last 1 of front 9 (hole 1, index 0)
             
             const back9 = stablefordPoints.slice(9, 18).reduce((a, b) => a + b, 0);
-            const back6 = stablefordPoints.slice(12, 18).reduce((a, b) => a + b, 0);
-            const back3 = stablefordPoints.slice(9, 12).reduce((a, b) => a + b, 0);
-            const back2 = stablefordPoints.slice(10, 12).reduce((a, b) => a + b, 0);
-            const back1 = stablefordPoints[9];
+            const back6 = stablefordPoints.slice(12, 18).reduce((a, b) => a + b, 0); // Holes 13-18
+            const back3 = stablefordPoints.slice(15, 18).reduce((a, b) => a + b, 0); // Holes 16,17,18
+            const back2 = stablefordPoints.slice(16, 18).reduce((a, b) => a + b, 0); // Holes 17,18
+            const back1 = stablefordPoints[17]; // Hole 18
             
             const front9 = stablefordPoints.slice(0, 9).reduce((a, b) => a + b, 0);
-            const front6 = stablefordPoints.slice(3, 9).reduce((a, b) => a + b, 0);
-            const front3 = stablefordPoints.slice(0, 3).reduce((a, b) => a + b, 0);
-            const front2 = stablefordPoints.slice(1, 3).reduce((a, b) => a + b, 0);
-            const front1 = stablefordPoints[0];
+            const front6 = stablefordPoints.slice(3, 9).reduce((a, b) => a + b, 0); // Holes 4-9
+            const front3 = stablefordPoints.slice(6, 9).reduce((a, b) => a + b, 0); // Holes 7,8,9
+            const front2 = stablefordPoints.slice(7, 9).reduce((a, b) => a + b, 0); // Holes 8,9
+            const front1 = stablefordPoints[8]; // Hole 9
             
             return {
                 back9,
@@ -10317,7 +10317,7 @@
                         <li><strong>GROSS:</strong> Total of all 18 holes (gross score)</li>
                         <li><strong>STBLFD:</strong> Total Stableford points (click header to sort)</li>
                         <li><strong>CB 13-18:</strong> Countback - Stableford points for holes 13-18 (used for tiebreakers)</li>
-                        <li><strong>CB 10-12:</strong> Countback - Stableford points for holes 10-12 (second tiebreaker)</li>
+                        <li><strong>CB 16-18:</strong> Countback - Stableford points for holes 16-18 (second tiebreaker)</li>
                         <li><strong>Action:</strong> Delete button</li>
                     </ul>
                     
@@ -10381,16 +10381,17 @@
                     <h4>Countback System for Tie-Breaking:</h4>
                     <p>When players have equal Stableford scores, positions are determined using this sequence:</p>
                     <ol>
-                        <li><strong>Back 9 (Holes 10-18):</strong> Compare Stableford points on holes 10-18</li>
-                        <li><strong>Last 6 of Back 9 (Holes 13-18):</strong> If still tied, compare holes 13-18</li>
-                        <li><strong>Last 3 of Back 9 (Holes 10-12):</strong> If still tied, compare holes 10-12</li>
-                        <li><strong>Last 2 of Back 9 (Holes 11-12):</strong> If still tied, compare holes 11-12</li>
-                        <li><strong>Last 1 of Back 9 (Hole 10):</strong> If still tied, compare hole 10 only</li>
+                        <li><strong>Highest Stableford score:</strong> Compare total Stableford points</li>
+                        <li><strong>Back 9 (Holes 10-18):</strong> If tied, compare Stableford points on holes 10-18</li>
+                        <li><strong>Holes 13-18 (Last 6 holes):</strong> If still tied, compare holes 13-18</li>
+                        <li><strong>Holes 16,17,18 (Last 3 holes):</strong> If still tied, compare holes 16,17,18</li>
+                        <li><strong>Holes 17,18 (Last 2 holes):</strong> If still tied, compare holes 17,18</li>
+                        <li><strong>Hole 18 (Last 1 hole):</strong> If still tied, compare hole 18 only</li>
                         <li><strong>Front 9 (Holes 1-9):</strong> If still tied, compare holes 1-9</li>
-                        <li><strong>Last 6 of Front 9 (Holes 4-9):</strong> If still tied, compare holes 4-9</li>
-                        <li><strong>Last 3 of Front 9 (Holes 1-3):</strong> If still tied, compare holes 1-3</li>
-                        <li><strong>Last 2 of Front 9 (Holes 2-3):</strong> If still tied, compare holes 2-3</li>
-                        <li><strong>Last 1 of Front 9 (Hole 1):</strong> If still tied, compare hole 1 only</li>
+                        <li><strong>Holes 4,5,6,7,8,9 (Last 6 holes):</strong> If still tied, compare holes 4-9</li>
+                        <li><strong>Holes 7,8,9 (Last 3 holes):</strong> If still tied, compare holes 7,8,9</li>
+                        <li><strong>Holes 8,9 (Last 2 holes):</strong> If still tied, compare holes 8,9</li>
+                        <li><strong>Hole 9 (Last 1 hole):</strong> If still tied, compare hole 9 only</li>
                     </ol>
                     <p>At each step, the player with the higher Stableford points wins the tiebreaker.</p>
                     
