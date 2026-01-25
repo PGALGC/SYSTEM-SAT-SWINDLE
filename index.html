@@ -2829,71 +2829,84 @@
             
             // Sort players by stableford total with countback tiebreakers
             scorecardData.players.sort((a, b) => {
-                // Calculate stableford for each player and countbacks
-                let aTotal = 0, bTotal = 0;
-                let aB9 = 0, bB9 = 0;
-                let aCB1318 = 0, bCB1318 = 0;
-                let aCB1012 = 0, bCB1012 = 0;
+                // Calculate stableford for each player
+                const aHandicap = parseFloat(a.whiteTees) || a.handicap || 0;
+                const bHandicap = parseFloat(b.whiteTees) || b.handicap || 0;
+                
+                const aPoints = [];
+                const bPoints = [];
                 
                 for (let hole = 0; hole < 18; hole++) {
                     const aGross = parseInt(a.scores[hole]) || 0;
                     const bGross = parseInt(b.scores[hole]) || 0;
                     
+                    let aHolePoints = 0;
                     if (aGross > 0) {
                         const par = globalParValues[hole] || 4;
                         const holeIndex = globalIndexValues[hole] || (hole + 1);
-                        const aHandicap = parseFloat(a.whiteTees) || a.handicap || 0;
                         const strokesReceived = calculateStrokesForHole(aHandicap, holeIndex);
                         const adjustedPar = par + strokesReceived;
                         const diff = aGross - adjustedPar;
                         
-                        let points = 0;
-                        if (diff <= -2) points = 4;
-                        else if (diff === -1) points = 3;
-                        else if (diff === 0) points = 2;
-                        else if (diff === 1) points = 1;
-                        
-                        aTotal += points;
-                        if (hole >= 9 && hole < 18) aB9 += points; // Back 9
-                        if (hole >= 12 && hole < 18) aCB1318 += points; // Holes 13-18
-                        if (hole >= 9 && hole < 12) aCB1012 += points; // Holes 10-12
+                        if (diff <= -2) aHolePoints = 4;
+                        else if (diff === -1) aHolePoints = 3;
+                        else if (diff === 0) aHolePoints = 2;
+                        else if (diff === 1) aHolePoints = 1;
                     }
+                    aPoints.push(aHolePoints);
                     
+                    let bHolePoints = 0;
                     if (bGross > 0) {
                         const par = globalParValues[hole] || 4;
                         const holeIndex = globalIndexValues[hole] || (hole + 1);
-                        const bHandicap = parseFloat(b.whiteTees) || b.handicap || 0;
                         const strokesReceived = calculateStrokesForHole(bHandicap, holeIndex);
                         const adjustedPar = par + strokesReceived;
                         const diff = bGross - adjustedPar;
                         
-                        let points = 0;
-                        if (diff <= -2) points = 4;
-                        else if (diff === -1) points = 3;
-                        else if (diff === 0) points = 2;
-                        else if (diff === 1) points = 1;
-                        
-                        bTotal += points;
-                        if (hole >= 9 && hole < 18) bB9 += points;
-                        if (hole >= 12 && hole < 18) bCB1318 += points;
-                        if (hole >= 9 && hole < 12) bCB1012 += points;
+                        if (diff <= -2) bHolePoints = 4;
+                        else if (diff === -1) bHolePoints = 3;
+                        else if (diff === 0) bHolePoints = 2;
+                        else if (diff === 1) bHolePoints = 1;
                     }
+                    bPoints.push(bHolePoints);
                 }
                 
-                // Apply sorting with countback tiebreakers
-                if (aTotal !== bTotal) {
-                    return scorecardSortDescending ? bTotal - aTotal : aTotal - bTotal;
-                }
-                // Tie on total: check B9
-                if (aB9 !== bB9) {
-                    return scorecardSortDescending ? bB9 - aB9 : aB9 - bB9;
-                }
-                // Tie on B9: check CB 13-18
-                if (aCB1318 !== bCB1318) {
-                    return scorecardSortDescending ? bCB1318 - aCB1318 : aCB1318 - bCB1318;
-                }
-                // Tie on CB 13-18: check CB 10-12
-                return scorecardSortDescending ? bCB1012 - aCB1012 : aCB1012 - bCB1012;
+                // Calculate all countback values
+                const aTotal = aPoints.reduce((sum, p) => sum + p, 0);
+                const bTotal = bPoints.reduce((sum, p) => sum + p, 0);
+                const aBack9 = aPoints.slice(9, 18).reduce((sum, p) => sum + p, 0);
+                const bBack9 = bPoints.slice(9, 18).reduce((sum, p) => sum + p, 0);
+                const aBack6 = aPoints.slice(12, 18).reduce((sum, p) => sum + p, 0);
+                const bBack6 = bPoints.slice(12, 18).reduce((sum, p) => sum + p, 0);
+                const aBack3 = aPoints.slice(9, 12).reduce((sum, p) => sum + p, 0);
+                const bBack3 = bPoints.slice(9, 12).reduce((sum, p) => sum + p, 0);
+                const aBack2 = aPoints.slice(10, 12).reduce((sum, p) => sum + p, 0);
+                const bBack2 = bPoints.slice(10, 12).reduce((sum, p) => sum + p, 0);
+                const aBack1 = aPoints[9];
+                const bBack1 = bPoints[9];
+                const aFront9 = aPoints.slice(0, 9).reduce((sum, p) => sum + p, 0);
+                const bFront9 = bPoints.slice(0, 9).reduce((sum, p) => sum + p, 0);
+                const aFront6 = aPoints.slice(3, 9).reduce((sum, p) => sum + p, 0);
+                const bFront6 = bPoints.slice(3, 9).reduce((sum, p) => sum + p, 0);
+                const aFront3 = aPoints.slice(0, 3).reduce((sum, p) => sum + p, 0);
+                const bFront3 = bPoints.slice(0, 3).reduce((sum, p) => sum + p, 0);
+                const aFront2 = aPoints.slice(1, 3).reduce((sum, p) => sum + p, 0);
+                const bFront2 = bPoints.slice(1, 3).reduce((sum, p) => sum + p, 0);
+                const aFront1 = aPoints[0];
+                const bFront1 = bPoints[0];
+                
+                // Apply full 11-level countback
+                if (aTotal !== bTotal) return scorecardSortDescending ? bTotal - aTotal : aTotal - bTotal;
+                if (aBack9 !== bBack9) return scorecardSortDescending ? bBack9 - aBack9 : aBack9 - bBack9;
+                if (aBack6 !== bBack6) return scorecardSortDescending ? bBack6 - aBack6 : aBack6 - bBack6;
+                if (aBack3 !== bBack3) return scorecardSortDescending ? bBack3 - aBack3 : aBack3 - bBack3;
+                if (aBack2 !== bBack2) return scorecardSortDescending ? bBack2 - aBack2 : aBack2 - bBack2;
+                if (aBack1 !== bBack1) return scorecardSortDescending ? bBack1 - aBack1 : aBack1 - bBack1;
+                if (aFront9 !== bFront9) return scorecardSortDescending ? bFront9 - aFront9 : aFront9 - bFront9;
+                if (aFront6 !== bFront6) return scorecardSortDescending ? bFront6 - aFront6 : aFront6 - bFront6;
+                if (aFront3 !== bFront3) return scorecardSortDescending ? bFront3 - aFront3 : aFront3 - bFront3;
+                if (aFront2 !== bFront2) return scorecardSortDescending ? bFront2 - aFront2 : aFront2 - bFront2;
+                return scorecardSortDescending ? bFront1 - aFront1 : aFront1 - bFront1;
             });
             
             // Save and re-render
@@ -4299,22 +4312,33 @@
                 };
             });
             
-            // Sort by stableford score with countback tiebreaker (same logic as Scorecard)
+            // Sort by stableford score with countback tiebreaker (same 11-level logic as Scorecard)
             playersWithScores.sort((a, b) => {
-                // Compare total Stableford
-                if (a.stableford !== b.stableford) {
-                    return b.stableford - a.stableford;
-                }
-                // Tie: check Back 9
-                if (a.countback.back9 !== b.countback.back9) {
-                    return b.countback.back9 - a.countback.back9;
-                }
-                // Tie: check holes 13-18
-                if (a.countback.back6 !== b.countback.back6) {
-                    return b.countback.back6 - a.countback.back6;
-                }
-                // Tie: check holes 10-12
-                return b.countback.back3 - a.countback.back3;
+                const cb = a.countback;
+                const cbB = b.countback;
+                
+                // 1. Total Stableford
+                if (a.stableford !== b.stableford) return b.stableford - a.stableford;
+                // 2. Back 9 (holes 10-18)
+                if (cb.back9 !== cbB.back9) return cbB.back9 - cb.back9;
+                // 3. Holes 13-18
+                if (cb.back6 !== cbB.back6) return cbB.back6 - cb.back6;
+                // 4. Holes 10-12
+                if (cb.back3 !== cbB.back3) return cbB.back3 - cb.back3;
+                // 5. Holes 11-12
+                if (cb.back2 !== cbB.back2) return cbB.back2 - cb.back2;
+                // 6. Hole 10
+                if (cb.back1 !== cbB.back1) return cbB.back1 - cb.back1;
+                // 7. Front 9 (holes 1-9)
+                if (cb.front9 !== cbB.front9) return cbB.front9 - cb.front9;
+                // 8. Holes 4-9
+                if (cb.front6 !== cbB.front6) return cbB.front6 - cb.front6;
+                // 9. Holes 1-3
+                if (cb.front3 !== cbB.front3) return cbB.front3 - cb.front3;
+                // 10. Holes 2-3
+                if (cb.front2 !== cbB.front2) return cbB.front2 - cb.front2;
+                // 11. Hole 1
+                return cbB.front1 - cb.front1;
             });
             
             // Get prizes based on player count
