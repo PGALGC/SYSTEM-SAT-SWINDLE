@@ -2407,9 +2407,14 @@
                     <div style="font-size: 9px; color: #666;">
                         <strong>Season Overview:</strong> Comprehensive statistics for all players across all weeks
                     </div>
-                    <button onclick="refreshStats()" class="success" style="padding: 4px 10px; font-size: 9px;">
-                        <i class="fas fa-sync-alt"></i> Refresh Stats
-                    </button>
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="refreshStats()" class="success" style="padding: 4px 10px; font-size: 9px;">
+                            <i class="fas fa-sync-alt"></i> Refresh Stats
+                        </button>
+                        <button onclick="capturePlayerStats()" class="secondary" style="padding: 4px 10px; font-size: 9px;">
+                            <i class="fas fa-camera"></i> Capture
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="table-container" style="max-height: 75vh;">
@@ -7332,6 +7337,181 @@
                 document.body.removeChild(temp);
                 console.error('Capture error:', error);
                 alert('Error capturing image');
+            });
+        }
+        
+        function capturePlayerStats() {
+            if (typeof html2canvas === 'undefined') {
+                alert('Image capture library not loaded');
+                return;
+            }
+            
+            const statsTable = document.getElementById('stats-table');
+            if (!statsTable) {
+                alert('Stats table not found');
+                return;
+                }
+            
+            // Check if there are any stats
+            const statsBody = document.getElementById('stats-body');
+            if (!statsBody || statsBody.children.length === 0) {
+                alert('No player statistics to capture. Please refresh stats first.');
+                return;
+            }
+            
+            // Create a temporary container for capture
+            const temp = document.createElement('div');
+            temp.style.position = 'absolute';
+            temp.style.left = '-9999px';
+            temp.style.backgroundColor = '#ffffff';
+            temp.style.padding = '20px';
+            temp.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+            document.body.appendChild(temp);
+            
+            // Add title
+            const title = document.createElement('h2');
+            title.textContent = 'Player Statistics - Season Overview';
+            title.style.textAlign = 'center';
+            title.style.marginBottom = '10px';
+            title.style.color = '#1a6b4f';
+            title.style.fontSize = '16px';
+            title.style.fontWeight = '700';
+            temp.appendChild(title);
+            
+            // Add date
+            const dateDiv = document.createElement('div');
+            dateDiv.textContent = `Generated: ${new Date().toLocaleString('en-GB', {year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'})}`;
+            dateDiv.style.textAlign = 'center';
+            dateDiv.style.fontSize = '10px';
+            dateDiv.style.marginBottom = '15px';
+            dateDiv.style.color = '#666';
+            temp.appendChild(dateDiv);
+            
+            // Clone and style the table
+            const table = document.createElement('table');
+            table.style.width = '100%';
+            table.style.borderCollapse = 'collapse';
+            table.style.fontSize = '10px';
+            table.style.backgroundColor = 'white';
+            
+            // Create table header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            headerRow.style.backgroundColor = '#1a6b4f';
+            headerRow.style.color = 'white';
+            
+            const headers = ['Player Name', 'Rounds Played', 'Avg Stableford', 'Best Score', 'Worst Score', 'Total Wins', 'Total Won (£)', 'Total Lost (£)', 'Net P/L (£)', 'Current Index', 'League Position'];
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                th.style.padding = '8px 6px';
+                th.style.textAlign = 'center';
+                th.style.fontWeight = '700';
+                th.style.fontSize = '9px';
+                th.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+                th.style.whiteSpace = 'nowrap';
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // Create table body
+            const tbody = document.createElement('tbody');
+            const rows = Array.from(statsBody.children);
+            
+            rows.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.style.borderBottom = '1px solid #eee';
+                
+                // Alternating row colors
+                if (index % 2 === 1) {
+                    tr.style.backgroundColor = '#f9f9f9';
+                } else {
+                    tr.style.backgroundColor = 'white';
+                }
+                
+                // Copy all cells
+                Array.from(row.cells).forEach((cell, cellIndex) => {
+                    const td = document.createElement('td');
+                    td.style.border = '1px solid #eee';
+                    td.style.padding = '6px';
+                    td.style.textAlign = cellIndex === 0 ? 'left' : 'center';
+                    td.style.color = '#333';
+                    td.style.fontSize = '9px';
+                    
+                    // Extract text content
+                    td.textContent = cell.textContent.trim();
+                    
+                    // Style player name column
+                    if (cellIndex === 0) {
+                        td.style.fontWeight = '600';
+                    }
+                    // Style Net P/L column with color coding
+                    else if (cellIndex === 8) {
+                        const value = parseFloat(td.textContent.replace(/[£,]/g, ''));
+                        if (!isNaN(value)) {
+                            if (value > 0) {
+                                td.style.color = '#4CAF50';
+                                td.style.fontWeight = 'bold';
+                            } else if (value < 0) {
+                                td.style.color = '#e74c3c';
+                                td.style.fontWeight = 'bold';
+                            }
+                        }
+                    }
+                    
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            
+            table.appendChild(tbody);
+            temp.appendChild(table);
+            
+            // Add summary box
+            const summaryBox = document.createElement('div');
+            summaryBox.style.marginTop = '15px';
+            summaryBox.style.padding = '10px';
+            summaryBox.style.backgroundColor = '#f0f7ff';
+            summaryBox.style.border = '2px solid #1a6b4f';
+            summaryBox.style.borderRadius = '4px';
+            summaryBox.style.textAlign = 'center';
+            
+            const summaryTitle = document.createElement('div');
+            summaryTitle.textContent = 'Season Summary';
+            summaryTitle.style.fontSize = '11px';
+            summaryTitle.style.fontWeight = 'bold';
+            summaryTitle.style.color = '#1a6b4f';
+            summaryTitle.style.marginBottom = '8px';
+            summaryBox.appendChild(summaryTitle);
+            
+            const totalPlayers = rows.length;
+            const playerCount = document.createElement('div');
+            playerCount.innerHTML = `<strong>Total Players:</strong> ${totalPlayers}`;
+            playerCount.style.fontSize = '10px';
+            playerCount.style.color = '#333';
+            playerCount.style.marginBottom = '4px';
+            summaryBox.appendChild(playerCount);
+            
+            temp.appendChild(summaryBox);
+            
+            // Capture the image
+            html2canvas(temp, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
+                link.download = `Player_Statistics_${timestamp}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                document.body.removeChild(temp);
+            }).catch(error => {
+                document.body.removeChild(temp);
+                console.error('Capture error:', error);
+                alert('Error capturing player statistics image');
             });
         }
         
