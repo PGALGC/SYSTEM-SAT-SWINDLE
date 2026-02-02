@@ -2302,16 +2302,16 @@
                             
                             <!-- Donation (Added to Starting Pot) -->
                             <div class="form-group">
-                                <label style="font-size: 9px;">Donation (Added to Starting Pot):</label>
+                                <label style="font-size: 9px;">Contribution (Added to Starting Pot):</label>
                                 <div style="position: relative; display: flex; align-items: center;">
                                     <span style="position: absolute; left: 8px; font-weight: 600; color: #333; font-size: 9px;">£</span>
                                     <input type="number" id="financial-donation" step="0.01" value="0" style="width: 100%; font-weight: 600; padding-left: 18px;">
                                 </div>
                             </div>
                             
-                            <!-- Adjusted Starting Pot (Starting Pot + Donation) -->
+                            <!-- Adjusted Starting Pot (Starting Pot + Contribution) -->
                             <div class="form-group">
-                                <label style="font-size: 9px;">Adjusted Starting Pot (Pot + Donation) (Auto):</label>
+                                <label style="font-size: 9px;">Adjusted Starting Pot (Pot + Contribution) (Auto):</label>
                                 <input type="text" id="financial-adjusted-pot" readonly style="width: 100%; background-color: #e8f5e9; font-weight: 700; font-size: 10px; color: #2e7d32;" value="£0.00">
                             </div>
                             
@@ -2374,7 +2374,7 @@
                         <div style="margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                             <!-- Donation Explanation -->
                             <div class="form-group">
-                                <label style="font-size: 9px; font-weight: 600;">Donation Explanation:</label>
+                                <label style="font-size: 9px; font-weight: 600;">Contribution Explanation:</label>
                                 <textarea id="financial-donation-explanation" placeholder="Describe the donation details..." style="width: 100%; height: 50px; padding: 6px; font-size: 9px; border: 1px solid #ccc; border-radius: 2px; resize: vertical;"></textarea>
                             </div>
                             
@@ -11154,7 +11154,161 @@
                 </div>
                 
                 <div class="guide-section">
-                    <h3><i class="fas fa-pound-sign"></i> 5. SWINDLE PRIZES TAB</h3>
+                    <h3><i class="fas fa-chart-bar"></i> TAB 5: STATS (Player Statistics & Financial Summary)</h3>
+                    <h4>What Does This Tab Do?</h4>
+                    <p>This tab provides comprehensive player statistics and financial management tools for the entire season.</p>
+                    
+                    <h4>Player Statistics Section</h4>
+                    <p>View detailed performance metrics for each player across the season:</p>
+                    <ul>
+                        <li><strong>Weeks Played:</strong> Total number of weeks the player participated</li>
+                        <li><strong>Total Weeks Won:</strong> Number of weeks the player finished in 1st place</li>
+                        <li><strong>Average Stableford:</strong> Mean Stableford score across all played weeks</li>
+                        <li><strong>Best Score:</strong> Highest Stableford score achieved</li>
+                        <li><strong>Total Prize Money:</strong> Sum of all winnings across the season</li>
+                    </ul>
+                    
+                    <h4>Financial Summary Section</h4>
+                    <p>Generate professional end-of-season financial reports for the PGA Society committee and accountants.</p>
+                    
+                    <p><strong>Step-by-Step: Using Financial Summary</strong></p>
+                    <ol>
+                        <li><strong>Select League Type:</strong>
+                            <ul>
+                                <li>Click the dropdown labeled "PGA – Winter or Summer League"</li>
+                                <li>Choose either "PGA Winter League" or "PGA Summer League"</li>
+                            </ul>
+                        </li>
+                        <li><strong>Enter Date Range:</strong>
+                            <ul>
+                                <li>Click "Date From" and select season start date</li>
+                                <li>Click "Date To" and select season end date</li>
+                            </ul>
+                        </li>
+                        <li><strong>Review Committee Members:</strong>
+                            <ul>
+                                <li>The system displays the committee members and their roles:</li>
+                                <li>Kamal Dhunna – Founder</li>
+                                <li>Harjinder Theara – Founder and Entertainments</li>
+                                <li>Joe Ciampa – League Table Results and Website</li>
+                                <li>Peter Ramsden – Decision Maker</li>
+                                <li>Daren Davey – Decision Maker</li>
+                                <li>Julian Pennie – Decision Maker</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <h4>Financial Fields (Auto-Calculated)</h4>
+                    <p>These fields calculate automatically based on your league and winners data:</p>
+                    <ul>
+                        <li><strong>Starting Pot (£):</strong> Auto-calculated as £20 × total registered players</li>
+                        <li><strong>Total Invested into Swindle (£):</strong> Sum of all weekly £5 entries across the season</li>
+                        <li><strong>Total Payout to Swindle Players (£):</strong> Sum of all weekly prize payouts (shown as negative)</li>
+                    </ul>
+                    
+                    <h4>Financial Fields (Manual Entry)</h4>
+                    <p>Enter these values manually as needed:</p>
+                    <ul>
+                        <li><strong>Donation (£):</strong> Any donations received (adds to Starting Pot)
+                            <ul>
+                                <li>Enter amount with £ prefix (e.g., "£50")</li>
+                                <li>Use explanation box below to document donation source</li>
+                            </ul>
+                        </li>
+                        <li><strong>End of Season Prizes for League Positions (£):</strong> Total paid for league standings prizes</li>
+                        <li><strong>EoSSS Payout End of Season (£):</strong> End of Season Special Swindle payout</li>
+                        <li><strong>Entertainment Drinks/Meal End of Season (£):</strong> Cost of end-of-season celebration</li>
+                        <li><strong>Other Costs (£):</strong> Any additional expenses
+                            <ul>
+                                <li>Use explanation box below to document what these costs cover</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <h4>Understanding the Calculations</h4>
+                    <p><strong>Adjusted Starting Pot Formula:</strong></p>
+                    <p><code>Adjusted Starting Pot = Starting Pot + Donations</code></p>
+                    
+                    <p><strong>Final Balance Formula:</strong></p>
+                    <p><code>Final Balance = (Starting Pot + Donations) - (League Prizes + EoSSS + Entertainment + Other Costs)</code></p>
+                    
+                    <div class="warning-box">
+                        <strong>Important:</strong> The Final Balance does NOT include weekly swindle entries or payouts - those are tracked separately as they operate independently from the registration pot.
+                    </div>
+                    
+                    <h4>Action Buttons</h4>
+                    <p><strong>1. "Calculate Summary" Button (Blue):</strong></p>
+                    <ol>
+                        <li>Click this button after entering all manual values</li>
+                        <li>System recalculates all auto fields</li>
+                        <li>Starting Pot updates based on current player count</li>
+                        <li>Total Invested and Total Payout update from winners data</li>
+                        <li>Adjusted Starting Pot and Final Balance recalculate</li>
+                        <li>All data saves to browser storage automatically</li>
+                    </ol>
+                    
+                    <p><strong>2. "Download Report" Button (Green):</strong></p>
+                    <ol>
+                        <li>Ensure you've clicked "Calculate Summary" first</li>
+                        <li>Click "Download Report"</li>
+                        <li>System generates a professional PDF report</li>
+                        <li>PDF includes:
+                            <ul>
+                                <li>PGA Society header with report title</li>
+                                <li>League type and reporting period</li>
+                                <li>Committee members list</li>
+                                <li>Income section (Starting Pot, Donations, Swindle Entries)</li>
+                                <li>Expenditure section (All costs and payouts)</li>
+                                <li>Color-coded Final Balance (green = surplus, red = deficit)</li>
+                                <li>Donation and Other Costs explanations</li>
+                                <li>Professional footer with timestamp</li>
+                            </ul>
+                        </li>
+                        <li>PDF downloads automatically (filename: PGA_Financial_Summary_[League]_[Date].pdf)</li>
+                        <li>Report is formatted for accountant review</li>
+                    </ol>
+                    
+                    <p><strong>3. "Reset" Button (Red):</strong></p>
+                    <ol>
+                        <li>Click this button to clear all financial data</li>
+                        <li>Confirmation popup: "Are you sure you want to reset all financial summary data?"</li>
+                        <li>Click OK to delete all entries and calculations</li>
+                        <li>Click Cancel to keep your data</li>
+                        <li>Use this at the start of a new season</li>
+                    </ol>
+                    
+                    <h4>Complete Workflow for Financial Summary</h4>
+                    <p><strong>End of Season Process:</strong></p>
+                    <ol>
+                        <li>Go to STATS tab</li>
+                        <li>Scroll to Financial Summary section</li>
+                        <li>Select correct league (Winter/Summer)</li>
+                        <li>Enter season start and end dates</li>
+                        <li>Enter any donations received (with explanation)</li>
+                        <li>Enter end of season prizes amount</li>
+                        <li>Enter EoSSS payout amount</li>
+                        <li>Enter entertainment costs</li>
+                        <li>Enter any other costs (with explanation)</li>
+                        <li>Click "Calculate Summary"</li>
+                        <li>Review all figures - especially Final Balance</li>
+                        <li>Click "Download Report" to generate PDF</li>
+                        <li>Share PDF with committee and accountant</li>
+                    </ol>
+                    
+                    <div class="tip-box">
+                        <strong>💡 Pro Tips:</strong>
+                        <ul>
+                            <li>Download the report regularly throughout the season to track finances</li>
+                            <li>Use the explanation boxes for donations and other costs - this helps with transparency</li>
+                            <li>A positive Final Balance means money remains in the society account</li>
+                            <li>A negative Final Balance means additional funding is needed</li>
+                            <li>Always backup your data before resetting the financial summary</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="guide-section">
+                    <h3><i class="fas fa-pound-sign"></i> 6. SWINDLE PRIZES TAB</h3>
                     <h4>Purpose:</h4>
                     <p>View the prize distribution matrix for different player counts.</p>
                     
