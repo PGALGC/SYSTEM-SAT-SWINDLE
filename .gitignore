@@ -1,0 +1,31 @@
+# Backup files
+*.json
+!package.json
+!tsconfig.json
+
+# CSV data files
+*.csv
+
+# Windows system files
+desktop.ini
+Thumbs.db
+
+# PDF reports
+*.pdf
+
+# PNG captures
+*.png
+
+# Temporary files
+*.tmp
+*.bak
+~*
+
+# BACKUP folder contents (but keep the folder structure)
+BACKUP/*.csv
+BACKUP/*.json
+BACKUP/*.png
+BACKUP/*.jpeg
+BACKUP/*.jpg
+BACKUP/*.txt
+!BACKUP/.gitkeep
