@@ -1977,8 +1977,13 @@
         
         <!-- WINNERS TAB -->
         <div id="winners-tab" class="tab-content">
-            <div class="section">
-                <h2><i class="fas fa-award"></i> Winners - Saturday Swindle</h2>
+            <div class="section" id="winners-saturday-swindle-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <h2 style="margin: 0;"><i class="fas fa-award"></i> Winners - Saturday Swindle</h2>
+                    <button onclick="captureWinnersSaturdaySwindle()" class="secondary" style="padding: 4px 10px; font-size: 9px;">
+                        <i class="fas fa-camera"></i> Capture
+                    </button>
+                </div>
                 
                 <div class="button-group" style="margin-bottom: 10px; align-items: center;">
                     <label style="font-size: 9px; font-weight: 600; margin-right: 5px;">Select Week:</label>
@@ -2470,7 +2475,7 @@
             { id: 19, name: "Josh Kinnear" }, { id: 20, name: "Josh Roseberry" },
             { id: 21, name: "Julian Pennie" }, { id: 22, name: "Kamal Dhunna" },
             { id: 23, name: "Mark Hickman" }, { id: 24, name: "Mark Saunders" },
-            { id: 25, name: "Michael Pacekmeyer" }, { id: 26, name: "Nick Eaton" },
+            { id: 25, name: "Michael Paeckmeyer" }, { id: 26, name: "Nick Eaton" },
             { id: 27, name: "Paul Bentley" }, { id: 28, name: "Peter Ramsden" },
             { id: 29, name: "Rich Moore" }, { id: 30, name: "Ringo Theara" },
             { id: 31, name: "Robert Brown" }, { id: 32, name: "Ryan Brown" },
@@ -4489,6 +4494,55 @@
             if (savedWeek) {
                 currentWinnersWeek = parseInt(savedWeek);
             }
+        }
+        
+        // ============================================
+        // WINNERS SATURDAY SWINDLE CAPTURE FUNCTION
+        // ============================================
+        
+        function captureWinnersSaturdaySwindle() {
+            const section = document.getElementById('winners-saturday-swindle-section');
+            if (!section) {
+                alert('Winners - Saturday Swindle section not found.');
+                return;
+            }
+            
+            // Find the table container that has max-height and overflow
+            const tableContainer = section.querySelector('.table-container');
+            
+            // Store original styles
+            const originalMaxHeight = tableContainer.style.maxHeight;
+            const originalOverflow = tableContainer.style.overflow;
+            
+            // Temporarily remove height restrictions to show all content
+            tableContainer.style.maxHeight = 'none';
+            tableContainer.style.overflow = 'visible';
+            
+            // Give browser time to re-render
+            setTimeout(() => {
+                html2canvas(section, {
+                    backgroundColor: '#2c4f7c',
+                    scale: 2,
+                    scrollY: -window.scrollY,
+                    scrollX: -window.scrollX,
+                    windowWidth: document.documentElement.scrollWidth,
+                    windowHeight: document.documentElement.scrollHeight
+                }).then(canvas => {
+                    // Restore original styles
+                    tableContainer.style.maxHeight = originalMaxHeight;
+                    tableContainer.style.overflow = originalOverflow;
+                    
+                    const link = document.createElement('a');
+                    link.download = `Winners_Saturday_Swindle_Week${currentWinnersWeek}_${new Date().toISOString().split('T')[0]}.png`;
+                    link.href = canvas.toDataURL();
+                    link.click();
+                }).catch(error => {
+                    // Restore original styles even if capture fails
+                    tableContainer.style.maxHeight = originalMaxHeight;
+                    tableContainer.style.overflow = originalOverflow;
+                    alert('Error capturing image: ' + error.message);
+                });
+            }, 100);
         }
         
         // ============================================
