@@ -5371,6 +5371,11 @@
                 drawRow('Adjusted Starting Pot', `£${adjustedPot.toFixed(2)}`, false, true);
             }
             drawRow('Weekly Swindle Entries (£5/player/week)', `£${totalInvested}`);
+            
+            // Calculate and display Total Income
+            const totalInvestedNum = parseFloat(totalInvested) || 0;
+            const totalIncome = (donation > 0 ? adjustedPot : startingPot) + totalInvestedNum;
+            drawRow('Total Income', `£${totalIncome.toFixed(2)}`, false, false, true);
             yPos += 3;
             
             // EXPENDITURE SECTION
