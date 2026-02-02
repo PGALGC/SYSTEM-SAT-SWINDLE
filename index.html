@@ -5373,8 +5373,9 @@
             drawRow('Weekly Swindle Entries (£5/player/week)', `£${totalInvested}`);
             
             // Calculate and display Total Income
+            // Total Income = Starting Pot + Donations + Weekly Swindle Entries
             const totalInvestedNum = parseFloat(totalInvested) || 0;
-            const totalIncome = (donation > 0 ? adjustedPot : startingPot) + totalInvestedNum;
+            const totalIncome = startingPot + donation + totalInvestedNum;
             drawRow('Total Income', `£${totalIncome.toFixed(2)}`, false, false, true);
             yPos += 3;
             
