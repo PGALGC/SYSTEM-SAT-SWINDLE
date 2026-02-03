@@ -5370,7 +5370,7 @@
             
             drawRow('Starting Pot (Registration @ £20/player)', `£${startingPot.toFixed(2)}`);
             if (donation > 0) {
-                drawRow('Add: Donations', `£${donation.toFixed(2)}`);
+                drawRow('Contributions', `£${donation.toFixed(2)}`);
                 drawRow('Adjusted Starting Pot', `£${adjustedPot.toFixed(2)}`, false, true);
             }
             drawRow('Weekly Swindle Entries (£5/player/week)', `£${totalInvested}`);
@@ -5409,7 +5409,7 @@
                 doc.setFont('helvetica', 'italic');
                 
                 if (donationExplanation) {
-                    doc.text('Donation Note:', margin + 2, yPos);
+                    doc.text('Contributions Note:', margin + 2, yPos);
                     const donationLines = doc.splitTextToSize(donationExplanation, tableWidth - 4);
                     yPos += 3;
                     doc.text(donationLines, margin + 2, yPos);
