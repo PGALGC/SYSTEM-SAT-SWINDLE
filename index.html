@@ -5052,13 +5052,16 @@
                     if (!playerStatsMap[name].weeksInWinners) playerStatsMap[name].weeksInWinners = [];
                     playerStatsMap[name].weeksInWinners.push(weekKey);
                     
-                    // Parse prize
+                    // Parse prize - this is GROSS prize money won (not net)
                     const prizeStr = player.prize || '£0';
                     const prizeAmount = parseFloat(prizeStr.replace('£', '')) || 0;
                     
+                    // Add to total won (this will be gross prize money)
+                    playerStatsMap[name].totalWon += prizeAmount;
+                    
+                    // Count as a win if they won any prize
                     if (prizeAmount > 0) {
                         playerStatsMap[name].totalWins++;
-                        playerStatsMap[name].totalWon += prizeAmount;
                     }
                 });
             });
