@@ -6376,8 +6376,8 @@
                             const playersNewIndex = columns[9].trim();
                             const totalAdjustment = columns[8].trim();
                             const playersPreviousIndex = columns[7].trim();
-                            const whiteHandicap = columns[10].trim();
-                            const yellowHandicap = columns[11].trim();
+                            const whiteHandicap = columns[11].trim();
+                            const yellowHandicap = columns[10].trim();
                             
                             const tr = document.createElement('tr');
                             tr.innerHTML = `
@@ -9914,8 +9914,8 @@
                     const prevIndex = cells[9].textContent;
                     const adjustment = cells[10].textContent;
                     const newIndex = cells[11].textContent;
-                    const whiteHcap = cells[12].textContent;
-                    const yellowHcap = cells[13].textContent;
+                    const whiteHcap = cells[13].textContent;
+                    const yellowHcap = cells[12].textContent;
                     
                     csvContent += `${no},"${name}",${index},"${category}",${prize},${stableford},${position},${prevIndex},${adjustment},${newIndex},${whiteHcap},${yellowHcap}\n`;
                 });
