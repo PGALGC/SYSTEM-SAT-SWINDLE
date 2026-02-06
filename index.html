@@ -7262,31 +7262,33 @@
                     tr.style.backgroundColor = 'white';
                 }
                 
-                // Add all 6 columns: Paid, Name, PGA_Index, Change, White Tees, Yellow Tees
-                for (let i = 0; i < 6; i++) {
+                // Add 6 columns: Paid, Name, PGA_Index, Change, White Tees, Yellow Tees
+                // Extracted table has: 0=Paid, 1=Name, 2=NewIndex, 3=Adjustment, 4=PrevIndex, 5=White, 6=Yellow
+                const columnMap = [0, 1, 2, 3, 5, 6]; // Skip column 4 (Previous Index)
+                columnMap.forEach((colIdx, displayIdx) => {
                     const td = document.createElement('td');
                     td.style.border = '1px solid #eee';
                     td.style.padding = '6px';
-                    td.style.textAlign = i === 1 ? 'left' : 'center'; // Left align Name column
+                    td.style.textAlign = displayIdx === 1 ? 'left' : 'center'; // Left align Name column
                     td.style.color = '#333';
                     td.style.fontSize = '9px';
                     
-                    if (row.cells[i]) {
-                        td.textContent = row.cells[i].textContent;
+                    if (row.cells[colIdx]) {
+                        td.textContent = row.cells[colIdx].textContent;
                         
                         // Style the Paid column
-                        if (i === 0) {
+                        if (displayIdx === 0) {
                             td.style.color = '#4CAF50';
                             td.style.fontWeight = 'bold';
                         }
                         // Style the Name column
-                        else if (i === 1) {
+                        else if (displayIdx === 1) {
                             td.style.fontWeight = '600';
                         }
                     }
                     
                     tr.appendChild(td);
-                }
+                })
                 tbody.appendChild(tr);
             });
             
