@@ -1336,6 +1336,13 @@
             color: #ffffff !important;
         }
         
+        /* No Score (NS) - When gross score is 0 */
+        .stableford-ns {
+            background-color: #ffff00 !important; /* Yellow for No Score */
+            color: #000000 !important;
+            font-weight: 800 !important;
+        }
+        
         /* Gross score display */
         .gross-score {
             font-weight: 600;
@@ -2613,6 +2620,10 @@
                             <span style="display: inline-block; width: 20px; height: 12px; background-color: #ff69b4; border: 1px solid #ff1493;"></span>
                             <span style="color: #e6f2ff;">Double Bogey+ (0pts)</span>
                         </span>
+                        <span style="display: inline-flex; align-items: center; gap: 4px;">
+                            <span style="display: inline-block; width: 20px; height: 12px; background-color: #ffff00; border: 1px solid #cccc00;"></span>
+                            <span style="color: #e6f2ff;">No Score (NS)</span>
+                        </span>
                     </div>
                 </div>
                 
@@ -3362,8 +3373,12 @@
             const player = scorecardData.players[playerIndex];
             if (!player) return null; // Return null instead of 0 for no score
             
-            const score = parseInt(player.scores[hole]) || 0;
-            if (score <= 0) return null; // Return null for no score or zero
+            const scoreValue = player.scores[hole];
+            // Check if the score is explicitly "0" (No Score)
+            if (scoreValue === '0' || scoreValue === 0) return 'NS'; // Return NS for zero score
+            
+            const score = parseInt(scoreValue) || 0;
+            if (score <= 0 || scoreValue === '' || scoreValue === null || scoreValue === undefined) return null; // Return null for empty/no score
             
             const par = globalParValues[hole] || 4;
             // Use White Tees playing handicap instead of Index
@@ -3411,8 +3426,13 @@
             const stablefordElement = document.getElementById(`stableford-${player.id}-${hole}`);
             
             if (stablefordElement) {
+                // Handle NS (No Score) case when score is 0
+                if (stableford === 'NS') {
+                    stablefordElement.className = 'stableford-points stableford-ns';
+                    stablefordElement.textContent = 'NS';
+                }
                 // Only apply color class if there's a score and stableford is calculated
-                if (score && stableford !== null) {
+                else if (score && stableford !== null) {
                     const stablefordClass = `stableford-${stableford}`;
                     stablefordElement.className = `stableford-points ${stablefordClass}`;
                     stablefordElement.textContent = stableford;
@@ -3462,7 +3482,7 @@
             let stablefordFront9 = 0;
             for (let hole = 0; hole < 9; hole++) {
                 const points = calculateStablefordForHole(playerIndex, hole);
-                if (points !== null) {
+                if (points !== null && points !== 'NS') {
                     stablefordFront9 += points;
                 }
             }
@@ -3471,7 +3491,7 @@
             let stablefordBack9 = 0;
             for (let hole = 9; hole < 18; hole++) {
                 const points = calculateStablefordForHole(playerIndex, hole);
-                if (points !== null) {
+                if (points !== null && points !== 'NS') {
                     stablefordBack9 += points;
                 }
             }
@@ -3487,7 +3507,7 @@
             let countbackStableford = 0;
             for (let hole = 12; hole < 18; hole++) {
                 const points = calculateStablefordForHole(playerIndex, hole);
-                if (points !== null) {
+                if (points !== null && points !== 'NS') {
                     countbackStableford += points;
                 }
             }
@@ -3500,7 +3520,7 @@
             let countback2Stableford = 0;
             for (let hole = 15; hole < 18; hole++) {
                 const points = calculateStablefordForHole(playerIndex, hole);
-                if (points !== null) {
+                if (points !== null && points !== 'NS') {
                     countback2Stableford += points;
                 }
             }
