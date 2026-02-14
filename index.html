@@ -3210,12 +3210,13 @@
                 
                 // Add hole gross score input cells
                 for (let hole = 0; hole < 18; hole++) {
-                    const score = player.scores[hole] || '';
+                    // Properly handle 0 score - only use empty string if value is null/undefined
+                    const score = (player.scores[hole] !== null && player.scores[hole] !== undefined && player.scores[hole] !== '') ? player.scores[hole] : '';
                     grossHTML += `
                         <td class="hole-cell hole-score-cell">
                             <input type="number" 
                                    value="${score}" 
-                                   min="1" max="15" 
+                                   min="0" max="15" 
                                    data-player="${playerIndex}" 
                                    data-hole="${hole}" 
                                    class="score-input">
@@ -3251,14 +3252,16 @@
                 
                 // Add stableford points cells for each hole
                 for (let hole = 0; hole < 18; hole++) {
-                    const score = player.scores[hole] || '';
+                    // Properly handle 0 score - only use empty string if value is null/undefined
+                    const score = (player.scores[hole] !== null && player.scores[hole] !== undefined && player.scores[hole] !== '') ? player.scores[hole] : '';
                     const stableford = calculateStablefordForHole(playerIndex, hole);
-                    const stablefordClass = score && stableford !== null ? `stableford-${stableford}` : '';
+                    // Handle NS case specially
+                    const stablefordClass = stableford === 'NS' ? 'stableford-ns' : (score !== '' && stableford !== null ? `stableford-${stableford}` : '');
                     
                     stablefordHTML += `
                         <td class="hole-cell">
                             <span class="stableford-points ${stablefordClass}" id="stableford-${player.id}-${hole}">
-                                ${score && stableford !== null ? stableford : ''}
+                                ${stableford === 'NS' ? 'NS' : (score !== '' && stableford !== null ? stableford : '')}
                             </span>
                         </td>
                     `;
