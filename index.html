@@ -2589,6 +2589,33 @@
                     </div>
                 </div>
                 
+                <!-- Color Key / Legend -->
+                <div class="legend-box" style="padding: 6px 8px; border-radius: 3px; margin-bottom: 6px; font-size: 8px;">
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                        <strong style="font-size: 9px;">Stableford Color Key:</strong>
+                        <span style="display: inline-flex; align-items: center; gap: 4px;">
+                            <span style="display: inline-block; width: 20px; height: 12px; background-color: #000000; border: 1px solid #333;"></span>
+                            <span style="color: #e6f2ff;">Par (2pts)</span>
+                        </span>
+                        <span style="display: inline-flex; align-items: center; gap: 4px;">
+                            <span style="display: inline-block; width: 20px; height: 12px; background-color: #ff0000; border: 1px solid #cc0000;"></span>
+                            <span style="color: #e6f2ff;">Birdie (3pts)</span>
+                        </span>
+                        <span style="display: inline-flex; align-items: center; gap: 4px;">
+                            <span style="display: inline-block; width: 20px; height: 12px; background-color: #0000ff; border: 1px solid #0000cc;"></span>
+                            <span style="color: #e6f2ff;">Eagle (4pts)</span>
+                        </span>
+                        <span style="display: inline-flex; align-items: center; gap: 4px;">
+                            <span style="display: inline-block; width: 20px; height: 12px; background-color: #800080; border: 1px solid #600060;"></span>
+                            <span style="color: #e6f2ff;">Bogey (1pt)</span>
+                        </span>
+                        <span style="display: inline-flex; align-items: center; gap: 4px;">
+                            <span style="display: inline-block; width: 20px; height: 12px; background-color: #ff69b4; border: 1px solid #ff1493;"></span>
+                            <span style="color: #e6f2ff;">Double Bogey+ (0pts)</span>
+                        </span>
+                    </div>
+                </div>
+                
                 <!-- Scorecard Table -->
                 <div class="scorecard-table-container">
                     <table id="scorecard-table">
@@ -10042,15 +10069,24 @@
                     const csvContent = e.target.result;
                     const lines = csvContent.split('\n').filter(line => line.trim());
                     
-                    if (lines.length < 4) {
+                    if (lines.length < 2) {
                         alert('Invalid batch calculator CSV format');
                         return;
                     }
                     
                     let importedCount = 0;
                     
-                    // Skip header rows (first 3 lines)
-                    for (let i = 3; i < lines.length; i++) {
+                    // Detect header format: check if first line contains "Player Name" (single header)
+                    // or if we need to skip multiple header rows
+                    let startLine = 1; // Default: skip 1 header row
+                    const firstLine = lines[0].toLowerCase();
+                    if (firstLine.includes('player name') || firstLine.includes('no,')) {
+                        startLine = 1; // Single header row
+                    } else if (lines.length >= 3 && lines[2].toLowerCase().includes('player name')) {
+                        startLine = 3; // 3 header rows
+                    }
+                    
+                    for (let i = startLine; i < lines.length; i++) {
                         const values = lines[i].split(',').map(v => v.trim().replace(/^"|"$/g, ''));
                         if (values.length < 12) continue;
                         
